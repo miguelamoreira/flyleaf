@@ -31,7 +31,7 @@
                   <v-text-field label="Confirm your password" type="password"></v-text-field>
                 </v-col>
                 <v-col cols="4" class="text-center mx-auto">
-                  <v-btn type="submit" block class="mt-4" text="Login" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);"></v-btn>
+                  <v-btn type="submit" block class="mt-4" text="Register" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);"></v-btn>
                 </v-col>
               </v-row>
             </v-form>
