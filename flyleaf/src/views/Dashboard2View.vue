@@ -15,7 +15,7 @@
             <v-row justify="center">
               <v-col cols="12" sm="6" md="4" lg="3" v-for="(request, index) in requests.slice(0, 4)" :key="request.title" class="d-flex flex-wrap">
                 <div class="requests" style="position: relative; margin: 0 4vh">
-                  <router-link :to="{ name: 'catalogue'}" :class="{ 'last-book-link': index === 3 }">
+                  <router-link :to="{ name: 'bookrequests'}" :class="{ 'last-book-link': index === 3 }">
                     <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
                       <img :src="`/src/assets/images/books/${request.image}`" style="width: 25vh; height: 40vh;">
                     </v-card>
