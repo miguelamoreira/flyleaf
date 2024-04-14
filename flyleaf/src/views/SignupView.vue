@@ -18,7 +18,7 @@
             <v-card-text>
               <v-form class="mt-6">
                 <v-text-field label="Username"></v-text-field>
-                <v-text-field label="Password" type="password"></v-text-field>
+                <v-text-field label="E-mail" type="email"></v-text-field>
                 <v-text-field label="Password" class="password"></v-text-field>
                 <v-text-field label="Confirm your password" type="password"></v-text-field>
                 <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">

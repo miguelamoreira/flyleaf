@@ -48,7 +48,7 @@
                             <v-text-field label="Username" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" class="pa-4">
-                            <v-text-field label="Password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                            <v-text-field label="E-mail" type="email" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -64,7 +64,7 @@
                             <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
                         </v-col>
                         <v-col cols="4" sm="2">
-                            <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);">Cancel</v-btn>
+                            <v-btn block class="mt-4" style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);">Cancel</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>

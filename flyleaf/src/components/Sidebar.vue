@@ -27,7 +27,7 @@
               <img src="@/assets/images/icons/add.svg" class="mr-4">
               <span class="font-weight-bold">New reading</span>
             </v-btn>
-            <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4">
+            <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" :to="{name: 'newreadinglist'}">
               <img src="@/assets/images/icons/add.svg" class="mr-4">
               <span class="font-weight-bold">New reading list</span>
             </v-btn>
