@@ -8,12 +8,8 @@
           <v-container fluid>
             <Navbar></Navbar>
             <v-row>
-              <v-col cols="2" style="margin: 2vh 25vh" class="d-flex align-center">
-                <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold mb-4">Catalogue</h2>
-              </v-col>
-              <v-col cols="6" lg="6" md="3" sm="2" class="d-flex align-center justify-space-evenly">
-                <v-select style="max-width: 200px; background-color: var(--vt-c-yellow-light);" hide-details label="Search by genre" class="rounded-lg"></v-select>
-                <v-text-field class="rounded-lg" style="max-width: 400px; background-color: var(--vt-c-yellow-light);" hide-details label="Search by title, author or year"></v-text-field>
+              <v-col cols="12" style="margin: 2vh 25vh" class="d-flex align-center">
+                <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold mb-4">My readings</h2>
               </v-col>
             </v-row>
             <v-row justify="center">
@@ -23,10 +19,6 @@
                     <img :src="`/src/assets/images/books/${book.image}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                   <div style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                    <div class="text-center">
-                      <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                      <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
-                    </div>
                     <p class="font-weight-bold mt-2">{{ book.title }}</p>
                     <p>{{ book.author }}</p>
                   </div>

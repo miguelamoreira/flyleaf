@@ -1,173 +1,72 @@
 <template>
-    <v-card>
-      <v-layout>
-        <v-navigation-drawer v-model="drawer" :rail="rail" permanent style="background-color: var(--vt-c-brown-light);" :elevation="4" width="300">
-          <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
-          <template v-slot:append><v-btn variant="text" @click.stop="toggleRail" class="my-6" size="small"><img :src="rail ? 'src/assets/images/icons/open.svg' : 'src/assets/images/icons/back.svg'"></v-btn></template>
-          <div class="ma-4 d-flex flex-row">
-            <img src="@/assets/images/avatar.svg" width="100" height="100">
-            <div class="d-flex flex-column ma-4">
-              <span class="font-weight-bold">Username</span>
-              <span>0 books read</span>
+    <v-row>
+      <v-col cols="12" class="mb-10">
+        <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; right: 15vh" @click="openNotificationsModal">
+          <img :src="notificationIcon">
+        </v-btn>
+        <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; right: 5vh" :to="{name: 'home'}">
+          <img src="@/assets/images/icons/logout.svg">
+        </v-btn>
+      </v-col>
+    </v-row>
+  
+    <!-- Notifications Modal -->
+    <v-dialog v-model="notificationsModal" max-width="600px" persistent="true">
+      <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
+        <div class="d-flex">
+          <v-btn style="background-color: var(--vt-c-beige);" text @click="closeNotificationsModal" :elevation="0" size="small"><img src="@/assets/images/icons/back.svg"></v-btn>
+          <v-card-title style="font-family: Aleo, serif; color: var(--vt-c-brown-dark);" class="text-h5">Notifications</v-card-title>
+        </div>
+        <v-card-text style="color: var(--vt-c-brown-medium);">
+          <div v-for="(notification, index) in notifications" :key="index" class="mb-4">
+            <div class="d-flex align-center mb-4">
+              <img :src="`/src/assets/images/icons/${notification.state === 'new' ? 'newnotif.svg' : 'oldnotif.svg'}`" class="mr-4">
+              <p class="text-h6 font-weight-bold mr-2">{{ notification.title }}</p>
+              <p class="text-caption">{{ notification.date }}</p>
             </div>
+            <p>{{ notification.content }}</p>
           </div>
-          <v-list density="compact" nav>
-            <v-list-item title="Homepage" value="homepage" :to="{name: 'dashboard'}"></v-list-item>
-            <v-list-item title="Catalogue" value="catalogue" :to="{name: 'catalogue'}"></v-list-item>
-            <v-list-item title="Profile" value="profile"></v-list-item>
-            <v-list-item title="My readings" value="readings"></v-list-item>
-            <v-list-item title="My reading lists" value="readinglists"></v-list-item>
-            <v-list-item title="My book requests" value="bookrequests"></v-list-item>
-            <v-list-item title="Settings" value="settings"></v-list-item>
-          </v-list>
-          <hr class="ma-4">
-          <p class="ma-4">Options</p>
-          <div class="d-flex flex-column">
-            <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" @click="openNewReadingModal">
-              <img src="@/assets/images/icons/add.svg" class="mr-4">
-              <span class="font-weight-bold">New reading</span>
-            </v-btn>
-            <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4">
-              <img src="@/assets/images/icons/add.svg" class="mr-4">
-              <span class="font-weight-bold">New reading list</span>
-            </v-btn>
-            <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" @click="openNewRequestModal">
-              <img src="@/assets/images/icons/add.svg" class="mr-4">
-              <span class="font-weight-bold">New book request</span>
-            </v-btn>
-          </div>
-        </v-navigation-drawer>
-      </v-layout>
-    </v-card>
-
-    <!-- New Reading Modal -->
-    <v-dialog v-model="newReadingModal" max-width="600px">
-      <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
-        <v-card-title style="font-family: Aleo, serif;" class="text-h5">New reading</v-card-title>
-        <v-card-text>
-          <v-row class="d-flex flex-row-reverse">
-            <v-col cols="7">
-              <v-select v-model="newReadingTitle" label="Title" :items="books.map(book => book.title)"></v-select>
-              <p v-if="newReadingTitle">{{ getAuthor(newReadingTitle) }}</p>
-              <p v-else>Author</p>
-              <v-textarea v-model="newReadingReview" label="Review" max-length="150"></v-textarea>
-              <v-select v-model="newReadingRating" :items="[1, 2, 3, 4, 5]" label="Rating"></v-select>
-            </v-col>
-            <v-col>
-              <img src="@/assets/images/books/papernames.webp" width="200" height="320" class="rounded-lg">
-            </v-col>
-          </v-row>
         </v-card-text>
-        <v-card-actions class="d-flex justify-center">
-          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveNewReading">Save</v-btn>
-          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeNewReadingModal">Cancel</v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- New Request Modal -->
-    <v-dialog v-model="newRequestModal" max-width="800px">
-      <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
-        <v-card-title style="font-family: Aleo, serif;" class="text-h5">New book request</v-card-title>
-        <v-card-text>
-          <v-row class="d-flex flex-row-reverse">
-            <v-col cols="8">
-              <v-select v-model="newRequestTitle" label="Title" :items="books.map(book => book.title)"></v-select>
-              <v-text-field label="Author" v-model="newRequestAuthor"></v-text-field>
-              <v-textarea v-model="newRequestDescription" label="Description" max-length="150"></v-textarea>
-              <div class="d-flex">
-                <v-text-field label="Year" v-model="newRequestYear" class="mr-2"></v-text-field>
-                <v-select label="Genre" :items="['Non-fiction', 'Fiction', 'Romance']"></v-select>
-              </div>
-            </v-col>
-            <v-col>
-              <label for="file-input" class="file-input-label">
-                <img src="@/assets/images/books/papernames.webp" width="200" height="320" class="rounded-lg">
-              </label>
-              <input id="file-input" type="file" style="display: none;" @change="handleFileInputChange">
-            </v-col>
-          </v-row>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-center">
-          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveNewRequest">Save</v-btn>
-          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeNewRequestModal">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-</template>
-
-<script>
+  </template>
+  
+  <script>
   export default {
-    data () {
+    data() {
       return {
-        drawer: true,
-        rail: false,
-        newReadingModal: false,
-        newReadingTitle: '',
-        newReadingReview: '',
-        newReadingRating: '',
-        newReadingCover: '',
-        books: [
-          {title: 'Paper Names', author: 'Susie Luo', cover: 'papernames.webp'},
-          {title: 'Poor Deer', author: 'Claire Oshetsky', cover: 'poordeer.webp'}
+        notificationsModal: false,
+        notifications: [
+          {state: 'old',title: 'Book request denied', date: '28/03/2024', content: 'Gorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. '},
+          {state: 'new', title: 'Book request accepted', date: '30/03/2024', content: 'Gorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. '},
         ],
-        newRequestModal: false,
-        newRequestTitle: '',
-        newRequestAuthor: '',
-        newRequestDescription: '',
-        newRequestYear: '',
-        newRequestGenre: '',
+        notificationIcon: '',
       }
     },
-    mounted() {
-      window.addEventListener('resize', this.handleResize);
-      this.handleResize(); 
+    created() {
+      // Determine the initial notification icon based on the presence of new notifications
+      this.notificationIcon = this.hasNewNotifications ? '/src/assets/images/icons/notif2.svg' : '/src/assets/images/icons/notif1.svg';
     },
     methods: {
-      handleResize() {
-        if (window.innerWidth < 1000) { 
-          this.rail = true;
-        } else {
-          this.rail = false;
-        }
+      openNotificationsModal() {
+        this.notificationsModal = true;
       },
-      toggleRail() {
-        this.rail = !this.rail;
-      },
-      openNewReadingModal() {
-        this.newReadingModal = true;
-      },
-      closeNewReadingModal() {
-        this.newReadingModal = false;
-      },
-      openNewRequestModal() {
-        this.newRequestModal = true;
-      },
-      closeNewRequestModal() {
-        this.newRequestModal = false;
-      },
-      getAuthor(title) {
-        const book = this.books.find(book => book.title === title);
-        return book ? book.author : '';
+      closeNotificationsModal() {
+        this.notificationsModal = false;
+        this.notifications.forEach(notification => {
+          if (notification.state === 'new') {
+            notification.state = 'old';
+          }
+        });
+        // Update the notification icon based on the presence of new notifications after closing the modal
+        this.notificationIcon = this.hasNewNotifications ? '/src/assets/images/icons/notif2.svg' : '/src/assets/images/icons/notif1.svg';
       },
     },
-    beforeDestroy() {
-      window.removeEventListener('resize', this.handleResize);
-    }
+    computed: {
+      hasNewNotifications() {
+        return this.notifications.some(notification => notification.state === 'new');
+      }
+    },
   }
-</script>
-
-<style>
-.file-input-label {
-  cursor: pointer;
-}
-
-.file-input-label img {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.file-input-label:hover img {
-  opacity: 0.7;
-}
-</style>
+  </script>
+  

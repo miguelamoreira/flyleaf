@@ -2,16 +2,15 @@
     <v-container fluid>
       <v-row>
         <v-col cols="1">
-          <NavBar></NavBar>
+          <Sidebar></Sidebar>
         </v-col>
         <v-col cols="11">
           <v-container fluid>
-            <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; right: 15vh;"><img src="@/assets/images/icons/notif1.svg"></v-btn>
-            <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; right: 5vh;" :to="{name: 'home'}"><img src="@/assets/images/icons/logout.svg"></v-btn>
+            <Navbar></Navbar>
           </v-container>
-          <v-container style="background-color: var(--vt-c-beige);" class="mx-12 pa-12">
+          <v-container style="background-color: var(--vt-c-beige);" class="mx-12">
             <div>
-              <div class="d-flex flex-row ma-12">
+              <div class="d-flex flex-row mx-12 mb-10">
                 <v-btn style="background-color: var(--vt-c-beige);" :elevation="0" :to="{name : 'catalogue'}"><img src="@/assets/images/icons/back.svg"></v-btn>
                 <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold mb-4">Catalogue</h2>
               </div>
@@ -60,11 +59,12 @@
   </template>
   
   <script>
-  import NavBar from '../components/Navbar.vue'
+  import Sidebar from '../components/Sidebar.vue'
+  import Navbar from '../components/Navbar.vue'
   
   export default {
     components: {
-      NavBar,
+      Sidebar, Navbar,
     },
     data() {
       return {

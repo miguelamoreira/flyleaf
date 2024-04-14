@@ -2,15 +2,11 @@
     <v-container fluid>
       <v-row>
         <v-col cols="1">
-          <NavBar></NavBar>
+          <Sidebar></Sidebar>
         </v-col>
         <v-col cols="11" >
           <v-container fluid>
-            <v-row>
-              <v-col cols="12" class="mb-10">
-                <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; right: 5vh" :to="{name: 'home'}"><img src="@/assets/images/icons/logout.svg"></v-btn>
-              </v-col>
-            </v-row>
+            <Navbar></Navbar>
             <v-row>
               <v-col cols="12" style="margin: 0 4vh">
                 <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold mb-4 ">Book requests</h2>
@@ -66,11 +62,12 @@
   </template>
   
   <script>
-  import NavBar from '../components/Navbar.vue'
+  import Sidebar from '@/components/Sidebar.vue';
+  import Navbar from '@/components/Navbar.vue';
   
   export default {
-    components: {
-      NavBar,
+    components: { 
+      Sidebar, Navbar,
     },
     data() {
       return {
