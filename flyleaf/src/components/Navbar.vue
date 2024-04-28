@@ -1,15 +1,20 @@
+
 <template>
-    <v-row>
-      <v-col cols="12" class="mb-10">
-        <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; right: 15vh" @click="openNotificationsModal">
+  <v-layout>
+    <v-container>
+      <v-app-bar :elevation="0" style="background-color: var(--vt-c-beige); width: 50%; position: absolute; left: 50%;" scroll-behavior="hide" scroll-threshold="50">
+        <v-spacer></v-spacer>
+        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="openNotificationsModal">
           <img :src="notificationIcon">
         </v-btn>
-        <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; right: 5vh" :to="{name: 'home'}">
+        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" :to="{name: 'home'}">
           <img src="@/assets/images/icons/logout.svg">
         </v-btn>
-      </v-col>
-    </v-row>
-  
+      </v-app-bar>
+    </v-container>
+  </v-layout>
+
+
     <!-- Notifications Modal -->
     <v-dialog v-model="notificationsModal" max-width="600px" persistent="true">
       <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
@@ -31,7 +36,7 @@
     </v-dialog>
   </template>
   
-  <script>
+<script>
   export default {
     data() {
       return {
@@ -68,5 +73,5 @@
       }
     },
   }
-  </script>
+</script>
   

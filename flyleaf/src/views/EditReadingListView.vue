@@ -4,16 +4,17 @@
       <Sidebar></Sidebar>
       <Navbar></Navbar>
       <v-col cols="10">
-        <v-container fluid>
+        <v-container fluid class="px-10">
           <v-row>
-            <v-col cols="12" class="mx-12 mt-10 mx-lg-14 mx-xl-16"> 
-              <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">New reading list</h2>
+            <v-col cols="12" class="mx-8 mt-10 mx-lg-10 mx-xl-16 d-flex"> 
+              <v-btn style="background-color: var(--vt-c-beige);" :elevation="0" :to="{name: 'list'}"><img src="@/assets/images/icons/back.svg"></v-btn>
+              <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">{{ list.title }}</h2>
             </v-col>
           </v-row>
           <v-row justify="center">
             <v-form class="mt-6 mx-14 mb-4 mx-lg-14 my-lg-6" style="width: 100%;">
               <v-row>
-                <v-col cols="12" sm="6" class="pa-4">
+                <v-col cols="12" sm="6">
                   <v-text-field label="Name" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                   <v-switch v-model="model" :label="`Switch: ${model}`" false-value="Private" true-value="Public" hide-details class="mx-2"></v-switch>
                 </v-col>
@@ -83,7 +84,12 @@
             description: '5 books', 
             image: 'normalpeople.webp',
             books: [
-            
+            { title: 'Poor Deer', author: 'Claire Oshetsky', image: 'poordeer.webp' },
+            { title: 'Normal People', author: 'Sally Rooney', image: 'normalpeople.webp' },
+            { title: 'The Need for Roots', author: 'Simone Weil', image: 'theneedforroots.webp' },
+            { title: 'August Blue', author: 'Deborah Levy', image: 'augustblue.webp' },
+            { title: 'Paper Names', author: 'Susie Luo', image: 'papernames.webp' },
+            { title: 'A Breath of Life', author: 'Clarice Lispector', image: 'abreathoflife.webp' },
           ] 
         }, 
       }

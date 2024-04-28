@@ -1,9 +1,8 @@
 <template>
     <v-card>
       <v-layout>
-        <v-navigation-drawer v-model="drawer" :rail="rail" permanent style="background-color: var(--vt-c-brown-light);" :elevation="4" width="300">
+        <v-navigation-drawer v-model="drawer" :rail="rail" permanent style="background-color: var(--vt-c-brown-light); color: var(--vt-c-brown-dark);" widh="35vh" :elevation="4" >
           <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
-          <template v-slot:append><v-btn variant="text" @click.stop="toggleRail" class="my-6" size="small"><img :src="rail ? 'src/assets/images/icons/open.svg' : 'src/assets/images/icons/close.svg'"></v-btn></template>
           <div class="ma-4 d-flex flex-row">
             <img src="@/assets/images/avatar.svg" width="100" height="100">
             <div class="d-flex flex-column ma-4">
@@ -12,7 +11,7 @@
             </div>
           </div>
           <v-list density="compact" nav>
-            <v-list-item title="Homepage" value="homepage" :to="{name: 'dashboard'}"></v-list-item>
+            <v-list-item title="Homepage" value="homepage" :to="{name: 'dashboard'}" class="page"></v-list-item>
             <v-list-item title="Catalogue" value="catalogue" :to="{name: 'catalogue'}"></v-list-item>
             <v-list-item title="My readings" value="readings" :to="{name: 'myreadings'}"></v-list-item>
             <v-list-item title="My reading lists" value="readinglists" :to="{name: 'myreadinglists'}"></v-list-item>
@@ -20,7 +19,7 @@
             <v-list-item title="Profile" value="profile" :to="{name: 'profile'}"></v-list-item>
             <v-list-item title="Settings" value="settings" :to="{name: 'settings'}"></v-list-item>
           </v-list>
-          <hr class="ma-4">
+          <hr class="ma-4" style="border: 1px solid var(--vt-c-brown-dark)">
           <p class="ma-4">Options</p>
           <div class="d-flex flex-column">
             <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" @click="openNewReadingModal">
@@ -185,4 +184,5 @@
 .file-input-label:hover img {
   opacity: 0.7;
 }
+
 </style>

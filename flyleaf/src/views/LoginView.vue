@@ -2,7 +2,9 @@
   <v-app>
     <v-container fluid>
       <v-app-bar app dense :elevation="0" class="pa-2" style="background-color: var(--vt-c-beige)">
-        <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
+        <router-link :to="{ name: 'home' }">
+            <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
+        </router-link>
         <v-app-bar-title class="ml-auto" grow></v-app-bar-title>
         <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" :to="{ name: 'login' }">Login</v-btn>
         <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" class="mx-4" :to="{ name: 'signup' }">Signup</v-btn>
@@ -11,14 +13,14 @@
     <v-container fluid class="fill-height justify-center" style="background-color: var(--vt-c-beige)">
       <v-row justify="center">
         <v-col cols="12" sm="10" lg="12">
-          <v-card class="pa-6 pt-8 rounded-lg" elevation="4" style="z-index: 1; background-color: var(--vt-c-brown-light); width: 450px;">
+          <v-card class="pa-6 pt-8 rounded-lg" elevation="4" style="z-index: 1; background-color: var(--vt-c-brown-light); width: 450px; color: var(--vt-c-brown-dark);">
             <v-card-title class="text-center card-title" style="font-family: Aleo, serif; font-size: 4vh;">
               SIGN IN
             </v-card-title>
             <v-card-text>
               <v-form class="mt-6">
-                <v-text-field label="Username"></v-text-field>
-                <v-text-field label="Password" type="password" class="mt-4"></v-text-field>
+                <v-text-field label="Username" v-model="username" class="rounded-lg" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+                <v-text-field label="Password" type="password" class="mt-4 mb-8 rounded-lg" v-model="password" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
                   Login
                 </v-btn>
@@ -31,3 +33,19 @@
     </v-container>
   </v-app>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    login() {
+      let user = [this.username, this.password]
+    }
+  }
+}
+</script>
