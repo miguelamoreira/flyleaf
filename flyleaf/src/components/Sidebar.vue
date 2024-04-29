@@ -4,7 +4,10 @@
         <v-navigation-drawer v-model="drawer" :rail="rail" permanent style="background-color: var(--vt-c-brown-light); color: var(--vt-c-brown-dark);" widh="35vh" :elevation="4" >
           <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
           <div class="ma-4 d-flex flex-row">
-            <img src="@/assets/images/avatar.svg" width="100" height="100">
+            <div>
+              <img src="@/assets/images/avatar.svg" width="100" height="100" class="avatar-image">
+              <v-btn style="background-color: var(--vt-c-green-dark); position: absolute; left: 10vh;" :elevation="0" size="small" @click="openAvatarModal"><img src="@/assets/images/icons/edit.svg"></v-btn>
+            </div>
             <div class="d-flex flex-column ma-4">
               <span class="font-weight-bold">Username</span>
               <span>0 books read</span>
@@ -38,6 +41,30 @@
         </v-navigation-drawer>
       </v-layout>
     </v-card>
+
+
+    <!-- Edit Avatar Modal -->
+    <v-dialog v-model="avatarModal" max-width="600px" persistent="true">
+      <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
+        <v-card-title style="font-family: Aleo, serif;" class="text-h5">Avatar</v-card-title>
+        <v-card-text>
+          <v-row class="d-flex justify-space-between pa-4">
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_1.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_f_1.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_2.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_f_2.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_3.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_f_3.svg')"></v-btn>
+          </v-row>
+          <v-row class="d-flex justify-space-between pa-4">
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_1.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_m_1.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_2.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_m_2.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_3.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_m_3.svg')"></v-btn>
+          </v-row>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-center mt-6">
+          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveAvatar">Save</v-btn>
+          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeAvatarModal">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- New Reading Modal -->
     <v-dialog v-model="newReadingModal" max-width="600px" persistent="true">
@@ -117,6 +144,7 @@
         newRequestYear: '',
         newRequestGenre: '',
         newRequestCover: '',
+        avatarModal: false,
       }
     },
     mounted() {
@@ -133,6 +161,21 @@
       },
       toggleRail() {
         this.rail = !this.rail;
+      },
+      openAvatarModal() {
+        this.avatarModal = true;
+      },
+      selectAvatar(avatarSrc) {
+        this.selectedAvatar = avatarSrc;
+      },
+      saveAvatar() {
+        if (this.selectedAvatar) {
+          document.querySelector('.avatar-image').setAttribute('src', this.selectedAvatar);
+        }
+        this.avatarModal = false;
+      },
+      closeAvatarModal() {
+        this.avatarModal = false;
       },
       openNewReadingModal() {
         this.newReadingModal = true;

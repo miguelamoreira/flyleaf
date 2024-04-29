@@ -21,7 +21,7 @@
               <v-form class="mt-6">
                 <v-text-field label="Username" v-model="username" class="rounded-lg" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-text-field label="Password" type="password" class="mt-4 mb-8 rounded-lg" v-model="password" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
+                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" :to="{ name: 'dashboard' }">
                   Login
                 </v-btn>
               </v-form>

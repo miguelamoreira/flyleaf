@@ -23,7 +23,7 @@
                 <v-text-field label="E-mail" v-model="email" type="email" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-text-field label="Password" v-model="password" type="password" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-text-field label="Confirm your password" v-model="confirmPassword" type="password" class="rounded-lg mb-8" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
+                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" :to="{ name: 'login' }">
                   Register
                 </v-btn>
               </v-form>
