@@ -1,11 +1,11 @@
 @font-face {
   font-family: "Arimo";
-  src: url(https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap);
+  src: url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap');
 }
 
 @font-face {
   font-family: "Aleo";
-  src: url(https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&display=swap);
+  src: url('https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&display=swap');
 }
 
 :root {
