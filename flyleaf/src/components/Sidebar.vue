@@ -44,7 +44,7 @@
 
 
     <!-- Edit Avatar Modal -->
-    <v-dialog v-model="avatarModal" max-width="600px" persistent="true">
+    <v-dialog v-model="avatarModal" max-width="600px" persistent>
       <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
         <v-card-title style="font-family: Aleo, serif;" class="text-h5">Avatar</v-card-title>
         <v-card-text>
@@ -67,7 +67,7 @@
     </v-dialog>
 
     <!-- New Reading Modal -->
-    <v-dialog v-model="newReadingModal" max-width="600px" persistent="true">
+    <v-dialog v-model="newReadingModal" max-width="600px" persistent>
       <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
         <v-card-title style="font-family: Aleo, serif;" class="text-h5">New reading</v-card-title>
         <v-card-text>
@@ -92,7 +92,7 @@
     </v-dialog>
 
     <!-- New Request Modal -->
-    <v-dialog v-model="newRequestModal" max-width="800px" persistent="true">
+    <v-dialog v-model="newRequestModal" max-width="800px" persistent>
       <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
         <v-card-title style="font-family: Aleo, serif;" class="text-h5">New book request</v-card-title>
         <v-card-text>

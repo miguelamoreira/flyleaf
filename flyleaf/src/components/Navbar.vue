@@ -7,7 +7,7 @@
         <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="openNotificationsModal">
           <img :src="notificationIcon">
         </v-btn>
-        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" :to="{name: 'home'}">
+        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="logout">
           <img src="@/assets/images/icons/logout.svg">
         </v-btn>
       </v-app-bar>
@@ -16,7 +16,7 @@
 
 
     <!-- Notifications Modal -->
-    <v-dialog v-model="notificationsModal" max-width="600px" persistent="true">
+    <v-dialog v-model="notificationsModal" max-width="600px" persistent>
       <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
         <div class="d-flex">
           <v-btn style="background-color: var(--vt-c-beige);" text @click="closeNotificationsModal" :elevation="0" size="small"><img src="@/assets/images/icons/back.svg"></v-btn>
@@ -66,6 +66,10 @@
         // Update the notification icon based on the presence of new notifications after closing the modal
         this.notificationIcon = this.hasNewNotifications ? '/src/assets/images/icons/notif2.svg' : '/src/assets/images/icons/notif1.svg';
       },
+      logout() {
+        localStorage.clear();
+        this.$router.push({ name: 'home' });
+      }
     },
     computed: {
       hasNewNotifications() {

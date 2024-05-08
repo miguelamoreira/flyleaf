@@ -18,10 +18,10 @@
               SIGN IN
             </v-card-title>
             <v-card-text>
-              <v-form class="mt-6">
-                <v-text-field label="Username" v-model="username" class="rounded-lg" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+              <v-form class="mt-6" @submit.prevent="login">
+                <v-text-field label="E-mail" v-model="email" class="rounded-lg" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-text-field label="Password" type="password" class="mt-4 mb-8 rounded-lg" v-model="password" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" :to="{ name: 'dashboard' }">
+                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
                   Login
                 </v-btn>
               </v-form>
@@ -35,16 +35,31 @@
 </template>
 
 <script>
+import { login } from '../services/auth.service.js';
 export default {
   data() {
     return {
-      username: '',
+      email: '',
       password: ''
     }
   },
   methods: {
-    login() {
-      let user = [this.username, this.password]
+    async login() {
+      try {
+        const { token, userType } = await login(this.email, this.password);
+        localStorage.setItem('token', token);
+        localStorage.setItem('userType', userType);
+
+        if (userType === 1) {
+          this.$router.push({ name: 'dashboard' }); // Redirect for userType === 1
+        } else if (userType === 2) {
+          this.$router.push({ name: 'dashboardAdmin' }); // Redirect for userType === 2
+        } else {
+          console.error('Unknown user type:', userType);
+        }
+      } catch (error) {
+        console.error('Login failed:', error);
+      }
     }
   }
 }

@@ -18,12 +18,12 @@
               SIGN UP
             </v-card-title>
             <v-card-text>
-              <v-form class="mt-6">
+              <v-form class="mt-6" @submit.prevent="signup">
                 <v-text-field label="Username" v-model="username" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-text-field label="E-mail" v-model="email" type="email" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-text-field label="Password" v-model="password" type="password" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
                 <v-text-field label="Confirm your password" v-model="confirmPassword" type="password" class="rounded-lg mb-8" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" :to="{ name: 'login' }">
+                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
                   Register
                 </v-btn>
               </v-form>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { signup } from '../services/auth.service.js';
 export default {
   data() {
     return {
@@ -47,15 +48,18 @@ export default {
     }
   },
   methods: {
-    signup() {
-      if (this.password != this.confirmPassword) {
+    async signup() {
+      if (this.password !== this.confirmPassword) {
         console.log('The passwords must match!');
-      } else {
-        let newUser = {
-          username: this.username,
-          email: this.email,
-          password: this.password
-        }
+        return;
+      }
+
+      try {
+        await signup(this.username, this.email, this.password);
+
+        this.$router.push({ name: 'login' });
+      } catch (error) {
+        console.error('Signup failed:', error.message);
       }
     }
   }
