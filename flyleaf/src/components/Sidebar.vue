@@ -9,22 +9,24 @@
               <v-btn style="background-color: var(--vt-c-green-dark); position: relative; left: 9vh; bottom: 14vh" :elevation="0" size="small" @click="openAvatarModal"><img src="@/assets/images/icons/edit.svg"></v-btn>
             </div>
             <div class="d-flex flex-column ma-4">
-              <span class="font-weight-bold">Username</span>
-              <span>0 books read</span>
+              <span class="font-weight-bold">{{ user.nomeUtilizador }}</span>
+              <span v-if="user.idTipoUtilizador === 1">0 books read</span>
             </div>
           </div>
           <v-list density="compact" nav>
             <v-list-item title="Homepage" value="homepage" :to="{name: 'dashboard'}" class="page"></v-list-item>
-            <v-list-item title="Catalogue" value="catalogue" :to="{name: 'catalogue'}"></v-list-item>
-            <v-list-item title="My readings" value="readings" :to="{name: 'myreadings'}"></v-list-item>
-            <v-list-item title="My reading lists" value="readinglists" :to="{name: 'myreadinglists'}"></v-list-item>
-            <v-list-item title="My book requests" value="bookrequests" :to="{name: 'mybookrequests'}"></v-list-item>
-            <v-list-item title="Profile" value="profile" :to="{name: 'profile'}"></v-list-item>
+            <v-list-item title="Catalogue" value="catalogue" :to="{name: 'catalogue'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item title="My readings" value="readings" :to="{name: 'myreadings'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item title="My reading lists" value="readinglists" :to="{name: 'myreadinglists'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item title="My book requests" value="bookrequests" :to="{name: 'mybookrequests'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item title="Profile" value="profile" :to="{name: 'profile'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item title="Book requests" value="bookrequests" :to="{name: 'bookrequests'}" v-if="user.idTipoUtilizador === 2"></v-list-item>
+            <v-list-item title="Users" value="users" :to="{name: 'users'}" v-if="user.idTipoUtilizador === 2"></v-list-item>
             <v-list-item title="Settings" value="settings" :to="{name: 'settings'}"></v-list-item>
           </v-list>
           <hr class="ma-4" style="border: 1px solid var(--vt-c-brown-dark)">
-          <p class="ma-4">Options</p>
-          <div class="d-flex flex-column">
+          <p class="ma-4" v-if="user.idTipoUtilizador === 1">Options</p>
+          <div class="d-flex flex-column" v-if="user.idTipoUtilizador === 1">
             <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" @click="openNewReadingModal">
               <img src="@/assets/images/icons/add.svg" class="mr-4">
               <span class="font-weight-bold">New reading</span>
@@ -123,6 +125,7 @@
 </template>
 
 <script>
+  import { useAuthStore } from '../stores/auth.js';
   export default {
     data () {
       return {
@@ -145,11 +148,17 @@
         newRequestGenre: '',
         newRequestCover: '',
         avatarModal: false,
+        authStore: useAuthStore(),
       }
     },
     mounted() {
       window.addEventListener('resize', this.handleResize);
       this.handleResize(); 
+    },
+    computed: {
+      user() {
+        return this.authStore.getUser;
+      }
     },
     methods: {
       handleResize() {

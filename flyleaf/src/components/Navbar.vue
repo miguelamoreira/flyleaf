@@ -4,7 +4,7 @@
     <v-container>
       <v-app-bar :elevation="0" style="background-color: var(--vt-c-beige); width: 50%; position: absolute; left: 50%;" scroll-behavior="hide" scroll-threshold="50">
         <v-spacer></v-spacer>
-        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="openNotificationsModal">
+        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="openNotificationsModal" v-if="user.idTipoUtilizador === 1">
           <img :src="notificationIcon">
         </v-btn>
         <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="logout">
@@ -37,6 +37,7 @@
   </template>
   
 <script>
+  import { useAuthStore } from '../stores/auth.js';
   export default {
     data() {
       return {
@@ -46,10 +47,10 @@
           {state: 'new', title: 'Book request accepted', date: '30/03/2024', content: 'Gorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. '},
         ],
         notificationIcon: '',
+        authStore: useAuthStore()
       }
     },
     created() {
-      // Determine the initial notification icon based on the presence of new notifications
       this.notificationIcon = this.hasNewNotifications ? '/src/assets/images/icons/notif2.svg' : '/src/assets/images/icons/notif1.svg';
     },
     methods: {
@@ -63,17 +64,19 @@
             notification.state = 'old';
           }
         });
-        // Update the notification icon based on the presence of new notifications after closing the modal
         this.notificationIcon = this.hasNewNotifications ? '/src/assets/images/icons/notif2.svg' : '/src/assets/images/icons/notif1.svg';
       },
       logout() {
-        localStorage.clear();
+        this.authStore.logout();
         this.$router.push({ name: 'home' });
       }
     },
     computed: {
       hasNewNotifications() {
         return this.notifications.some(notification => notification.state === 'new');
+      },
+      user() {
+        return this.authStore.getUser;
       }
     },
   }

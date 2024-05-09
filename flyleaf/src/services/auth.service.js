@@ -12,7 +12,7 @@ const apiClient = axios.create({
 export const login = async (emailUtilizador, passeUtilizador) => {
     try {
       const response = await apiClient.post('/users/login', { emailUtilizador, passeUtilizador });
-      return { token: response.data.token, userType: response.data.userType };
+      return { token: response.data.token, user: response.data.user };
     } catch (error) {
       throw new Error('Login failed');
     }

@@ -36,27 +36,22 @@
 
 <script>
 import { login } from '../services/auth.service.js';
+import { useAuthStore } from '../stores/auth.js';
+
 export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      authStore: useAuthStore(),
     }
   },
   methods: {
     async login() {
       try {
-        const { token, userType } = await login(this.email, this.password);
-        localStorage.setItem('token', token);
-        localStorage.setItem('userType', userType);
+        await this.authStore.login({ email: this.email, password: this.password });
 
-        if (userType === 1) {
-          this.$router.push({ name: 'dashboard' }); // Redirect for userType === 1
-        } else if (userType === 2) {
-          this.$router.push({ name: 'dashboardAdmin' }); // Redirect for userType === 2
-        } else {
-          console.error('Unknown user type:', userType);
-        }
+        this.$router.push({ name: 'dashboard' });
       } catch (error) {
         console.error('Login failed:', error);
       }

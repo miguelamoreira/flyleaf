@@ -3,7 +3,6 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import DashboardView from '../views/DashboardView.vue'
-import Dashboard2View from '../views/Dashboard2View.vue'
 import CatalogueView from '../views/CatalogueView.vue'
 import BookView from '../views/BookView.vue'
 import ReadingsView from '@/views/ReadingsView.vue'
@@ -39,11 +38,6 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView
-    },
-    {
-      path: '/dashboardAdmin',
-      name: 'dashboardAdmin',
-      component: Dashboard2View
     },
     {
       path: '/catalogue',
