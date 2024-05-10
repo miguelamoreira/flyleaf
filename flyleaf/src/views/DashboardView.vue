@@ -15,7 +15,7 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <router-link :to="{ name: 'catalogue'}" :class="{ 'last-book-link': index === 3 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${book.image}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`/src/assets/images/books/${book.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
@@ -23,8 +23,8 @@
                     <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
                     <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
-                  <p class="font-weight-bold mt-2">{{ book.title }}</p>
-                  <p>{{ book.author }}</p>
+                  <p class="font-weight-bold mt-2">{{ book.nomeLivro }}</p>
+                  <p>{{ book['autores.nomeAutor'] }}</p>
                 </div>
               </div>
             </v-col>
@@ -110,6 +110,7 @@
   import Sidebar from '@/components/Sidebar.vue';
   import Navbar from '@/components/Navbar.vue';
   import { useAuthStore } from '../stores/auth.js';
+  import { useBookStore } from '../stores/books.js';
   
   export default {
     components: {
@@ -117,12 +118,6 @@
     },
     data() {
       return {
-        books: [
-          { title: 'Paper Names', author: 'Susie Luo', image: 'papernames.webp' },
-          { title: 'A Breath of Life', author: 'Clarice Lispector', image: 'abreathoflife.webp' },
-          { title: 'Poor Deer', author: 'Claire Oshetsky', image: 'poordeer.webp' },
-          { title: 'Normal People', author: 'Sally Rooney', image: 'normalpeople.webp' },
-        ],
         readingLists: [
           { id: 1, title: '2024 in books', description: '23 books', image: 'normalpeople.webp' },
           { id: 2, title: 'TBR', description: '2 books', image: 'poordeer.webp' },
@@ -142,12 +137,19 @@
           { id: 4, username: 'D', readigns: 1, image: 'avatar.svg' },
         ],
         authStore: useAuthStore(),
+        bookStore: useBookStore(),
       }
     },
     computed: {
       user() {
         return this.authStore.getUser;
+      },
+      books() {
+        return this.bookStore.getBooks;
       }
+    },
+    mounted() {
+      this.bookStore.fetchBooks();
     },
   }
 </script>
