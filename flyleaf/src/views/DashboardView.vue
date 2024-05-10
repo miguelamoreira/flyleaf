@@ -35,16 +35,16 @@
             </v-col>
           </v-row>
           <v-row justify="center">
-            <v-col cols="12" sm="6" md="4" lg="3" v-for="(list, index) in readingLists.slice(0, 4)" :key="index" class="d-flex flex-wrap">
+            <v-col cols="12" sm="6" md="4" lg="3" v-for="(list, index) in lists.slice(0, 4)" :key="index" class="d-flex flex-wrap">
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;">
                 <router-link :to="{ name: 'myreadinglists'}" :class="{ 'last-book-link': index === 3 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${list.image}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`/src/assets/images/books/${list.livros[0]['capaLivro']}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                  <p class="font-weight-bold mt-2">{{ list.title }}</p>
-                  <p>{{ list.description }}</p>
+                  <p class="font-weight-bold mt-2">{{ list.nomeLista }}</p>
+                  <p>{{ list.descricaoLista }}</p>
                 </div>
               </div>
             </v-col>
@@ -111,6 +111,7 @@
   import Navbar from '@/components/Navbar.vue';
   import { useAuthStore } from '../stores/auth.js';
   import { useBookStore } from '../stores/books.js';
+  import { useListStore } from '../stores/lists.js';
   
   export default {
     components: {
@@ -118,12 +119,6 @@
     },
     data() {
       return {
-        readingLists: [
-          { id: 1, title: '2024 in books', description: '23 books', image: 'normalpeople.webp' },
-          { id: 2, title: 'TBR', description: '2 books', image: 'poordeer.webp' },
-          { id: 3, title: 'Favourites', description: '4 books', image: 'papernames.webp' },
-          { id: 4, title: 'Classics', description: '1 books', image: 'papernames.webp' },
-        ],
         requests: [
           { title: 'The Need for Roots', author: 'Simone Weil', image: 'theneedforroots.webp' },
           { title: 'August Blue', author: 'Deborah Levy', image: 'augustblue.webp' },
@@ -138,6 +133,7 @@
         ],
         authStore: useAuthStore(),
         bookStore: useBookStore(),
+        listStore: useListStore(),
       }
     },
     computed: {
@@ -146,10 +142,14 @@
       },
       books() {
         return this.bookStore.getBooks;
+      },
+      lists() {
+        return this.listStore.getLists;
       }
     },
     mounted() {
       this.bookStore.fetchBooks();
+      this.listStore.fetchLists();
     },
   }
 </script>
