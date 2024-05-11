@@ -15,6 +15,7 @@ import AdminBookRequestsView from '@/views/AdminBookRequestsView.vue'
 import UsersView from '@/views/UsersView.vue'
 import AddReadingListView from '@/views/AddReadingListView.vue'
 import EditReadingListView from '@/views/EditReadingListView.vue'
+import UserReadingListsView from '@/views/UserReadingListsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,12 @@ const router = createRouter({
     {
       path: '/myreadinglists',
       name: 'myreadinglists',
+      component: UserReadingListsView
+    },
+    ,
+    {
+      path: '/readinglists',
+      name: 'readinglists',
       component: ReadingListsView
     },
     {
