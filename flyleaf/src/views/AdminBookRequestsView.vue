@@ -10,18 +10,18 @@
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Book requests</h2>
             </v-col>
           </v-row>
-          <v-row v-for="(book, index) in requests" :key="book.title" justify="center" class="px-10 mt-10">
+          <v-row v-for="(request, index) in requests" :key="request.nomePedidoLivro" justify="center" class="px-10 mt-10">
             <v-col>
               <div class="requests" style="position: relative; width: 130vh;">
                 <div class="d-flex flex-row mx-4 mb-10 flex-nowrap align-items-start">
-                  <img :src="`/src/assets/images/books/${book.image}`" width="200" height="310" class="rounded-lg" :elevation="4">
+                  <img :src="`/src/assets/images/books/${request.capaPedidoLivro}`" width="200" height="310" class="rounded-lg" :elevation="4">
                   <div class="mx-lg-12">
                     <div class="d-flex flex-row align-center">
-                      <p class="text-h6 font-weight-bold">{{ book.title }}</p>
+                      <p class="text-h6 font-weight-bold">{{ request.nomePedidoLivro }}</p>
                     </div>
-                    <p class="font-weight-bold">{{ book.author }}</p>
-                    <p class="text-center mt-5">{{ book.description }}</p>
-                    <p class="text-body-2 text-center mt-5">{{ book.year }} - {{ book.genre }}</p>
+                    <p class="font-weight-bold">{{ request['autores.nomeAutor']  }}</p>
+                    <p class="text-center mt-5">{{ request.descricaoPedidoLivro }}</p>
+                    <p class="text-body-2 text-center mt-5">{{ request.anoPedidoLivro }} - {{ request['categorias.nomeCategoria']  }}</p>
                   </div>
                 </div>
                 <div class="d-flex mt-16" style="position: absolute; bottom: 0; left: 30vh; right: 0;">
@@ -44,6 +44,7 @@
 <script>
   import Sidebar from '@/components/Sidebar.vue';
   import Navbar from '@/components/Navbar.vue';
+  import { useRequestStore } from '../stores/requests.js';
       
   export default {
     components: {
@@ -57,8 +58,17 @@
           { title: 'Greek Lessons', author: 'Han Kang', image: 'greeklessons.webp', genre: 'Fiction', year: 2023, description: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
           { title: 'Brutes', author: 'Dizz Tate', image: 'brutes.webp', genre: 'Fiction', year: 2023, description: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
         ],
+        requestStore: useRequestStore(),
       }
-    }
+    },
+    computed: {
+      requests() {
+        return this.requestStore.getRequests;
+      }
+    },
+    mounted() {
+      this.requestStore.fetchRequests();
+    },
   }
 </script>
       
