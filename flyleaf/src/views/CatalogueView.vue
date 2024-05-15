@@ -27,7 +27,7 @@
                     <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ filteredBooks[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
-                  <p>{{ filteredBooks[(rowIndex * 4) + (i - 1)]['autores.nomeAutor'] }}</p>
+                  <p>{{ filteredBooks[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
                 </div>
               </div>
             </v-col>
@@ -81,7 +81,7 @@ export default {
       const query = this.searchQuery.toLowerCase();
       return this.books.filter(book => {
         const title = book.nomeLivro.toLowerCase();
-        const author = book['autores.nomeAutor'].toLowerCase();
+        const author = book['autors.nomeAutor'].toLowerCase();
         const category = book['categoria.nomeCategoria'].toLowerCase();
         const year = book.anoLivro.toString();
         return title.includes(query) || author.includes(query) || category.includes(query) || year.includes(query);

@@ -19,8 +19,8 @@
                   </v-card>
                 </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < requests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                  <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomePedidoLivro }}</p>
-                  <p>{{ requests[(rowIndex * 4) + (i - 1)]['autores.nomeAutor'] }}</p>
+                  <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
+                  <p>{{ requests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
                 </div>
               </div>
             </v-col>

@@ -24,7 +24,7 @@
                     <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ book.nomeLivro }}</p>
-                  <p>{{ book['autores.nomeAutor'] }}</p>
+                  <p>{{ book['autors.nomeAutor'] }}</p>
                 </div>
               </div>
             </v-col>
@@ -37,9 +37,9 @@
           <v-row justify="center">
             <v-col cols="12" sm="6" md="4" lg="3" v-for="(list, index) in lists.slice(0, 4)" :key="index" class="d-flex flex-wrap">
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;">
-                <router-link :to="{ name: 'myreadinglists'}" :class="{ 'last-book-link': index === 3 }">
+                <router-link :to="{ name: 'readinglists'}" :class="{ 'last-book-link': index === 3 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${list.livros[0]['capaLivro']}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`/src/assets/images/books/${list.Livros[0]['capaLivro']}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
@@ -69,8 +69,8 @@
                       <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
                       <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                     </div>
-                    <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomePedidoLivro }}</p>
-                    <p>{{ requests[(rowIndex * 4) + (i - 1)]['autores.nomeAutor'] }}</p>
+                    <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
+                    <p>{{ requests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
                 </div>
               </div>
             </v-col>

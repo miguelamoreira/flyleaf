@@ -17,11 +17,11 @@
                   <img :src="`/src/assets/images/books/${request.capaPedidoLivro}`" width="200" height="310" class="rounded-lg" :elevation="4">
                   <div class="mx-lg-12">
                     <div class="d-flex flex-row align-center">
-                      <p class="text-h6 font-weight-bold">{{ request.nomePedidoLivro }}</p>
+                      <p class="text-h6 font-weight-bold">{{ request.nomeLivroPedido }}</p>
                     </div>
-                    <p class="font-weight-bold">{{ request['autores.nomeAutor']  }}</p>
-                    <p class="text-center mt-5">{{ request.descricaoPedidoLivro }}</p>
-                    <p class="text-body-2 text-center mt-5">{{ request.anoPedidoLivro }} - {{ request['categorias.nomeCategoria']  }}</p>
+                    <p class="font-weight-bold">{{ request['autors.nomeAutor']  }}</p>
+                    <p class="text-center mt-5">{{ request.descricaoLivroPedido }}</p>
+                    <p class="text-body-2 text-center mt-5">{{ request.anoLivroPedido }} - {{ request['categoria.nomeCategoria']  }}</p>
                   </div>
                 </div>
                 <div class="d-flex mt-16" style="position: absolute; bottom: 0; left: 30vh; right: 0;">
