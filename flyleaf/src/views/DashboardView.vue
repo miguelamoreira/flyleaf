@@ -66,8 +66,8 @@
                 </router-link>
                 <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < requests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                     <div class="text-center d-flex" style="position: inherit; left: 30px; bottom: 60px;" >
-                      <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                      <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="acceptRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="denyRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                     </div>
                     <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
                     <p>{{ requests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
@@ -143,7 +143,7 @@
         return this.listStore.getLists;
       },
       requests() {
-        return this.requestStore.getRequests;
+        return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating");
       }
     },
     mounted() {
@@ -151,6 +151,26 @@
       this.listStore.fetchLists();
       this.requestStore.fetchRequests();
     },
+    methods: {
+      async acceptRequest(requestId) {
+        try {
+          await this.requestStore.updateRequest(requestId, { estadoPedido: 'accepted' });
+
+          await this.requestStore.fetchRequests(); 
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      async denyRequest(requestId) {
+        try {
+          await this.requestStore.updateRequest(requestId, { estadoPedido: 'denied' });
+
+          await this.requestStore.fetchRequests(); 
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    }
   }
 </script>
   

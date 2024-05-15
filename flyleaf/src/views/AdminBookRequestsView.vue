@@ -25,8 +25,8 @@
                   </div>
                 </div>
                 <div class="d-flex mt-16" style="position: absolute; bottom: 0; left: 30vh; right: 0;">
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2"><img src="@/assets/images/icons/arrow.svg"></v-btn>
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/icons/delete.svg"></v-btn>
+                  <v-btn @click="acceptRequest(requests.idPedido)" :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2"><img src="@/assets/images/icons/arrow.svg"></v-btn>
+                  <v-btn @click="denyRequest(requests.idPedido)" :elevation="0" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
               </div>
             </v-col>
@@ -63,12 +63,32 @@
     },
     computed: {
       requests() {
-        return this.requestStore.getRequests;
+        return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating");
       }
     },
     mounted() {
       this.requestStore.fetchRequests();
     },
+    methods: {
+      async acceptRequest(requestId) {
+        try {
+          await this.requestStore.updateRequest(requestId, { estadoPedido: 'accepted' });
+
+          await this.requestStore.fetchRequests(); 
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      async denyRequest(requestId) {
+        try {
+          await this.requestStore.updateRequest(requestId, { estadoPedido: 'denied' });
+
+          await this.requestStore.fetchRequests();
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    }
   }
 </script>
       

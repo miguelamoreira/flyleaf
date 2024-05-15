@@ -26,3 +26,12 @@ export const createRequest = async (requestData) => {
       throw new Error('Failed to create book request');
   }
 };
+
+export const updateRequest = async (requestId, requestData) => {
+  try {
+      const response = await apiClient.patch(`/requests/${requestId}`, requestData);
+      return response.data.data;
+  } catch (error) {
+      throw new Error('Failed to update book request');
+  }
+};

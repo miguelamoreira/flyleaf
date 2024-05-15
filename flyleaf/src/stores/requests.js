@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { fetchRequests, createRequest } from '../services/requests.service.js'; 
+import { fetchRequests, createRequest, updateRequest } from '../services/requests.service.js'; 
 
 export const useRequestStore = defineStore('request', {
     state: () => ({
@@ -21,6 +21,13 @@ export const useRequestStore = defineStore('request', {
             try {
                 const newRequest = await createRequest(requestData);
                 this.requests.push(newRequest);
+            } catch (error) {
+                throw error;
+            }
+        },
+        async updateRequest(requestId, updatedData) {
+            try {
+                await updateRequest(requestId, updatedData);
             } catch (error) {
                 throw error;
             }
