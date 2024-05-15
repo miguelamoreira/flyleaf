@@ -17,3 +17,12 @@ export const fetchRequests = async () => {
       throw new Error('Failed to fetch book requests');
     }
 };
+
+export const createRequest = async (requestData) => {
+  try {
+      const response = await apiClient.post('/requests', requestData);
+      return response.data.data;
+  } catch (error) {
+      throw new Error('Failed to create book request');
+  }
+};

@@ -105,7 +105,7 @@
               <v-textarea v-model="newRequestDescription" label="Description" max-length="150" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-textarea>
               <div class="d-flex">
                 <v-text-field label="Year" v-model="newRequestYear" class="mr-2 rounded-lg mb-4" style="background-color: var(--vt-c-yellow-light);" hide-details></v-text-field>
-                <v-select label="Genre" :items="['Non-fiction', 'Fiction', 'Romance']" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
+                <v-select  v-model="newRequestGenre" label="Genre" :items="genres" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
               </div>
             </v-col>
             <v-col>
@@ -126,6 +126,9 @@
 
 <script>
   import { useAuthStore } from '../stores/auth.js';
+  import { useRequestStore } from '../stores/requests.js';
+  import { useGenreStore } from '../stores/genres.js';
+
   export default {
     data () {
       return {
@@ -149,6 +152,8 @@
         newRequestCover: '',
         avatarModal: false,
         authStore: useAuthStore(),
+        requestStore: useRequestStore(),
+        genreStore: useGenreStore()
       }
     },
     mounted() {
@@ -158,7 +163,11 @@
     computed: {
       user() {
         return this.authStore.getUser;
-      }
+      },
+      genres() {
+        return this.genreStore.getGenres.map(genre => genre.nomeCategoria);
+      },
+      
     },
     methods: {
       handleResize() {
@@ -201,6 +210,39 @@
         this.newRequestGenre = '';
         this.newRequestCover = '';
       },
+      async saveNewRequest() {
+        if (!this.newRequestTitle || !this.newRequestAuthor || !this.newRequestDescription || !this.newRequestYear || !this.newRequestGenre) {
+          console.log("Incomplete data!");
+          return;
+        }
+
+        try {
+          const selectedGenre = this.genreStore.getGenres.find(genre => genre.nomeCategoria === this.newRequestGenre);
+
+          if (!selectedGenre) {
+              console.error("Selected genre not found!");
+              return;
+          }
+
+          const requestData = {
+            idUtilizador: this.user.idUtilizador,
+            bookData: {
+              nomePedidoLivro: this.newRequestTitle,
+              anoPedidoLivro: this.newRequestYear,
+              descricaoPedidoLivro: this.newRequestDescription,
+              capaLivroPedido: this.newRequestCover,
+              estadoPedido: 'validating', 
+            },
+            authorNames: [this.newRequestAuthor], 
+            categoryIds: [selectedGenre.idCategoria], 
+          };
+
+        await this.requestStore.createNewRequest(requestData);
+        this.closeNewRequestModal();
+        } catch(error) {
+          console.log("Error saving new request: ", error);
+        }
+      },
       closeNewRequestModal() {
         this.newRequestModal = false;
       },
@@ -216,6 +258,9 @@
         const file = event.target.files[0];
         this.newRequestCover = URL.createObjectURL(file);
       },
+    },
+    mounted() {
+      this.genreStore.fetchGenres();
     },
     beforeDestroy() {
       window.removeEventListener('resize', this.handleResize);
