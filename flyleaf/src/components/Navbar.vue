@@ -25,11 +25,10 @@
         <v-card-text style="color: var(--vt-c-brown-medium);">
           <div v-for="(notification, index) in notifications" :key="index" class="mb-4">
             <div class="d-flex align-center mb-4">
-              <img :src="`/src/assets/images/icons/${notification.state === 'new' ? 'newnotif.svg' : 'oldnotif.svg'}`" class="mr-4">
-              <p class="text-h6 font-weight-bold mr-2">{{ notification.title }}</p>
-              <p class="text-caption">{{ notification.date }}</p>
+              <p class="text-h6 font-weight-bold mr-2">{{ notification.tituloNotificacao }}</p>
+              <p class="text-caption">{{ notification.dataNotificacao }}</p>
             </div>
-            <p>{{ notification.content }}</p>
+            <p>{{ notification.conteudoNotificacao }}</p>
           </div>
         </v-card-text>
       </v-card>
@@ -38,20 +37,15 @@
   
 <script>
   import { useAuthStore } from '../stores/auth.js';
+  import { useNotificationStore } from '../stores/notifications.js'
   export default {
     data() {
       return {
         notificationsModal: false,
-        notifications: [
-          {state: 'old',title: 'Book request denied', date: '28/03/2024', content: 'Gorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. '},
-          {state: 'new', title: 'Book request accepted', date: '30/03/2024', content: 'Gorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. '},
-        ],
-        notificationIcon: '',
-        authStore: useAuthStore()
+        notificationIcon: '/src/assets/images/icons/notif.svg',
+        authStore: useAuthStore(),
+        notificationStore: useNotificationStore(),
       }
-    },
-    created() {
-      this.notificationIcon = this.hasNewNotifications ? '/src/assets/images/icons/notif2.svg' : '/src/assets/images/icons/notif1.svg';
     },
     methods: {
       openNotificationsModal() {
@@ -59,12 +53,6 @@
       },
       closeNotificationsModal() {
         this.notificationsModal = false;
-        this.notifications.forEach(notification => {
-          if (notification.state === 'new') {
-            notification.state = 'old';
-          }
-        });
-        this.notificationIcon = this.hasNewNotifications ? '/src/assets/images/icons/notif2.svg' : '/src/assets/images/icons/notif1.svg';
       },
       logout() {
         this.authStore.logout();
@@ -72,12 +60,17 @@
       }
     },
     computed: {
-      hasNewNotifications() {
-        return this.notifications.some(notification => notification.state === 'new');
-      },
       user() {
         return this.authStore.getUser;
-      }
+      },
+      notifications() {
+        this.user = this.authStore.getUser;
+        const idUtilizador = this.user ? this.user.idUtilizador : null;
+        return idUtilizador ? this.notificationStore.getNotifications.filter(notification => notification.idUtilizador === idUtilizador) : [];
+      },
+    },
+    mounted() {
+      this.notificationStore.fetchNotifications();
     },
   }
 </script>
