@@ -24,7 +24,7 @@
                 <div v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <div class="d-flex text-center" style="position: absolute; left: 4vh; bottom: 7.5vh;">
                     <v-btn @click="createReading(filteredBooks[(rowIndex * 4) + (i - 1)].idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                    <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="openNewReadingModal(filteredBooks[(rowIndex * 4) + (i - 1)])" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ filteredBooks[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
                   <p>{{ filteredBooks[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
@@ -47,6 +47,7 @@
     </v-row>
   </v-container>
 
+  <!-- Confirming reading logging modal (UX purposes) -->
   <v-dialog v-model="readingModal" max-width="600px" persistent>
     <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
       <v-card-title style="font-family: Aleo, serif;" class="text-h5">New Reading</v-card-title>
@@ -57,6 +58,30 @@
     </v-card>
   </v-dialog>
 
+  <!-- New reading/review modal -->
+  <v-dialog v-model="newReadingModal" max-width="600px" persistent>
+      <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
+        <v-card-title style="font-family: Aleo, serif;" class="text-h5">New reading</v-card-title>
+        <v-card-text>
+          <v-row class="d-flex flex-row-reverse">
+            <v-col cols="7">
+              <p>{{ newReadingTitle }}</p>
+              <p class="mb-4">{{ newReadingAuthor }}</p>
+              <v-textarea v-model="newReadingReview" label="Review" max-length="150" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-textarea>
+              <v-select v-model="newReadingRating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
+            </v-col>
+            <v-col>
+              <img :src="newReadingTitle ? `/src/assets/images/books/${newReadingCover}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-center">
+          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveNewReading">Save</v-btn>
+          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeNewReadingModal">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
 </template>
 
 <script>
@@ -66,6 +91,7 @@ import { useAuthStore } from '../stores/auth.js';
 import { useBookStore } from '../stores/books.js';
 import { useGenreStore } from '../stores/genres.js';
 import { useReadingsStore } from '../stores/readings.js';
+import { useReviewStore } from '../stores/reviews.js';
 
 export default {
   components: {
@@ -78,8 +104,15 @@ export default {
       genreStore: useGenreStore(),
       searchQuery: '',
       readingsStore: useReadingsStore(),
+      reviewsStore: useReviewStore(),
       textModal: '',
-      readingModal: false
+      readingModal: false,
+      newReadingModal: false,
+      newReadingTitle: '',
+      newReadingAuthor: '',
+      newReadingCover: '',
+      newReadingReview: '',
+      newReadingRating: null
     }
   },
   computed: {
@@ -126,6 +159,41 @@ export default {
       this.readingModal = false;
       this.textModal = '';
     },
+    openNewReadingModal(book) {
+      this.newReadingTitle = book.nomeLivro;
+      this.newReadingAuthor = book['autors.nomeAutor'];
+      this.newReadingCover = book.capaLivro['data'];
+      this.newReadingModal = true;
+    },
+    closeNewReadingModal() {
+      this.newReadingModal = false;
+      this.newReadingReview = '';
+      this.newReadingRating = null;
+      this.newReadingTitle = '';
+      this.newReadingAuthor = '';
+      this.newReadingCover = '';
+      },
+    async saveNewReading() {
+      try {
+        const book = this.bookStore.getBooks.find(book => book.nomeLivro === this.newReadingTitle);
+        if (!book) {
+          return;
+        }
+
+        const bookId = book.idLivro;
+        const reviewData = {
+          idLivro: bookId,
+          idUtilizador: this.user.idUtilizador,
+          comentario: this.newReadingReview,
+          classificacao: this.newReadingRating
+        };
+
+        await this.reviewStore.createReviewOrReading(bookId, reviewData);
+        this.closeNewReadingModal();
+      } catch (error) {
+        console.error('Error saving new reading:', error);
+      }
+    }
   },
   mounted() {
     this.genreStore.fetchGenres();

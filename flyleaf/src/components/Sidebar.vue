@@ -139,7 +139,7 @@
         newReadingModal: false,
         newReadingTitle: '',
         newReadingReview: '',
-        newReadingRating: '',
+        newReadingRating: null,
         newReadingCover: '',
         newRequestModal: false,
         newRequestTitle: '',
@@ -202,13 +202,17 @@
       },
       async saveNewReading() {
         if (!this.newReadingTitle) {
-          console.error('Incomplete data!');
           return;
         }
 
         try {
-          const bookId = this.bookStore.getBooks.find(book => book.nomeLivro === this.newReadingTitle).idLivro;
-          
+          const book = this.bookStore.getBooks.find(book => book.nomeLivro === this.newReadingTitle);
+          if (!book) {
+            return;
+          }
+
+          const bookId = book.idLivro;
+
           const reviewData = {
             idLivro: bookId,
             idUtilizador: this.user.idUtilizador,

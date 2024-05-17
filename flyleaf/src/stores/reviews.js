@@ -9,9 +9,9 @@ export const useReviewStore = defineStore('review', {
         getReviews: (state) => state.reviews,
     },
     actions: {
-        async fetchReviews() {
+        async fetchReviews(bookId) {
             try {
-                const reviews = await fetchReviews();
+                const reviews = await fetchReviews(bookId);
                 this.reviews = reviews;
             } catch (error) {
                 throw error;
@@ -20,10 +20,10 @@ export const useReviewStore = defineStore('review', {
         async createReviewOrReading(bookId, reviewData) {
             try {
                 const newReview = await createReviewOrReading(bookId, reviewData);
-                this.requests.push(newReview);
+                this.reviews.push(newReview); 
             } catch (error) {
                 throw error;
             }
         },
     }
-})
+});
