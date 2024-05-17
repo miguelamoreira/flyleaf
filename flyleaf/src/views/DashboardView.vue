@@ -15,12 +15,12 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <router-link :to="{ name: 'catalogue'}" :class="{ 'last-book-link': index === 3 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${book.capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`/src/assets/images/books/${book.capaLivro['data']}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <div class="text-center">
-                    <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="createReading(book.idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
                     <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ book.nomeLivro }}</p>
@@ -105,6 +105,17 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-dialog v-model="readingModal" max-width="600px" persistent>
+    <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
+      <v-card-title style="font-family: Aleo, serif;" class="text-h5">New Reading</v-card-title>
+      <v-card-text class="text-center">{{ textModal }}</v-card-text>
+      <v-card-actions class="d-flex justify-center mt-6">
+        <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeReadingModal">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
 </template>
 <script>
   import Sidebar from '@/components/Sidebar.vue';
@@ -113,6 +124,7 @@
   import { useBookStore } from '../stores/books.js';
   import { useListStore } from '../stores/lists.js';
   import { useRequestStore } from '../stores/requests.js';
+  import { useReadingsStore } from '../stores/readings.js';
   
   export default {
     components: {
@@ -130,6 +142,9 @@
         bookStore: useBookStore(),
         listStore: useListStore(),
         requestStore: useRequestStore(),
+        readingsStore: useReadingsStore(),
+        textModal: '',
+        readingModal: false
       }
     },
     computed: {
@@ -169,6 +184,21 @@
         } catch (error) {
           console.error(error);
         }
+      },
+      async createReading(idLivro) {
+        const idUtilizador = this.authStore.getUser ? this.authStore.getUser.idUtilizador : null;
+
+        try {
+          await this.readingsStore.createReading(idUtilizador, idLivro);
+          this.readingModal = true;
+          this.textModal = "Your reading has been logged sucessfully."
+        } catch (error) {
+          console.error('Error creating reading:', error);
+        }
+      },
+      closeReadingModal() {
+        this.readingModal = false;
+        this.textModal = '';
       },
     }
   }

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { fetchReadings } from '../services/readings.service.js'; 
+import { fetchReadings, createReading } from '../services/readings.service.js'; 
 
 export const useReadingsStore = defineStore('reading', {
     state: () => ({
@@ -13,6 +13,14 @@ export const useReadingsStore = defineStore('reading', {
             try {
                 const readings = await fetchReadings();
                 this.readings = readings;
+            } catch (error) {
+                throw error;
+            }
+        },
+        async createReading(idUtilizador, idLivro) {
+            try {
+                const newReading = await createReading(idUtilizador, idLivro);
+                this.readings.push(newReading);
             } catch (error) {
                 throw error;
             }

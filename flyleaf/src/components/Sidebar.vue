@@ -75,14 +75,14 @@
         <v-card-text>
           <v-row class="d-flex flex-row-reverse">
             <v-col cols="7">
-              <v-select v-model="newReadingTitle" label="Title" :items="books.map(book => book.title)" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-2"></v-select>
-              <p v-if="newReadingTitle" class="mb-4">{{ getAuthor(newReadingTitle) }}</p>
+              <v-select v-model="newReadingTitle" label="Title" :items="books.map(book => book.nomeLivro)" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-2"></v-select>
+              <p v-if="newReadingTitle" class="mb-4">{{ getAuthor() }}</p>
               <p v-else class="mb-4">Author</p>
               <v-textarea v-model="newReadingReview" label="Review" max-length="150" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-textarea>
               <v-select v-model="newReadingRating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
             </v-col>
             <v-col>
-              <img :src="newReadingTitle ? `/src/assets/images/books/${getBookImage(newReadingTitle)}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
+              <img :src="newReadingTitle ? `/src/assets/images/books/${getBookImage()}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
             </v-col>
           </v-row>
         </v-card-text>
@@ -128,6 +128,8 @@
   import { useAuthStore } from '../stores/auth.js';
   import { useRequestStore } from '../stores/requests.js';
   import { useGenreStore } from '../stores/genres.js';
+  import { useReviewStore } from '../stores/reviews.js'
+  import { useBookStore } from '../stores/books.js';
 
   export default {
     data () {
@@ -139,10 +141,6 @@
         newReadingReview: '',
         newReadingRating: '',
         newReadingCover: '',
-        books: [
-          {title: 'Paper Names', author: 'Susie Luo', image: 'papernames.webp'},
-          {title: 'Poor Deer', author: 'Claire Oshetsky', image: 'poordeer.webp'}
-        ],
         newRequestModal: false,
         newRequestTitle: '',
         newRequestAuthor: '',
@@ -153,7 +151,9 @@
         avatarModal: false,
         authStore: useAuthStore(),
         requestStore: useRequestStore(),
-        genreStore: useGenreStore()
+        genreStore: useGenreStore(),
+        reviewStore: useReviewStore(),
+        bookStore: useBookStore()
       }
     },
     mounted() {
@@ -167,7 +167,9 @@
       genres() {
         return this.genreStore.getGenres.map(genre => genre.nomeCategoria);
       },
-      
+      books() {
+        return this.bookStore.getBooks;
+      }
     },
     methods: {
       handleResize() {
@@ -198,7 +200,33 @@
       openNewReadingModal() {
         this.newReadingModal = true;
       },
+      async saveNewReading() {
+        if (!this.newReadingTitle) {
+          console.error('Incomplete data!');
+          return;
+        }
+
+        try {
+          const bookId = this.bookStore.getBooks.find(book => book.nomeLivro === this.newReadingTitle).idLivro;
+          
+          const reviewData = {
+            idLivro: bookId,
+            idUtilizador: this.user.idUtilizador,
+            comentario: this.newReadingReview,
+            classificacao: this.newReadingRating
+          };
+
+          await this.reviewStore.createReviewOrReading(bookId, reviewData);
+          this.closeNewReadingModal();
+        } catch (error) {
+          console.error('Error saving new reading: ', error);
+        }
+      },
       closeNewReadingModal() {
+        this.newReadingTitle = '';
+        this.newReadingReview = '';
+        this.newReadingRating = '';
+        this.newReadingCover = '';
         this.newReadingModal = false;
       },
       openNewRequestModal() {
@@ -246,13 +274,13 @@
       closeNewRequestModal() {
         this.newRequestModal = false;
       },
-      getAuthor(title) {
-        const book = this.books.find(book => book.title === title);
-        return book ? book.author : '';
+      getAuthor() {
+        const selectedBook = this.books.find(book => book.nomeLivro === this.newReadingTitle);
+        return selectedBook ? selectedBook["autors.nomeAutor"] : '';
       },
       getBookImage(title) {
-        const book = this.books.find(book => book.title === title);
-        return book ? book.image : '';
+        const selectedBook = this.books.find(book => book.nomeLivro === this.newReadingTitle);
+        return selectedBook ? `/src/assets/images/books/${selectedBook.capaLivro['data']}` : '/src/assets/images/books/none.svg';
       },
       handleFileInputChange(event) {
         const file = event.target.files[0];

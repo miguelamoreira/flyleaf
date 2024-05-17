@@ -23,7 +23,7 @@
                 </router-link>
                 <div v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <div class="d-flex text-center" style="position: absolute; left: 4vh; bottom: 7.5vh;">
-                    <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="createReading(filteredBooks[(rowIndex * 4) + (i - 1)].idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
                     <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ filteredBooks[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
@@ -46,6 +46,17 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-dialog v-model="readingModal" max-width="600px" persistent>
+    <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
+      <v-card-title style="font-family: Aleo, serif;" class="text-h5">New Reading</v-card-title>
+      <v-card-text class="text-center">{{ textModal }}</v-card-text>
+      <v-card-actions class="d-flex justify-center mt-6">
+        <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeReadingModal">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
 </template>
 
 <script>
@@ -54,6 +65,7 @@ import Navbar from '@/components/Navbar.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { useBookStore } from '../stores/books.js';
 import { useGenreStore } from '../stores/genres.js';
+import { useReadingsStore } from '../stores/readings.js';
 
 export default {
   components: {
@@ -65,6 +77,9 @@ export default {
       bookStore: useBookStore(),
       genreStore: useGenreStore(),
       searchQuery: '',
+      readingsStore: useReadingsStore(),
+      textModal: '',
+      readingModal: false
     }
   },
   computed: {
@@ -95,7 +110,22 @@ export default {
       } catch (error) {
         console.error('Error fetching books:', error);
       }
-    }
+    },
+    async createReading(idLivro) {
+      const idUtilizador = this.authStore.getUser ? this.authStore.getUser.idUtilizador : null;
+
+      try {
+        await this.readingsStore.createReading(idUtilizador, idLivro);
+        this.readingModal = true;
+        this.textModal = "Your reading has been logged sucessfully."
+      } catch (error) {
+        console.error('Error creating reading:', error);
+      }
+    },
+    closeReadingModal() {
+      this.readingModal = false;
+      this.textModal = '';
+    },
   },
   mounted() {
     this.genreStore.fetchGenres();
