@@ -15,7 +15,7 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <router-link :to="{ name: 'catalogue'}" :class="{ 'last-book-link': index === 3 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${book.capaLivro['data']}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${book.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
@@ -39,7 +39,7 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;">
                 <router-link :to="{ name: 'readinglists'}" :class="{ 'last-book-link': index === 3 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${list.Livros[0]['capaLivro']}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpeg;base64,${list.Livros[0].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
@@ -61,7 +61,7 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <router-link :to="{ name: 'bookrequests'}" :class="{ 'last-book-link': index === 3 }" v-if="((rowIndex * 4) + (i - 1)) < requests.length">
                     <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                      <img :src="`/src/assets/images/books/${requests[(rowIndex * 4) + (i - 1)].image}`" style="width: 25vh; height: 40vh;">
+                      <img :src="`data:image/jpg;base64,${requests[(rowIndex * 4) + (i - 1)].capaLivroPedido}`" style="width: 25vh; height: 40vh;">
                     </v-card>
                 </router-link>
                 <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < requests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
@@ -220,7 +220,7 @@
       },
       async createReading(idLivro) {
         const idUtilizador = this.authStore.getUser ? this.authStore.getUser.idUtilizador : null;
-
+    
         try {
           await this.readingsStore.createReading(idUtilizador, idLivro);
           this.readingModal = true;

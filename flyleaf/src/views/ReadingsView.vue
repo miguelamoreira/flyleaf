@@ -15,10 +15,14 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <div v-if="((rowIndex * 4) + (i - 1)) < readings.length">
                   <v-card :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${readings[(rowIndex * 4) + (i - 1)].Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${readings[(rowIndex * 4) + (i - 1)].Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < readings.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                  <div class="d-flex text-center" style="position: absolute; left: 4vh; bottom: 7.5vh;">
+                    <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/settings.svg" width="30" height="30"></v-btn>
+                    <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                  </div>
                   <p class="font-weight-bold mt-2">{{ readings[(rowIndex * 4) + (i - 1)].Livro.nomeLivro }}</p>
                   <p>{{ readings[(rowIndex * 4) + (i - 1)].dataLeitura }}</p>
                 </div>

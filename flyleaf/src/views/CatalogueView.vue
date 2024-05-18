@@ -18,7 +18,7 @@
               <div class="book mx-12 mb-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <router-link v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length" :to="{ name: 'book'}">
                   <v-card :elevation="4" class="rounded-lg" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${filteredBooks[(rowIndex * 4) + (i - 1)].image}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${filteredBooks[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">

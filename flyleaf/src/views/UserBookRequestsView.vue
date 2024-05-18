@@ -15,12 +15,19 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <div v-if="((rowIndex * 4) + (i - 1)) < requests.length">
                   <v-card :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${requests[(rowIndex * 4) + (i - 1)].image}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${requests[(rowIndex * 4) + (i - 1)].capaLivroPedido}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </div>
-                <div v-if="((rowIndex * 4) + (i - 1)) < requests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                  <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
-                  <p>{{ requests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
+                <div v-if="((rowIndex * 4) + (i - 1)) < requests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;" class="d-flex align-center justify-content-between">
+                  <div>
+                    <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
+                    <p>{{ requests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
+                  </div>
+                  <div style="background-color: var(--vt-c-beige); position: absolute; left: 20vh; top: 2vh" >
+                    <img v-if="requests[(rowIndex * 4) + (i - 1)].estadoPedido == 'accepted'" src="@/assets/images/icons/arrow.svg">
+                    <img v-if="requests[(rowIndex * 4) + (i - 1)].estadoPedido == 'validating'" src="@/assets/images/icons/pending.svg">
+                    <img v-if="requests[(rowIndex * 4) + (i - 1)].estadoPedido == 'denied'" src="@/assets/images/icons/denied.svg">
+                  </div>
                 </div>
               </div>
             </v-col>
@@ -59,12 +66,9 @@
         },
         requests() {
           this.user = this.authStore.getUser;
-          console.log('User:', this.user);
           const idUtilizador = this.user ? this.user.idUtilizador : null;
-          console.log('idUtilizador:', idUtilizador);
-          console.log("Pedidos:" ,this.requestStore.getRequests);
           return idUtilizador ? this.requestStore.getRequests.filter(request => request.idUtilizador === idUtilizador) : [];
-        }
+        },
       }
     }
 </script>
