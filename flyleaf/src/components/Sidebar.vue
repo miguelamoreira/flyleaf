@@ -2,10 +2,10 @@
     <v-card>
       <v-layout>
         <v-navigation-drawer v-model="drawer" :rail="rail" permanent style="background-color: var(--vt-c-brown-light); color: var(--vt-c-brown-dark);" widh="35vh" :elevation="4" >
-          <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
+          <img src="../assets/images/logo.svg" width="150" height="100" contain class="mx-4">
           <div class="ma-4 d-flex flex-row">
             <div>
-              <img src="@/assets/images/avatar.svg" width="100" height="100" class="avatar-image">
+              <img :src="`../src/assets/images/avatars/${user.avatarUtilizador}`" width="100" height="100" class="avatar-image">
               <v-btn style="background-color: var(--vt-c-green-dark); position: relative; left: 9vh; bottom: 14vh" :elevation="0" size="small" @click="openAvatarModal"><img src="@/assets/images/icons/edit.svg"></v-btn>
             </div>
             <div class="d-flex flex-column ma-4">
