@@ -37,16 +37,16 @@
             </v-col>
           </v-row>
           <v-row justify="center">
-            <v-col cols="12" sm="6" md="4" lg="3" v-for="(book, index) in books.slice(0, 4)" :key="book.title" class="d-flex flex-wrap">
+            <v-col cols="12" sm="6" md="4" lg="3" v-for="(reading, index) in readings" :key="reading.Livro.capaLivro" class="d-flex flex-wrap">
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
                 <router-link :to="{ name: 'catalogue'}">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${book.image}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${reading.Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                  <p class="font-weight-bold mt-2">{{ book.title }}</p>
-                  <p>{{ book.author }}</p>
+                  <p class="font-weight-bold mt-2">{{ reading.Livro.nomeLivro }}</p>
+                  <p>{{ reading.Livro.anoLivro }}</p>
                 </div>
               </div>
             </v-col>
@@ -64,6 +64,8 @@
 <script>
   import Sidebar from '@/components/Sidebar.vue';
   import Navbar from '@/components/Navbar.vue';
+  import { useAuthStore } from '../stores/auth.js';
+  import { useReadingsStore } from '../stores/readings.js';
   
   export default {
     components: {
@@ -76,8 +78,25 @@
           { title: 'A Breath of Life', author: 'Clarice Lispector', image: 'abreathoflife.webp' },
           { title: 'Poor Deer', author: 'Claire Oshetsky', image: 'poordeer.webp' },
           { title: 'Normal People', author: 'Sally Rooney', image: 'normalpeople.webp' },
-        ]
+        ],
+        authStore: useAuthStore(),
+        readingsStore: useReadingsStore()
       }
+    },
+    computed: {
+      readings() {
+        this.user = this.authStore.getUser;
+        const idUtilizador = this.user ? this.user.idUtilizador : null;
+        const userReadings = idUtilizador ? this.readingsStore.getReadings.filter(reading => reading.idUtilizador === idUtilizador) : [];
+        console.log('user readings', userReadings);
+        
+        const reversedReadings = userReadings.slice().reverse();
+
+        return reversedReadings.length <= 4 ? reversedReadings : reversedReadings.slice(0, 4);
+      }
+    },
+    mounted() {
+      this.readingsStore.fetchReadings();
     }
   }
   </script>

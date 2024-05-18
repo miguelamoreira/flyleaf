@@ -12,7 +12,7 @@ const apiClient = axios.create({
 export const fetchReviews = async (bookId) => {
     try {
         const response = await apiClient.get(`/books/${bookId}/reviews`);
-        return response.data.reviews; 
+        return response.data.data; 
     } catch (error) {
         throw new Error('Failed to fetch book reviews');
     }
