@@ -46,7 +46,7 @@ const router = createRouter({
       component: CatalogueView
     },
     {
-      path: '/catalogue/book',
+      path: '/catalogue/:bookId',
       name: 'book',
       component: BookView
     },

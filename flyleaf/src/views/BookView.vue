@@ -14,20 +14,22 @@
           <v-row justify="center">
             <v-col cols="12">
               <div class="d-flex flex-row mx-4 mb-4 flex-wrap flex-sm-nowrap justify-center px-12 mt-8">
-                <v-card :elevation="4" style="width: 90vh; height: 60vh;" class="rounded-lg"> 
-                  <img :src="`/src/assets/images/books/${book.image}`" style="width: 38vh; height: 60vh;">
-                </v-card>
+                <div>
+                  <v-card :elevation="4" style="width: 35vh; height: 55vh;" class="rounded-lg"> 
+                    <img :src="`data:image/jpg;base64,${book.capaLivro}`" style="width: 35vh; height: 55vh;">
+                  </v-card>
+                </div>
                 <div class="ml-lg-8">
                   <div class="d-flex flex-row">
-                    <p class="text-h6 font-weight-bold">{{ book.title }}</p>
-                    <p class="text-body-2 mx-4 mt-2">{{ book.year }}</p>
+                    <p class="text-h6 font-weight-bold">{{ currentBook.nomeLivro }}</p>
+                    <p class="text-body-2 mx-4 mt-2">{{ currentBook.anoLivro }}</p>
                   </div>
-                  <p class="font-weight-bold">{{ book.author }}</p>
-                  <p class="my-12 font-weight-bold">{{ book.categories.join(', ') }}</p>
-                  <p class="my-12 font-weight-bold">{{ book.rating }}/5</p>
+                  <p class="font-weight-bold">{{ currentBook['autors.nomeAutor'] }}</p>
+                  <p class="my-12 font-weight-bold">{{ currentBook['categoria.nomeCategoria'] }}</p>
+                  <p class="my-12 font-weight-bold">{{ currentBook.rating ? currentBook.rating.join : '?' }}/5</p>
                   <p class="mt-12 mb-6 font-weight-bold">Description</p>
                   <p class="text-center">
-                    {{ book.description }}
+                    {{ currentBook.descricaoLivro }}
                   </p>
                 </div>
               </div>
@@ -35,21 +37,22 @@
           </v-row>
           <v-row>
             <v-col cols="12" class="mx-12 mt-5 mx-lg-14 mx-xl-16">
-              <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">Reviews</h2>
+              <h2 v-if="reviews.length > 0" style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">Reviews</h2>
+              <h2 v-else style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">No reviews yet</h2>
             </v-col>
           </v-row>
           <v-row v-for="(row, rowIndex) in Math.ceil((reviews.length) / 2)" :key="rowIndex" justify="center" class="px-10">
             <v-col v-for="i in 2" :key="i" cols="12" sm="6" md="6">
               <v-card v-if="((rowIndex * 2) + (i - 1)) < reviews.length" class="rounded-lg pa-4 ma-4" style="background-color: var(--vt-c-yellow-light);" :elevation="2">
                 <div class="d-flex">
-                  <img :src="`/src/assets/images/${reviews[(rowIndex * 2) + (i - 1)].avatar}`" width="80" class="mx-4">
+                  <img :src="`/src/assets/images/avatars/${reviews[(rowIndex * 2) + (i - 1)].avatarUtilizador}`" width="80" class="mx-4">
                   <div class="d-flex flex-column text-center">
-                    <v-card-title class="text-h6 font-weight-bold">{{ reviews[(rowIndex * 2) + (i - 1)].username }}</v-card-title>
-                    <p>{{ reviews[(rowIndex * 2) + (i - 1)].readings }} books</p>
+                    <v-card-title class="text-h6 font-weight-bold">{{ reviews[(rowIndex * 2) + (i - 1)].nomeUtilizador }}</v-card-title>
+                    <p>{{ userBookCount(reviews[(rowIndex * 2) + (i - 1)].idUtilizador) }} books</p>
                   </div>
                 </div>
                 <v-card-text class="text-center pt-12">
-                  {{ reviews[(rowIndex * 2) + (i - 1)].review }}
+                  {{ reviews[(rowIndex * 2) + (i - 1)].comentario }}
                 </v-card-text>
               </v-card>
             </v-col>
@@ -69,6 +72,9 @@
   <script>
     import Sidebar from '@/components/Sidebar.vue';
     import Navbar from '@/components/Navbar.vue';
+    import { useBookStore } from '../stores/books.js';
+    import { useReviewStore } from '../stores/reviews.js';
+    import { useReadingsStore } from '../stores/readings';
     
     export default {
       components: {
@@ -76,21 +82,35 @@
       },
       data() {
         return {
-          book: { 
-            title: 'Paper Names', 
-            year: 2023,
-            categories: ['Fiction'],
-            rating: 3.7,
-            author: 'Susie Luo', 
-            image: 'papernames.webp',
-            description: 'An unexpected act of violence brings together a Chinese-American family and a wealthy white lawyer in this propulsive and sweeping story of family, identity and the American experience—for fans of Jean Kwok, Mary Beth Keane and Naima Coster.' 
-          },
-          reviews: [
-            { username: 'Joca', avatar: 'avatar.svg', readings: 5, review: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-            { username: 'A', avatar: 'avatar.svg', readings: 2, review: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-            { username: 'A', avatar: 'avatar.svg', readings: 2, review: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-            { username: 'A', avatar: 'avatar.svg', readings: 2, review: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-          ]
+          bookId: null,
+          book: null,
+          bookStore: useBookStore(),
+          reviewStore: useReviewStore(),
+          readingsStore: useReadingsStore()
+        }
+      },
+      computed: {
+        books() {
+          return this.bookStore.getBooks;
+        },
+        currentBook() {
+          this.bookId = this.$route.params.bookId;
+          this.book = this.books.find(book => book.idLivro == this.bookId)
+          return this.book;
+        },
+        reviews() {
+          return this.reviewStore.getReviews;
+        },
+      },
+      mounted() {
+        this.bookStore.fetchBooks();
+        this.currentBook;
+        this.reviewStore.fetchReviews(this.bookId)
+        this.readingsStore.fetchReadings();
+      },
+      methods: {
+        userBookCount(idUtilizador) {
+          return this.readingsStore.getReadings.filter(reading => reading.idUtilizador === idUtilizador).length;
         }
       }
     }

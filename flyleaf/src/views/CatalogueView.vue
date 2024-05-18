@@ -16,7 +16,7 @@
           <v-row v-for="(row, rowIndex) in Math.ceil((filteredBooks.length + 1) / 4)" :key="rowIndex" justify="center">
             <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 mb-6 mx-lg-14 my-lg-8" style="position: relative;"> 
-                <router-link v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length" :to="{ name: 'book'}">
+                <router-link v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length" :to="{ name: 'book', params: { bookId: filteredBooks[(rowIndex * 4) + (i - 1)].idLivro }}">
                   <v-card :elevation="4" class="rounded-lg" style="width: 25vh; height: 40vh;">
                     <img :src="`data:image/jpg;base64,${filteredBooks[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>

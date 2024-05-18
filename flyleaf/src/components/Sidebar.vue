@@ -2,10 +2,10 @@
     <v-card>
       <v-layout>
         <v-navigation-drawer v-model="drawer" :rail="rail" permanent style="background-color: var(--vt-c-brown-light); color: var(--vt-c-brown-dark);" widh="35vh" :elevation="4" >
-          <img src="../assets/images/logo.svg" width="150" height="100" contain class="mx-4">
+          <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
           <div class="ma-4 d-flex flex-row">
             <div>
-              <img :src="`../src/assets/images/avatars/${user.avatarUtilizador}`" width="100" height="100" class="avatar-image">
+              <img src="@/assets/images/avatar.svg" width="100" height="100" class="avatar-image">
               <v-btn style="background-color: var(--vt-c-green-dark); position: relative; left: 9vh; bottom: 14vh" :elevation="0" size="small" @click="openAvatarModal"><img src="@/assets/images/icons/edit.svg"></v-btn>
             </div>
             <div class="d-flex flex-column ma-4">
@@ -82,7 +82,7 @@
               <v-select v-model="newReadingRating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
             </v-col>
             <v-col>
-              <img :src="`${getBookImage()}`" width="200" height="320" class="rounded-lg">
+              <img :src="newReadingTitle ? `/src/assets/images/books/${getBookImage()}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
             </v-col>
           </v-row>
         </v-card-text>
@@ -282,9 +282,9 @@
         const selectedBook = this.books.find(book => book.nomeLivro === this.newReadingTitle);
         return selectedBook ? selectedBook["autors.nomeAutor"] : '';
       },
-      getBookImage() {
+      getBookImage(title) {
         const selectedBook = this.books.find(book => book.nomeLivro === this.newReadingTitle);
-        return selectedBook ? `data:image/jpg;base64,${selectedBook.capaLivro}` : '/src/assets/images/books/none.svg';
+        return selectedBook ? `/src/assets/images/books/${selectedBook.capaLivro['data']}` : '/src/assets/images/books/none.svg';
       },
       handleFileInputChange(event) {
         const file = event.target.files[0];
