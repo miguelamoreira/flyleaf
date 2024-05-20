@@ -20,8 +20,8 @@
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <div class="text-center">
-                    <v-btn @click="createReading(book.idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                    <v-btn @click="openNewReadingModal(book)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="createReading(book.idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="openNewReadingModal(book)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ book.nomeLivro }}</p>
                   <p>{{ book['autors.nomeAutor'] }}</p>
@@ -66,8 +66,8 @@
                 </router-link>
                 <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < requests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                     <div class="text-center d-flex" style="position: inherit; left: 30px; bottom: 60px;" >
-                      <v-btn @click="acceptRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                      <v-btn @click="denyRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="acceptRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="denyRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                     </div>
                     <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
                     <p>{{ requests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
@@ -91,8 +91,8 @@
                   </router-link>
                   <div v-if="index !== 3" style="position: absolute; bottom: -60px; left: 0; right: 0;">
                     <div class="text-center">
-                      <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0"><img src="@/assets/images/icons/block.svg" width="30" height="30"></v-btn>
-                      <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                      <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/block.svg" width="30" height="30"></v-btn>
+                      <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                     </div>
                     <p class="font-weight-bold mt-2">{{ user.username }}</p>
                     <p>{{ user.readings }} books</p>
@@ -130,7 +130,7 @@
               <v-select v-model="newReadingRating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
             </v-col>
             <v-col>
-              <img :src="newReadingTitle ? `/src/assets/images/books/${newReadingCover}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
+              <img :src="newReadingTitle ? `data:image/jpg;base64,${newReadingCover}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
             </v-col>
           </v-row>
         </v-card-text>
@@ -236,7 +236,7 @@
       openNewReadingModal(book) {
         this.newReadingTitle = book.nomeLivro;
         this.newReadingAuthor = book['autors.nomeAutor'];
-        this.newReadingCover = book.capaLivro['data'];
+        this.newReadingCover = book.capaLivro;
         this.newReadingModal = true;
       },
       closeNewReadingModal() {
