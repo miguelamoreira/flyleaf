@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '@/stores/auth.js';
 
 const baseURL = 'http://127.0.0.1:3000';
 
@@ -26,5 +27,25 @@ export const signup = async (nomeUtilizador, emailUtilizador, passeUtilizador) =
     throw new Error('Signup failed');
   }
 };
+
+export const getAllUsers = async (token) => {
+  try {
+    const response = await apiClient.get('/users', { headers: { Authorization: `Bearer ${token}` }});
+    return response.data;
+  } catch (error) {
+    throw new Error('Fetching users failed');
+  }
+};
+
+export const deleteUser = async (idUtilizador, token) => {
+  try {
+    const response = await apiClient.delete(`/users/${idUtilizador}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error deleting user')
+  }
+}
 
 export default apiClient;

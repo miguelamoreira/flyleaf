@@ -25,8 +25,8 @@
                   </div>
                 </div>
                 <div class="d-flex mt-16" style="position: absolute; bottom: 0; left: 30vh; right: 0;">
-                  <v-btn @click="acceptRequest(requests.idPedido)" :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2"><img src="@/assets/images/icons/arrow.svg"></v-btn>
-                  <v-btn @click="denyRequest(requests.idPedido)" :elevation="0" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/icons/delete.svg"></v-btn>
+                  <v-btn @click="acceptRequest(request.idPedido)" :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2"><img src="@/assets/images/icons/arrow.svg"></v-btn>
+                  <v-btn @click="denyRequest(request.idPedido)" :elevation="0" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
               </div>
             </v-col>
@@ -52,12 +52,6 @@
     },
     data() {
       return {
-        requests: [
-          { title: 'The Need for Roots', author: 'Simone Weil', image: 'theneedforroots.webp', genre: 'Fiction', year: 2023, description: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-          { title: 'August Blue', author: 'Deborah Levy', image: 'augustblue.webp', genre: 'Fiction', year: 2023, description: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-          { title: 'Greek Lessons', author: 'Han Kang', image: 'greeklessons.webp', genre: 'Fiction', year: 2023, description: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-          { title: 'Brutes', author: 'Dizz Tate', image: 'brutes.webp', genre: 'Fiction', year: 2023, description: 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.' },
-        ],
         requestStore: useRequestStore(),
       }
     },

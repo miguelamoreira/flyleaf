@@ -80,26 +80,29 @@
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Users</h2>
             </v-col>
           </v-row>
-          <v-row justify="center">
-            <v-col cols="12" sm="6" md="4" lg="3" v-for="(user, index) in users.slice(0, 4)" :key="index" class="d-flex flex-wrap">
-              <div class="users mx-12 mx-lg-14" style="position: relative;">
-                <div :class="{ 'last-book-link': index === 3 }">
-                  <router-link :to="{ name: 'users'}">
-                    <v-card :elevation="0" class="rounded-lg mb-4"  height="320" style="width: 25vh; height: 35vh; background-color: var(--vt-c-beige);">
-                      <img :src="`/src/assets/images/${user.image}`" style="width: 25vh; height: 35vh;">
+          <v-row justify="center" v-for="(row, rowIndex) in Math.ceil((users.length + 1) / 4)" :key="rowIndex">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
+              <div class="book mx-12 mx-lg-14 my-lg-8" style="position: relative;"> 
+                <router-link :to="{ name: 'users'}" :class="{ 'last-book-link': index === 3 }" v-if="((rowIndex * 4) + (i - 1)) < users.length">
+                    <v-card :elevation="0" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh; background-color: var(--vt-c-beige);">
+                      <img :src="`/src/assets/images/avatars/${users[(rowIndex * 4) + (i - 1)].avatarUtilizador}`" style="width: 25vh; height: 30vh;">
                     </v-card>
-                  </router-link>
-                  <div v-if="index !== 3" style="position: absolute; bottom: -60px; left: 0; right: 0;">
-                    <div class="text-center">
+                </router-link>
+                <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < users.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                    <div class="text-center d-flex" style="position: inherit; left: 30px; bottom: 60px;" >
                       <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/block.svg" width="30" height="30"></v-btn>
-                      <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="deleteUser(users[(rowIndex * 4) + (i - 1)].idUtilizador)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                     </div>
-                    <p class="font-weight-bold mt-2">{{ user.username }}</p>
-                    <p>{{ user.readings }} books</p>
-                  </div>
+                    <p class="font-weight-bold mt-2">{{ users[(rowIndex * 4) + (i - 1)].nomeUtilizador }}</p>
+                    <p>{{ getReadingsCount(users[(rowIndex * 4) + (i - 1)].idUtilizador)}} books read</p>
                 </div>
               </div>
             </v-col>
+          </v-row>
+          <v-row justify-center>
+            <div class="mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
+                <v-card :elevation="0" class="rounded-lg" height="320" style="width: 160vh; height: 10vh; background-color: var(--vt-c-beige);"></v-card> 
+            </div>
           </v-row>
         </v-container>
       </v-col>
@@ -158,12 +161,6 @@
     },
     data() {
       return {
-        users: [
-          { id: 1, username: 'Joca', readings: 5, image: 'avatar.svg' },
-          { id: 2, username: 'B', readings: 2, image: 'avatar.svg' },
-          { id: 3, username: 'C', readings: 4, image: 'avatar.svg' },
-          { id: 4, username: 'D', readigns: 1, image: 'avatar.svg' },
-        ],
         authStore: useAuthStore(),
         bookStore: useBookStore(),
         listStore: useListStore(),
@@ -192,12 +189,20 @@
       },
       requests() {
         return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating");
+      },
+      users() {
+        return this.authStore.getUsers.filter(user => user.idTipoUtilizador === 1);
+      },
+      readings() {
+        return this.readingsStore.getReadings;
       }
     },
     mounted() {
       this.bookStore.fetchBooks();
       this.listStore.fetchLists();
       this.requestStore.fetchRequests();
+      this.authStore.fetchUsers();
+      this.readingsStore.fetchReadings();
     },
     methods: {
       async acceptRequest(requestId) {
@@ -267,7 +272,19 @@
         } catch (error) {
           console.error('Error saving new reading:', error);
         }
-      }
+      },
+      getReadingsCount(idUtilizador) {
+        return this.readingsStore.getReadings.filter(reading => reading.idUtilizador === idUtilizador).length;
+      },
+      async deleteUser(userId) {
+        try {
+          await this.authStore.deleteUser(userId);
+
+          await this.authStore.fetchUsers();
+        } catch (error) {
+          console.error(error);
+        }
+      },
     }
   }
 </script>

@@ -14,21 +14,21 @@
             <v-col>
               <div class="users" style="position: relative; width: 130vh;">
                 <div class="d-flex flex-row mx-4 mb-16 flex-nowrap align-items-start">
-                  <img :src="`/src/assets/images/${user.image}`" width="200" height="200" class="rounded-lg" :elevation="4">
+                  <img :src="`/src/assets/images/avatars/${user.avatarUtilizador}`" width="200" height="200" class="rounded-lg" :elevation="4">
                 <div class="mx-lg-12">
                 <div class="d-flex flex-row align-center">
-                  <p class="text-h6 font-weight-bold">{{ user.username }}</p>
+                  <p class="text-h6 font-weight-bold">{{ user.nomeUtilizador }}</p>
                 </div>
                 <div class="d-flex flex-row justify-space-between my-4 flex-lg-row flex-sm-column">
-                  <p class="text-center mt-2 mx-16">{{user.readings}} readings</p>
-                  <p class="text-center mt-2 mx-16">{{ user.lists }} reading lists</p>
-                  <p class="text-center mt-2 mx-16">{{ user.requests }} book requests</p>
+                  <p class="text-center mt-2 mx-16">{{ getReadingsCount(user.idUtilizador) }} readings</p>
+                  <p class="text-center mt-2 mx-16">{{ getListsCount(user.idUtilizador) }} reading lists</p>
+                  <p class="text-center mt-2 mx-16">{{ getRequestsCount(user.idUtilizador) }} book requests</p>
                 </div>
               </div>
               </div>
                 <div class="d-flex mt-16" style="position: absolute; bottom: 0; left: 30vh; right: 0;">
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2"><img src="@/assets/images/icons/arrow.svg"></v-btn>
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/icons/delete.svg"></v-btn>
+                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2"><img src="@/assets/images/icons/block.svg"></v-btn>
+                  <v-btn @click="deleteUser(user.idUtilizador)" :elevation="0" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
               </div>
             </v-col>
@@ -46,6 +46,10 @@
 <script>
   import Sidebar from '@/components/Sidebar.vue';
   import Navbar from '@/components/Navbar.vue';
+  import { useAuthStore } from '../stores/auth.js';
+  import { useReadingsStore } from '../stores/readings.js';
+  import { useListStore } from '../stores/lists.js';
+  import { useRequestStore } from '../stores/requests';
       
   export default {
     components: {
@@ -53,13 +57,51 @@
     },
     data() {
       return {
-        users: [
-          { id: 1, username: 'Joca', readings: 5, image: 'avatar.svg', lists: 2, requests: 3 },
-          { id: 2, username: 'B', readings: 2, image: 'avatar.svg', lists: 2, requests: 3 },
-          { id: 3, username: 'C', readings: 4, image: 'avatar.svg', lists: 2, requests: 3 },
-          { id: 4, username: 'D', readings: 1, image: 'avatar.svg', lists: 2, requests: 3 },
-        ],
+        authStore: useAuthStore(),
+        readingsStore: useReadingsStore(),
+        listsStore: useListStore(),
+        requestsStore: useRequestStore(),
       }
+    },
+    computed: {
+      users() {
+        return this.authStore.getUsers.filter(user => user.idTipoUtilizador === 1);
+      },
+      readings() {
+        return this.readingsStore.getReadings;
+      },
+      lists() {
+        return this.listsStore.getLists;
+      },
+      requests() {
+        return this.requestsStore.getRequests;
+      }
+    },
+    mounted() {
+      this.authStore.fetchUsers();
+      this.readingsStore.fetchReadings();
+      this.listsStore.fetchLists();
+      this.requestsStore.fetchRequests();
+    },
+    methods: {
+      getReadingsCount(idUtilizador) {
+        return this.readingsStore.getReadings.filter(reading => reading.idUtilizador === idUtilizador).length;
+      },
+      getListsCount(idUtilizador) {
+        return this.listsStore.getLists.filter(list => list.idUtilizador === idUtilizador).length;
+      },
+      getRequestsCount(idUtilizador) {
+        return this.requestsStore.getRequests.filter(request => request.idUtilizador === idUtilizador).length;
+      },
+      async deleteUser(userId) {
+        try {
+          await this.authStore.deleteUser(userId);
+
+          await this.authStore.fetchUsers();
+        } catch (error) {
+          console.error(error);
+        }
+      },
     }
   }
 </script>
