@@ -90,7 +90,10 @@
                 </router-link>
                 <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < users.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                     <div class="text-center d-flex" style="position: inherit; left: 30px; bottom: 60px;" >
-                      <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/block.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="updateUser(users[(rowIndex * 4) + (i - 1)].idUtilizador)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);">
+                        <img v-if="users[(rowIndex * 4) + (i - 1)].estadoUtilizador === 'normal'" width="30" height="30" src="@/assets/images/icons/block.svg">
+                        <img v-if="users[(rowIndex * 4) + (i - 1)].estadoUtilizador === 'bloqueado'" width="30" height="30" src="@/assets/images/icons/arrow.svg">
+                      </v-btn>
                       <v-btn @click="deleteUser(users[(rowIndex * 4) + (i - 1)].idUtilizador)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                     </div>
                     <p class="font-weight-bold mt-2">{{ users[(rowIndex * 4) + (i - 1)].nomeUtilizador }}</p>
@@ -285,6 +288,25 @@
           console.error(error);
         }
       },
+      async updateUser(userId) {
+        try {
+          let user = this.authStore.getUsers.find(user => user.idUtilizador == userId);
+
+          let newStateData;
+
+          if (user.estadoUtilizador == 'normal') {
+            newStateData = { estadoUtilizador : 'bloqueado'};
+          } else {
+            newStateData = { estadoUtilizador : 'normal' };
+          }
+
+          await this.authStore.updateUserState(userId, newStateData)
+
+          await this.authStore.fetchUsers();
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
   }
 </script>

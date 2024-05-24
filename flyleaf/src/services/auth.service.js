@@ -48,4 +48,15 @@ export const deleteUser = async (idUtilizador, token) => {
   }
 }
 
+export const toggleState = async (idUtilizador, token, stateData) => {
+  try {
+    const response = await apiClient.patch(`/users/${idUtilizador}`, stateData, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error updating user's state");
+  }
+}
+
 export default apiClient;

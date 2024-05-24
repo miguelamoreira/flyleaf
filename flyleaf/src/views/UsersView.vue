@@ -27,7 +27,10 @@
               </div>
               </div>
                 <div class="d-flex mt-16" style="position: absolute; bottom: 0; left: 30vh; right: 0;">
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2"><img src="@/assets/images/icons/block.svg"></v-btn>
+                  <v-btn @click="updateUser(user.idUtilizador)" :elevation="0" style="background-color: var(--vt-c-beige);" class="mx-2">
+                    <img v-if="user.estadoUtilizador == 'normal'" src="@/assets/images/icons/block.svg">
+                    <img v-if="user.estadoUtilizador == 'bloqueado'" src="@/assets/images/icons/arrow.svg">
+                  </v-btn>
                   <v-btn @click="deleteUser(user.idUtilizador)" :elevation="0" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
               </div>
@@ -102,6 +105,25 @@
           console.error(error);
         }
       },
+      async updateUser(userId) {
+        try {
+          let user = this.authStore.getUsers.find(user => user.idUtilizador == userId);
+
+          let newStateData;
+
+          if (user.estadoUtilizador == 'normal') {
+            newStateData = { estadoUtilizador : 'bloqueado'};
+          } else {
+            newStateData = { estadoUtilizador : 'normal' };
+          }
+
+          await this.authStore.updateUserState(userId, newStateData)
+
+          await this.authStore.fetchUsers();
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
   }
 </script>

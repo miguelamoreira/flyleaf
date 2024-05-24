@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { login, getAllUsers, deleteUser } from '../services/auth.service.js'; 
+import { login, getAllUsers, deleteUser, toggleState } from '../services/auth.service.js'; 
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -46,5 +46,13 @@ export const useAuthStore = defineStore('auth', {
         throw new Error('Failed to delete user');
       }
     },
+    async updateUserState(userId, stateData) {
+      try {
+        await toggleState(userId, this.token, stateData);
+        await this.fetchUsers();
+      } catch (error) {
+        throw new Error('Failed to update state')
+      }
+    }
   },
 });
