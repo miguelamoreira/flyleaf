@@ -9,20 +9,24 @@ const apiClient = axios.create({
     }
 });
 
-export const fetchReadings = async () => {
+export const fetchReadings = async (token) => {
     try {
-      const response = await apiClient.get('/readings'); 
+      const response = await apiClient.get('/readings', {
+        headers: { Authorization: `Bearer ${token}` }
+      }); 
       return response.data.data;
     } catch (error) {
       throw new Error('Failed to fetch readings');
     }
 };
 
-export const createReading = async (idUtilizador, idLivro) => {
+export const createReading = async (idUtilizador, idLivro, token) => {
   try {
       const response = await apiClient.post('/readings', {
-          idUtilizador,
-          idLivro
+        idUtilizador,
+        idLivro
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       return response.data.data;
   } catch (error) {

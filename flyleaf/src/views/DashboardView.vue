@@ -13,7 +13,12 @@
           <v-row justify="center">
             <v-col cols="12" sm="6" md="4" lg="3" v-for="(book, index) in books.slice(0, 4)" :key="book.title" class="d-flex flex-wrap">
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
-                <router-link :to="{ name: 'catalogue'}" :class="{ 'last-book-link': index === 3 }">
+                <router-link  v-if="index !== 3" :to="{ name: 'book', params: { bookId: book.idLivro }}">
+                  <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${book.capaLivro}`" style="width: 25vh; height: 40vh;">
+                  </v-card>
+                </router-link>
+                <router-link v-else :to="{ name: 'catalogue' }"  :class="{ 'last-book-link': index === 3 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
                     <img :src="`data:image/jpg;base64,${book.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
@@ -233,6 +238,8 @@
           await this.readingsStore.createReading(idUtilizador, idLivro);
           this.readingModal = true;
           this.textModal = "Your reading has been logged sucessfully."
+
+          await this.readingsStore.fetchReadings();
         } catch (error) {
           console.error('Error creating reading:', error);
         }
@@ -271,6 +278,7 @@
           };
 
           await this.reviewStore.createReviewOrReading(bookId, reviewData);
+          await this.readingsStore.fetchReadings();
           this.closeNewReadingModal();
         } catch (error) {
           console.error('Error saving new reading:', error);

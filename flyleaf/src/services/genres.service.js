@@ -9,9 +9,11 @@ const apiClient = axios.create({
     }
 });
 
-export const fetchGenres = async () => {
+export const fetchGenres = async (token) => {
     try {
-      const response = await apiClient.get('/categories'); 
+      const response = await apiClient.get('/categories', {
+        headers: { Authorization: `Bearer ${token}` }
+      }); 
       return response.data.data;
     } catch (error) {
       throw new Error('Failed to fetch genres');

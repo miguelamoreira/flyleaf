@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { fetchRequests, createRequest, updateRequest } from '../services/requests.service.js'; 
+import { useAuthStore } from './auth.js';
 
 export const useRequestStore = defineStore('request', {
     state: () => ({
@@ -11,7 +12,8 @@ export const useRequestStore = defineStore('request', {
     actions: {
         async fetchRequests() {
             try {
-                const requests = await fetchRequests();
+                const token = useAuthStore().token;
+                const requests = await fetchRequests(token);
                 this.requests = requests;
             } catch (error) {
                 throw error;
@@ -19,7 +21,8 @@ export const useRequestStore = defineStore('request', {
         },
         async createNewRequest(requestData) {
             try {
-                const newRequest = await createRequest(requestData);
+                const token = useAuthStore().token;
+                const newRequest = await createRequest(requestData, token);
                 this.requests.push(newRequest);
             } catch (error) {
                 throw error;
@@ -27,7 +30,8 @@ export const useRequestStore = defineStore('request', {
         },
         async updateRequest(requestId, updatedData) {
             try {
-                await updateRequest(requestId, updatedData);
+                const token = useAuthStore().token;
+                await updateRequest(requestId, updatedData, token);
             } catch (error) {
                 throw error;
             }

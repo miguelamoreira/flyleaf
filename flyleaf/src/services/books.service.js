@@ -9,18 +9,22 @@ const apiClient = axios.create({
     }
 });
 
-export const fetchBooks = async () => {
+export const fetchBooks = async (token) => {
     try {
-      const response = await apiClient.get('/books'); 
+      const response = await apiClient.get('/books', {
+        headers: { Authorization: `Bearer ${token}` }
+      }); 
       return response.data.data;
     } catch (error) {
       throw new Error('Failed to fetch books');
     }
 };
 
-export const fetchBookById = async (bookId) => {
+export const fetchBookById = async (bookId, token) => {
   try {
-      const response = await apiClient.get(`/books/${bookId}`);
+      const response = await apiClient.get(`/books/${bookId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }); 
       return response.data.data;
   } catch (error) {
       throw new Error('Failed to fetch book by ID');

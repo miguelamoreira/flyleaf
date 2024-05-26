@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { fetchLists } from '../services/lists.service.js'; 
+import { useAuthStore } from './auth.js';
 
 export const useListStore = defineStore('list', {
     state: () => ({
@@ -11,7 +12,8 @@ export const useListStore = defineStore('list', {
     actions: {
         async fetchLists() {
             try {
-                const lists = await fetchLists();
+                const token = useAuthStore().token;
+                const lists = await fetchLists(token);
                 this.lists = lists;
             } catch (error) {
                 throw error;

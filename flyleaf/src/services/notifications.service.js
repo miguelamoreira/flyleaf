@@ -9,9 +9,11 @@ const apiClient = axios.create({
     }
 });
 
-export const fetchNotifications = async () => {
+export const fetchNotifications = async (token) => {
     try {
-      const response = await apiClient.get('/notifications'); 
+      const response = await apiClient.get('/notifications', {
+        headers: { Authorization: `Bearer ${token}` }
+      }); 
       return response.data.data;
     } catch (error) {
       throw new Error('Failed to fetch notifications');

@@ -9,9 +9,11 @@ const apiClient = axios.create({
     }
 });
 
-export const fetchLists = async () => {
+export const fetchLists = async (token) => {
     try {
-      const response = await apiClient.get('/reading-lists'); 
+      const response = await apiClient.get('/reading-lists', {
+        headers: { Authorization: `Bearer ${token}` }
+      }); 
       return response.data.data;
     } catch (error) {
       throw new Error('Failed to fetch reading lists');

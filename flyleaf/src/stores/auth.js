@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { login, getAllUsers, deleteUser, toggleState } from '../services/auth.service.js'; 
+import { login, getAllUsers, deleteUser, toggleState, updateAvatar } from '../services/auth.service.js'; 
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -31,8 +31,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchUsers() {
       try {
-        const token = this.token;
-        const response = await getAllUsers(token);
+        const response = await getAllUsers(this.token);
         this.users = response.data;
       } catch (error) {
         throw new Error('Failed to fetch users');
@@ -52,6 +51,14 @@ export const useAuthStore = defineStore('auth', {
         await this.fetchUsers();
       } catch (error) {
         throw new Error('Failed to update state')
+      }
+    },
+    async updateAvatar(userId, avatarData) {
+      try {
+        await updateAvatar(userId, this.token, avatarData);
+        await this.fetchUsers();
+      } catch (error) {
+        throw new Error('Failed to update avatar');
       }
     }
   },

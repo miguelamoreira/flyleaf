@@ -9,18 +9,23 @@ const apiClient = axios.create({
     }
 });
 
-export const fetchReviews = async (bookId) => {
+export const fetchReviews = async (bookId, token) => {
     try {
-        const response = await apiClient.get(`/books/${bookId}/reviews`);
+        const response = await apiClient.get(`/books/${bookId}/reviews`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }); 
         return response.data.data; 
     } catch (error) {
         throw new Error('Failed to fetch book reviews');
     }
 };
 
-export const createReviewOrReading = async (bookId, reviewData) => {
+export const createReviewOrReading = async (bookId, reviewData, token) => {
     try {
-        const response = await apiClient.post(`/books/${bookId}/reviews`, reviewData); 
+        const response = await apiClient.patch(`/books/${bookId}/reviews`, reviewData,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      });
         return response.data; 
     } catch (error) {
         throw new Error('Failed to create review or reading');

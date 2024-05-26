@@ -5,12 +5,12 @@
           <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
           <div class="ma-4 d-flex flex-row">
             <div>
-              <img src="@/assets/images/avatars/avatar.svg" width="100" height="100" class="avatar-image">
+              <img :src="`/src/assets/images/avatars/${user.avatarUtilizador}`" width="100" height="100" class="avatar-image">
               <v-btn style="background-color: var(--vt-c-green-dark); position: relative; left: 9vh; bottom: 14vh" :elevation="0" size="small" @click="openAvatarModal"><img src="@/assets/images/icons/edit.svg"></v-btn>
             </div>
             <div class="d-flex flex-column ma-4">
               <span class="font-weight-bold">{{ user.nomeUtilizador }}</span>
-              <span v-if="user.idTipoUtilizador === 1">0 books read</span>
+              <span v-if="user.idTipoUtilizador === 1">{{ getReadingsCount(user.idUtilizador) }} books read</span>
             </div>
           </div>
           <v-list density="compact" nav>
@@ -51,14 +51,14 @@
         <v-card-title style="font-family: Aleo, serif;" class="text-h5">Avatar</v-card-title>
         <v-card-text>
           <v-row class="d-flex justify-space-between pa-4">
-            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_1.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_f_1.svg')"></v-btn>
-            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_2.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_f_2.svg')"></v-btn>
-            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_3.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_f_3.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_1.svg" width="120" height="120" @click="selectAvatar('avatar_f_1.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_2.svg" width="120" height="120" @click="selectAvatar('avatar_f_2.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_f_3.svg" width="120" height="120" @click="selectAvatar('avatar_f_3.svg')"></v-btn>
           </v-row>
           <v-row class="d-flex justify-space-between pa-4">
-            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_1.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_m_1.svg')"></v-btn>
-            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_2.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_m_2.svg')"></v-btn>
-            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_3.svg" width="120" height="120" @click="selectAvatar('/src/assets/images/avatars/avatar_m_3.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_1.svg" width="120" height="120" @click="selectAvatar('avatar_m_1.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_2.svg" width="120" height="120" @click="selectAvatar('avatar_m_2.svg')"></v-btn>
+            <v-btn :elevation="0" width="120" height="120" style="background-color: var(--vt-c-beige);"><img src="@/assets/images/avatars/avatar_m_3.svg" width="120" height="120" @click="selectAvatar('avatar_m_3.svg')"></v-btn>
           </v-row>
         </v-card-text>
         <v-card-actions class="d-flex justify-center mt-6">
@@ -130,6 +130,7 @@
   import { useGenreStore } from '../stores/genres.js';
   import { useReviewStore } from '../stores/reviews.js'
   import { useBookStore } from '../stores/books.js';
+  import { useReadingsStore } from '../stores/readings';
 
   export default {
     data () {
@@ -153,7 +154,8 @@
         requestStore: useRequestStore(),
         genreStore: useGenreStore(),
         reviewStore: useReviewStore(),
-        bookStore: useBookStore()
+        bookStore: useBookStore(),
+        readingsStore: useReadingsStore(),
       }
     },
     mounted() {
@@ -182,17 +184,24 @@
       toggleRail() {
         this.rail = !this.rail;
       },
+      getReadingsCount(idUtilizador) {
+        return this.readingsStore.getReadings.filter(reading => reading.idUtilizador === idUtilizador).length;
+      },
       openAvatarModal() {
         this.avatarModal = true;
       },
       selectAvatar(avatarSrc) {
         this.selectedAvatar = avatarSrc;
       },
-      saveAvatar() {
+      async saveAvatar() {
         if (this.selectedAvatar) {
-          document.querySelector('.avatar-image').setAttribute('src', this.selectedAvatar);
+          const avatarData = { avatarUtilizador: this.selectedAvatar };
+          await this.authStore.updateAvatar(this.user.idUtilizador, avatarData);
+          this.user.avatarUtilizador = this.selectedAvatar;
+          this.closeAvatarModal();
+        } else {
+          this.closeAvatarModal();
         }
-        this.avatarModal = false;
       },
       closeAvatarModal() {
         this.avatarModal = false;
@@ -221,6 +230,9 @@
           };
 
           await this.reviewStore.createReviewOrReading(bookId, reviewData);
+
+          await this.readingsStore.fetchReadings();
+          await this.requestStore.fetchRequests(); 
           this.closeNewReadingModal();
         } catch (error) {
           console.error('Error saving new reading: ', error);

@@ -37,9 +37,9 @@ export const getAllUsers = async (token) => {
   }
 };
 
-export const deleteUser = async (idUtilizador, token) => {
+export const deleteUser = async (userId, token) => {
   try {
-    const response = await apiClient.delete(`/users/${idUtilizador}`, {
+    const response = await apiClient.delete(`/users/${userId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
@@ -48,14 +48,25 @@ export const deleteUser = async (idUtilizador, token) => {
   }
 }
 
-export const toggleState = async (idUtilizador, token, stateData) => {
+export const toggleState = async (userId, token, stateData) => {
   try {
-    const response = await apiClient.patch(`/users/${idUtilizador}`, stateData, {
+    const response = await apiClient.patch(`/users/${userId}`, stateData, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
   } catch (error) {
     throw new Error("Error updating user's state");
+  }
+}
+
+export const updateAvatar = async (userId, token, avatarData) => {
+  try {
+      const response = await apiClient.patch(`/users/${userId}/avatar`, avatarData, {
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+  } catch (error) {
+      throw new Error("Error updating user's avatar");
   }
 }
 

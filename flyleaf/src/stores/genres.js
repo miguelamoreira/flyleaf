@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { fetchGenres } from '../services/genres.service.js'; 
+import { useAuthStore } from './auth.js';
 
 export const useGenreStore = defineStore('genre', {
     state: () => ({
@@ -11,7 +12,8 @@ export const useGenreStore = defineStore('genre', {
     actions: {
         async fetchGenres() {
             try {
-                const genres = await fetchGenres();
+                const token = useAuthStore().token;
+                const genres = await fetchGenres(token);
                 this.genres = genres;
             } catch (error) {
                 throw error;

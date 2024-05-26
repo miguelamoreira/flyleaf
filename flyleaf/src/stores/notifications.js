@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { fetchNotifications } from '../services/notifications.service.js'; 
+import { useAuthStore } from './auth.js';
 
 export const useNotificationStore = defineStore('notification', {
     state: () => ({
@@ -11,7 +12,8 @@ export const useNotificationStore = defineStore('notification', {
     actions: {
         async fetchNotifications() {
             try {
-                const notifications = await fetchNotifications();
+                const token = useAuthStore().token;
+                const notifications = await fetchNotifications(token);
                 this.notifications = notifications;
             } catch (error) {
                 throw error;

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { fetchBooks, fetchBookById } from '../services/books.service.js'; 
+import { useAuthStore } from './auth.js';
 
 export const useBookStore = defineStore('book', {
     state: () => ({
@@ -13,7 +14,8 @@ export const useBookStore = defineStore('book', {
     actions: {
         async fetchBooks() {
             try {
-                const books = await fetchBooks();
+                const token = useAuthStore().token;
+                const books = await fetchBooks(token);
                 this.books = books;
             } catch (error) {
                 throw error;
@@ -21,7 +23,8 @@ export const useBookStore = defineStore('book', {
         },
         async fetchBookById(bookId) {
             try {
-                const book = await fetchBookById(bookId); 
+                const token = useAuthStore().token;
+                const book = await fetchBookById(bookId, token); 
                 this.currentBook = book;
             } catch (error) {
                 throw error;

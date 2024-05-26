@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { fetchReviews, createReviewOrReading } from '../services/reviews.service.js'; 
+import { useAuthStore } from './auth.js';
 
 export const useReviewStore = defineStore('review', {
     state: () => ({
@@ -11,7 +12,8 @@ export const useReviewStore = defineStore('review', {
     actions: {
         async fetchReviews(bookId) {
             try {
-                const reviews = await fetchReviews(bookId);
+                const token = useAuthStore().token;
+                const reviews = await fetchReviews(bookId, token);
                 this.reviews = reviews;
             } catch (error) {
                 throw error;
@@ -19,7 +21,8 @@ export const useReviewStore = defineStore('review', {
         },
         async createReviewOrReading(bookId, reviewData) {
             try {
-                const newReview = await createReviewOrReading(bookId, reviewData);
+                const token = useAuthStore().token;
+                const newReview = await createReviewOrReading(bookId, reviewData, token);
                 this.reviews.push(newReview); 
             } catch (error) {
                 throw error;
