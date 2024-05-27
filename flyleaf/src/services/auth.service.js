@@ -70,4 +70,26 @@ export const updateAvatar = async (userId, token, avatarData) => {
   }
 }
 
+export const getFavourites = async (userId, token) => {
+  try {
+      const response = await apiClient.get(`/users/${userId}/favourites`, {
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+  } catch (error) {
+      throw new Error("Error fetching user's favorite books");
+  }
+}
+
+export const addFavourite = async (userId, token, bookId) => {
+  try {
+      const response = await apiClient.post(`/users/${userId}/favourites`, bookId, {
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+  } catch (error) {
+      throw new Error("Error adding book to favorites");
+  }
+}
+
 export default apiClient;

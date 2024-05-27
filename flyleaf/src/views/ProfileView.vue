@@ -16,17 +16,17 @@
               <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">Favourites</h2>
             </v-col>
           </v-row>
-          <v-row justify="center">
-            <v-col cols="12" sm="6" md="4" lg="3" v-for="(book, index) in books.slice(0, 4)" :key="book.title" class="d-flex flex-wrap">
+          <v-row v-if="favourites && favourites.length" v-for="(row, rowIndex) in Math.ceil((favourites.length + 1) / 4)" :key="rowIndex" justify="center">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
-                <router-link :to="{ name: 'catalogue'}">
+                <router-link :to="{ name: 'catalogue'}" v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${book.image}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
-                <div style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                  <p class="font-weight-bold mt-2">{{ book.title }}</p>
-                  <p>{{ book.author }}</p>
+                <div v-if="((rowIndex * 4) + (i - 1)) < favourites.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                  <p class="font-weight-bold mt-2">{{ favourites[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
+                  <p>{{ favourites[(rowIndex * 4) + (i - 1)].autors[0].nomeAutor }}</p>
                 </div>
               </div>
             </v-col>
@@ -36,17 +36,17 @@
               <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">Recently read</h2>
             </v-col>
           </v-row>
-          <v-row justify="center">
-            <v-col cols="12" sm="6" md="4" lg="3" v-for="(reading, index) in readings" :key="reading.Livro.capaLivro" class="d-flex flex-wrap">
+          <v-row justify="center" v-for="(row, rowIndex) in Math.ceil((readings.length + 1) / 4)" :key="rowIndex">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
-                <router-link :to="{ name: 'catalogue'}">
+                <router-link v-if="((rowIndex * 4) + (i - 1)) < readings.length" :to="{ name: 'book', params: { bookId: readings[(rowIndex * 4) + (i - 1)].idLivro }}">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`data:image/jpg;base64,${reading.Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${readings[(rowIndex * 4) + (i - 1)].Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
-                <div style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                  <p class="font-weight-bold mt-2">{{ reading.Livro.nomeLivro }}</p>
-                  <p>{{ reading.Livro.anoLivro }}</p>
+                <div v-if="((rowIndex * 4) + (i - 1)) < readings.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                  <p class="font-weight-bold mt-2">{{ readings[(rowIndex * 4) + (i - 1)].Livro.nomeLivro }}</p>
+                  <p>{{ readings[(rowIndex * 4) + (i - 1)].dataLeitura }}</p>
                 </div>
               </div>
             </v-col>
@@ -73,17 +73,15 @@
     },
     data() {
       return {
-        books: [
-          { title: 'Paper Names', author: 'Susie Luo', image: 'papernames.webp' },
-          { title: 'A Breath of Life', author: 'Clarice Lispector', image: 'abreathoflife.webp' },
-          { title: 'Poor Deer', author: 'Claire Oshetsky', image: 'poordeer.webp' },
-          { title: 'Normal People', author: 'Sally Rooney', image: 'normalpeople.webp' },
-        ],
         authStore: useAuthStore(),
         readingsStore: useReadingsStore()
       }
     },
     computed: {
+      favourites() {
+        console.log('user favourites', this.authStore.getFavourites);
+        return this.authStore.getFavourites;
+      },
       readings() {
         this.user = this.authStore.getUser;
         const idUtilizador = this.user ? this.user.idUtilizador : null;
@@ -96,6 +94,7 @@
       }
     },
     mounted() {
+      this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
       this.readingsStore.fetchReadings();
     }
   }

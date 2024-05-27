@@ -16,20 +16,20 @@
               <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">Favourites</h2>
             </v-col>
           </v-row>
-          <v-row justify="center" v-if="user.idTipoUtilizador === 1">
-            <v-col cols="12" sm="6" md="4" lg="3" v-for="(book, index) in books.slice(0, 4)" :key="book.title" class="d-flex flex-wrap">
+          <v-row v-if="favourites && favourites.length && user.idTipoUtilizador === 1" v-for="(row, rowIndex) in Math.ceil((favourites.length + 1) / 4)" :key="rowIndex" justify="center">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
-                <div class="favourites" @click="openFavouritesModal">
+                <div class="favourites" @click="openFavouritesModal" v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`/src/assets/images/books/${book.image}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </div>
-                <div style="position: absolute; bottom: -55px; left: 0; right: 0;" class="d-flex align-center justify-space-between">
+                <div v-if="((rowIndex * 4) + (i - 1)) < favourites.length" style="position: absolute; bottom: -55px; left: 0; right: 0;" class="d-flex align-center justify-space-between">
                   <div>
-                    <p class="font-weight-bold mt-2">{{ book.title }}</p>
-                    <p>{{ book.author }}</p>
+                    <p class="font-weight-bold mt-2">{{ favourites[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
+                    <p>{{ favourites[(rowIndex * 4) + (i - 1)].autors[0].nomeAutor }}</p>
                   </div>
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" size="small"><img src="@/assets/images/icons/delete.svg"></v-btn>
+                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; left: 20vh;" size="small"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
               </div>
             </v-col>
@@ -102,12 +102,6 @@
     },
     data() {
       return {
-        books: [
-          { title: 'Paper Names', author: 'Susie Luo', image: 'papernames.webp' },
-          { title: 'A Breath of Life', author: 'Clarice Lispector', image: 'abreathoflife.webp' },
-          { title: 'Poor Deer', author: 'Claire Oshetsky', image: 'poordeer.webp' },
-          { title: 'Normal People', author: 'Sally Rooney', image: 'normalpeople.webp' },
-        ],
         favouritesModal: false,
         authStore: useAuthStore(),
       }
@@ -115,7 +109,11 @@
     computed: {
       user() {
         return this.authStore.getUser;
-      }
+      },
+      favourites() {
+        console.log('user favourites', this.authStore.getFavourites);
+        return this.authStore.getFavourites;
+      },
     },
     methods: {
       openFavouritesModal() {
@@ -124,6 +122,9 @@
       closeFavouritesModal() {
         this.favouritesModal = false;
       },
+    },
+    mounted() {
+      this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
     }
   }
 </script>

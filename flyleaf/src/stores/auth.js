@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { login, getAllUsers, deleteUser, toggleState, updateAvatar } from '../services/auth.service.js'; 
+import { login, getAllUsers, deleteUser, toggleState, updateAvatar, getFavourites, addFavourite } from '../services/auth.service.js'; 
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -7,11 +7,13 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: false,
     user: null,
     users: [],
+    favourite: [],
   }),
   getters: {
     isLoggedIn: (state) => state.isAuthenticated,
     getUser: (state) => state.user,
     getUsers: (state) => state.users,
+    getFavourites: (state) => state.favourites
   },
   actions: {
     async login({ email, password }) {
@@ -60,6 +62,22 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         throw new Error('Failed to update avatar');
       }
-    }
+    },
+    async fetchFavourites(userId) {
+      try {
+        const response = await getFavourites(userId, this.token);
+        this.favourites = response.data;
+      } catch (error) {
+        throw new Error('Failed to fetch favorites');
+      }
+    },
+    async addFavourite(bookId) {
+      try {
+        await addFavourite(this.user.idUtilizador, this.token, bookId);
+        await this.fetchFavourites(this.user.idUtilizador);
+      } catch (error) {
+        throw new Error('Failed to add favorite');
+      }
+    },
   },
 });
