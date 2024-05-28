@@ -83,7 +83,7 @@ export const getFavourites = async (userId, token) => {
 
 export const addFavourite = async (userId, token, bookId) => {
   try {
-      const response = await apiClient.post(`/users/${userId}/favourites`, bookId, {
+      const response = await apiClient.post(`/users/${userId}/favourites`, {idLivro: bookId}, {
           headers: { Authorization: `Bearer ${token}` }
       });
       return response.data;
@@ -91,5 +91,27 @@ export const addFavourite = async (userId, token, bookId) => {
       throw new Error("Error adding book to favorites");
   }
 }
+
+export const removeFavourite = async (userId, token, bookId) => {
+  try {
+      const response = await apiClient.delete(`/users/${userId}/favourites`, {data: { idLivro: bookId }, 
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+  } catch (error) {
+      throw new Error("Error adding book to favorites");
+  }
+}
+
+export const updateFavourites = async (userId, token, oldFavId, newFavId) => {
+  try {
+    const response = await apiClient.put(`/users/${userId}/favourites`, { oldFav: oldFavId, newFav: newFavId }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error updating favorites');
+  }
+};
 
 export default apiClient;

@@ -19,7 +19,7 @@
           <v-row v-if="favourites && favourites.length && user.idTipoUtilizador === 1" v-for="(row, rowIndex) in Math.ceil((favourites.length + 1) / 4)" :key="rowIndex" justify="center">
             <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
-                <div class="favourites" @click="openFavouritesModal" v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
+                <div class="favourites" @click="openUpdateModal(favourites[(rowIndex * 4) + (i - 1)].idLivro, favourites[(rowIndex * 4) + (i - 1)].nomeLivro)" v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
                     <img :src="`data:image/jpg;base64,${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
@@ -29,8 +29,9 @@
                     <p class="font-weight-bold mt-2">{{ favourites[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
                     <p>{{ favourites[(rowIndex * 4) + (i - 1)].autors[0].nomeAutor }}</p>
                   </div>
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; left: 20vh;" size="small"><img src="@/assets/images/icons/delete.svg"></v-btn>
+                  <v-btn @click="removeFavourite(favourites[(rowIndex * 4) + (i - 1)].idLivro)" :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; left: 20vh;" size="small"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
+                <v-card @click="openFavouritesModal" v-else-if="favourites.length < 4" :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh; background-color: white;"></v-card>
               </div>
             </v-col>
           </v-row>
@@ -85,9 +86,33 @@
           <v-card-title style="font-family: Aleo, serif; color: var(--vt-c-brown-dark);" class="text-h5">Favourites</v-card-title>
         </div>
       <v-card-text style="color: var(--vt-c-brown-medium);">
-        <v-select label="Title" hide-details style="background-color: var(--vt-c-yellow-light);" class="rounded-lg mt-6"></v-select>
-        <p class="mt-4">Author</p>
+        <v-select v-model="titleFavourite" :items="books.map(book => book.nomeLivro)" label="Title" hide-details style="background-color: var(--vt-c-yellow-light);" class="rounded-lg mt-6"></v-select>
+        <p v-if="titleFavourite" class="mt-4">{{ getAuthor(titleFavourite) }}</p>
+        <p v-else class="mt-4">Author</p>
       </v-card-text>
+      <v-card-actions class="d-flex justify-center">
+          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="addFavourite">Save</v-btn>
+          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeFavouritesModal">Cancel</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Alter Favourites Modal -->
+  <v-dialog v-model="updateModal" max-width="600px" persistent="true" @input="closeUpdateModal">
+      <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
+        <div class="d-flex">
+          <v-btn style="background-color: var(--vt-c-beige);" text @click="closeUpdateModal" :elevation="0" size="small"><img src="@/assets/images/icons/back.svg"></v-btn>
+          <v-card-title style="font-family: Aleo, serif; color: var(--vt-c-brown-dark);" class="text-h5">Favourites</v-card-title>
+        </div>
+      <v-card-text style="color: var(--vt-c-brown-medium);">
+        <v-select v-model="newTitleFavourite" :items="books.map(book => book.nomeLivro)" label="Title" hide-details style="background-color: var(--vt-c-yellow-light);" class="rounded-lg mt-6"></v-select>
+        <p v-if="newTitleFavourite" class="mt-4">{{ getAuthor(newTitleFavourite) }}</p>
+        <p v-else class="mt-4">Author</p>
+      </v-card-text>
+      <v-card-actions class="d-flex justify-center">
+          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="updateFavourite">Save</v-btn>
+          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeUpdateModal">Cancel</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -95,6 +120,7 @@
   import Sidebar from '@/components/Sidebar.vue';
   import Navbar from '@/components/Navbar.vue';
   import { useAuthStore } from '../stores/auth.js';
+  import { useBookStore } from '../stores/books';
   
   export default {
     components: {
@@ -103,7 +129,11 @@
     data() {
       return {
         favouritesModal: false,
+        updateModal: false,
         authStore: useAuthStore(),
+        bookStore: useBookStore(),
+        titleFavourite: '',
+        newTitleFavourite: '',
       }
     },
     computed: {
@@ -114,17 +144,70 @@
         console.log('user favourites', this.authStore.getFavourites);
         return this.authStore.getFavourites;
       },
+      books() {
+        return this.bookStore.getBooks;
+      },
     },
     methods: {
       openFavouritesModal() {
         this.favouritesModal = true;
       },
+      openUpdateModal(bookId, bookName) {
+        this.oldFavId = bookId; 
+        this.newTitleFavourite = bookName;
+        this.updateModal = true;
+      },
       closeFavouritesModal() {
+        this.titleFavourite = '';
         this.favouritesModal = false;
+      },
+      closeUpdateModal() {
+        this.newTitleFavourite = '';
+        this.updateModal = false;
+      },
+      getAuthor(title) {
+        const selectedBook = this.books.find(book => book.nomeLivro === title);
+        return selectedBook ? selectedBook["autors.nomeAutor"] : '';
+      },
+      async addFavourite() {
+        const selectedBook = this.books.find(book => book.nomeLivro === this.titleFavourite);
+        if (selectedBook) {
+          try {
+            await this.authStore.addFavourite(selectedBook.idLivro);
+            await this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
+            this.closeFavouritesModal();
+          } catch (error) {
+            console.error('Failed to add favourite:', error);
+          }
+        }
+      },
+      async removeFavourite(bookId) {
+        try {
+          await this.authStore.removeFavourite(bookId);
+          await this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
+        } catch (error) {
+          console.error('Failed to remove favourite:', error);
+        }
+      },
+      async updateFavourite() {
+        const selectedBook = this.books.find(book => book.nomeLivro === this.newTitleFavourite);
+        if (!selectedBook) {
+          console.error('Selected book not found.');
+          return;
+        }
+
+        try {
+          await this.authStore.updateFavourite(this.oldFavId, selectedBook.idLivro);
+          await this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
+          this.closeUpdateModal();
+        } catch (error) {
+          console.error('Failed to update favourite:', error);
+        }
       },
     },
     mounted() {
       this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
+      this.bookStore.fetchBooks;
     }
   }
 </script>

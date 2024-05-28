@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { login, getAllUsers, deleteUser, toggleState, updateAvatar, getFavourites, addFavourite } from '../services/auth.service.js'; 
+import { login, getAllUsers, deleteUser, toggleState, updateAvatar, getFavourites, addFavourite, removeFavourite, updateFavourites } from '../services/auth.service.js'; 
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -68,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
         const response = await getFavourites(userId, this.token);
         this.favourites = response.data;
       } catch (error) {
-        throw new Error('Failed to fetch favorites');
+        throw new Error('Failed to fetch favourites');
       }
     },
     async addFavourite(bookId) {
@@ -76,7 +76,23 @@ export const useAuthStore = defineStore('auth', {
         await addFavourite(this.user.idUtilizador, this.token, bookId);
         await this.fetchFavourites(this.user.idUtilizador);
       } catch (error) {
-        throw new Error('Failed to add favorite');
+        throw new Error('Failed to add favourite');
+      }
+    },
+    async removeFavourite(bookId) {
+      try {
+        await removeFavourite(this.user.idUtilizador, this.token, bookId);
+        await this.fetchFavourites(this.user.idUtilizador);
+      } catch (error) {
+        throw new Error('Failed to remove favourite');
+      }
+    },
+    async updateFavourite(oldFavId, newFavId) {
+      try {
+        await updateFavourites(this.user.idUtilizador, this.token, oldFavId, newFavId);
+        await this.fetchFavourites(this.user.idUtilizador);
+      } catch (error) {
+        throw new Error('Failed to update favourites');
       }
     },
   },
