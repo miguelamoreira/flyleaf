@@ -28,6 +28,7 @@
                   <p class="font-weight-bold mt-2">{{ favourites[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
                   <p>{{ favourites[(rowIndex * 4) + (i - 1)].autors[0].nomeAutor }}</p>
                 </div>
+                <v-card v-else-if="favourites.length < 4" :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh; background-color: white;"></v-card>
               </div>
             </v-col>
           </v-row>
