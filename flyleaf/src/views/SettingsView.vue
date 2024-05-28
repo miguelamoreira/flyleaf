@@ -35,43 +35,67 @@
               </div>
             </v-col>
           </v-row>
+          <v-row v-else-if="favourites && favourites.length == 0">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
+              <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
+                <v-card @click="openFavouritesModal" :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh; background-color: white;"></v-card>
+              </div>
+            </v-col>
+          </v-row>
           <v-row>
             <v-col cols="12" class="mx-12 mt-16 mx-lg-14">
               <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">User data</h2>
             </v-col>
           </v-row>
           <v-row justify="center">
-            <v-form class="mt-6 mx-14 mb-4 mx-lg-14 my-lg-6" style="width: 100%;">
+            <v-form class="mt-6 mx-14 mb-4 mx-lg-14 my-lg-6" style="width: 100%;" @submit.prevent="updateUser">
               <v-row>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field label="Username" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field v-model="username" label="Username" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field label="E-mail" type="email" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field v-model="email" label="E-mail" type="email" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field label="Password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field v-model="password" label="Password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field label="Confirm your password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field v-model="confirmPassword" label="Confirm your password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
                 </v-row>
               <v-row justify="center">
                 <v-col cols="4" sm="2">
-                  <v-btn type="submit" block class="mt-6" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
+                  <v-btn @click="updateUser" :disabled="!username || !email || !password || !confirmPassword" block class="mt-6" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
                 </v-col>
                 <v-col cols="4" sm="2">
-                  <v-btn block class="mt-6" style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);">Cancel</v-btn>
+                  <v-btn @click="cancelUpdate" block class="mt-6" style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);">Cancel</v-btn>
                 </v-col>
               </v-row>
             </v-form>
           </v-row>
-          <v-row justify-center>
-            <div class="mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
-                <v-card :elevation="0" class="rounded-lg" height="320" style="width: 160vh; height: 40vh; background-color: var(--vt-c-beige);"></v-card> 
-            </div>
+          <v-row>
+            <v-col cols="12" class="mx-12 mt-16 mx-lg-14">
+              <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">Notifications</h2>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" class="mb-4">
+              <v-form class="mt-6 my-lg-6" style="width: 100%;">
+                <v-row justify="center">
+                  <h3>Do you wish to receive notifications about your book requests?</h3>
+                </v-row>
+                <v-row justify="center">
+                  <v-switch v-model="notifStatus" :label="`${notifStatus}`" hide-details false-value="no" true-value="yes"></v-switch>
+                </v-row>
+                <v-row justify="center">
+                  <v-col cols="4" sm="2"> 
+                    <v-btn @click="updateNotification" block class="mt-6" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-col>
           </v-row>
         </v-container>
       </v-col>
@@ -121,6 +145,7 @@
   import Navbar from '@/components/Navbar.vue';
   import { useAuthStore } from '../stores/auth.js';
   import { useBookStore } from '../stores/books';
+  import { useNotificationStore } from '../stores/notifications';
   
   export default {
     components: {
@@ -132,8 +157,15 @@
         updateModal: false,
         authStore: useAuthStore(),
         bookStore: useBookStore(),
+        notifsStore: useNotificationStore(),
         titleFavourite: '',
         newTitleFavourite: '',
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        notifStatus: true,
+        notificationLabel: '',
       }
     },
     computed: {
@@ -204,10 +236,67 @@
           console.error('Failed to update favourite:', error);
         }
       },
+      async updateUser() {
+        const userData = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword
+        }
+
+        try {
+          await this.authStore.updateUser(userData);
+          await this.authStore.fetchUsers;
+
+          this.username = '';
+          this.email = '';
+          this.password = '';
+          this.confirmPassword = '';
+        } catch (error) {
+          console.error('Failed to update user:', error);
+        }
+      },
+      cancelUpdate() {
+        this.username = '';
+        this.email = '';
+        this.password = '';
+        this.confirmPassword = '';
+      },
+      async updateNotification() {
+        try {
+          let boolStatus;
+          if (this.notifStatus == 'yes') {
+            boolStatus = true;
+          } else if (this.notifStatus == 'no') {
+            boolStatus = false;
+          }
+          
+          await this.notifsStore.updateNotification({
+            idTipoNotificacao: 1,
+            idUtilizador: this.user.idUtilizador,
+            estadoNotificacao: boolStatus,
+          });
+
+          await this.notifsStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
+        } catch (error) {
+          console.error('Failed to update notification status:', error);
+        }
+      },
+      async settings() {
+        await this.notifsStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
+        const state = this.notifsStore.notificationSettings.estadoNotificacao;
+
+        if (state == true) {
+          this.notifStatus = 'yes'
+        } else {
+          this.notifStatus = 'no'
+        }
+      }
     },
     mounted() {
       this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
-      this.bookStore.fetchBooks;
+      this.bookStore.fetchBooks();
+      this.settings();
     }
   }
 </script>

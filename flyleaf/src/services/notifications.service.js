@@ -19,3 +19,27 @@ export const fetchNotifications = async (token) => {
       throw new Error('Failed to fetch notifications');
     }
 };
+
+export const fetchNotificationsSettings = async (userId, token) => {
+  try {
+    const response = await apiClient.get(`/users/${userId}/notifications/settings`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data.data;
+  } catch (error) {
+      throw new Error('Failed to fetch notifications settings');
+  }
+}
+
+export const updateNotification = async (idTipoNotificacao, idUtilizador, estadoNotificacao, token) => {
+  try {
+    const response = await apiClient.patch('/notifications/settings', { idTipoNotificacao, idUtilizador, estadoNotificacao}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data.msg; 
+  } catch (error) {
+    throw new Error('Failed to update notification status');
+  }
+};
+
+export default apiClient;

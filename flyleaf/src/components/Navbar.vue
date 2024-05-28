@@ -4,7 +4,7 @@
     <v-container>
       <v-app-bar :elevation="0" style="background-color: var(--vt-c-beige); width: 50%; position: absolute; left: 50%;" scroll-behavior="hide" scroll-threshold="50">
         <v-spacer></v-spacer>
-        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="openNotificationsModal" v-if="user.idTipoUtilizador === 1">
+        <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="openNotificationsModal" v-if="user.idTipoUtilizador === 1 && notificationEnabled">
           <img :src="notificationIcon">
         </v-btn>
         <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" @click="logout">
@@ -45,6 +45,7 @@
         notificationIcon: '/src/assets/images/icons/notif.svg',
         authStore: useAuthStore(),
         notificationStore: useNotificationStore(),
+        notificationEnabled: false,
       }
     },
     methods: {
@@ -57,6 +58,10 @@
       logout() {
         this.authStore.logout();
         this.$router.push({ name: 'home' });
+      },
+      async settings() {
+        await this.notificationStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
+        this.notificationEnabled = this.notificationStore.notificationSettings.estadoNotificacao;
       }
     },
     computed: {
@@ -66,11 +71,14 @@
       notifications() {
         this.user = this.authStore.getUser;
         const idUtilizador = this.user ? this.user.idUtilizador : null;
-        return idUtilizador ? this.notificationStore.getNotifications.filter(notification => notification.idUtilizador === idUtilizador) : [];
+        if (this.notificationEnabled) {
+          return idUtilizador ? this.notificationStore.getNotifications.filter(notification => notification.idUtilizador === idUtilizador) : [];
+        }
       },
     },
     mounted() {
       this.notificationStore.fetchNotifications();
+      this.settings();
     },
   }
 </script>

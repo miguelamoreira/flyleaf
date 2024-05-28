@@ -70,6 +70,17 @@ export const updateAvatar = async (userId, token, avatarData) => {
   }
 }
 
+export const updateUser = async (userId, token, userData) => {
+  try {
+    const response = await apiClient.put(`/users/${userId}`, userData, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error updating user");
+  }
+};
+
 export const getFavourites = async (userId, token) => {
   try {
       const response = await apiClient.get(`/users/${userId}/favourites`, {
