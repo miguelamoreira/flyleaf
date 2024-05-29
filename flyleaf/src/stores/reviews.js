@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { fetchReviews, createReviewOrReading } from '../services/reviews.service.js'; 
+import { fetchReviews, createReviewOrReading, updateReview, deleteReview } from '../services/reviews.service.js'; 
 import { useAuthStore } from './auth.js';
 
 export const useReviewStore = defineStore('review', {
@@ -28,5 +28,23 @@ export const useReviewStore = defineStore('review', {
                 throw error;
             }
         },
+        async deleteReview(bookId, reviewId) {
+            try {
+                const token = useAuthStore().token;
+                await deleteReview(bookId, reviewId, token);
+                await this.fetchReviews(bookId);
+            } catch (error) {
+                throw error;
+            }
+        },
+        async updateReview(bookId, reviewId, reviewData) {
+            try {
+                const token = useAuthStore().token;
+                await updateReview(bookId, reviewId, reviewData, token);
+                await this.fetchReviews(bookId);
+            } catch (error) {
+                throw error;
+            }
+        }
     }
 });

@@ -57,7 +57,8 @@
           </v-row>
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
-          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveReading">Save</v-btn>
+          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveReview">Save</v-btn>
+          <v-btn style="background-color: var(--vt-c-red-medium); color: var(--vt-c-beige);" text @click="deleteReview(currentReading.Livro.idLivro, currentReading.criticaLivro.idCritica)">Delete</v-btn>
           <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeReadingModal">Cancel</v-btn>
         </v-card-actions>
       </v-card>
@@ -69,6 +70,7 @@
     import Navbar from '@/components/Navbar.vue';
     import { useAuthStore } from '../stores/auth.js';
     import { useReadingsStore } from '../stores/readings.js';
+    import { useReviewStore } from '../stores/reviews';
     
     export default {
       components: {
@@ -78,6 +80,7 @@
         return {
           authStore: useAuthStore(),
           readingsStore: useReadingsStore(),
+          reviewStore: useReviewStore(),
           readingModal: false,
           readingTitle: '',
           readingAuthor: '',
@@ -105,6 +108,7 @@
           }
         },
         openReadingModal(reading) {
+          this.currentReading = reading;
           this.readingCover = reading.Livro.capaLivro;
           this.readingTitle = reading.Livro.nomeLivro;
           this.readingAuthor = reading.Livro.autors.map(autor => autor.nomeAutor).join(', ');
@@ -119,6 +123,35 @@
           this.readingAuthor = '';
           this.review = '';
         },
+        async saveReview() {
+          try {
+            const bookId = this.currentReading.Livro.idLivro;
+            const reviewId = this.currentReading.criticaLivro.idCritica;
+            
+            if (!this.review.trim() && !this.comentario.trim()) {
+              await this.deleteReview(bookId, reviewId);
+              return;
+            }
+
+            await this.reviewStore.updateReview(bookId, reviewId, {
+              comentario: this.review,
+              classificacao: this.rating
+            });
+            
+            await this.readingsStore.fetchReadings();
+            this.closeReadingModal();
+          } catch (error) {
+            console.error('Error saving review:', error);
+          }
+        },
+        async deleteReview(bookId, reviewId) {
+          try {
+            await this.reviewStore.deleteReview(bookId, reviewId);
+            this.closeReadingModal();
+          } catch (error) {
+            console.error('Error deleting review:', error);
+          }
+        }
       },
       mounted() {
         this.readingsStore.fetchReadings();

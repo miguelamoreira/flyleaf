@@ -31,3 +31,27 @@ export const createReviewOrReading = async (bookId, reviewData, token) => {
         throw new Error('Failed to create review or reading');
     }
 };
+
+export const updateReview = async (bookId, reviewId, reviewData, token) => {
+    try {
+        const response = await apiClient.patch(`/books/${bookId}/reviews/${reviewId}`, reviewData,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+        return response.data; 
+    } catch (error) {
+        throw new Error('Failed to create review or reading');
+    }
+};
+
+export const deleteReview = async (bookId, reviewId, token) => {
+    try {
+        const response = await apiClient.delete(`/books/${bookId}/reviews/${reviewId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+        return response; 
+    } catch (error) {
+        throw new Error('Failed to create review or reading');
+    }
+};
