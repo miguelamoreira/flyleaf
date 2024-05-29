@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { fetchReadings, createReading } from '../services/readings.service.js'; 
+import { fetchReadings, createReading, deleteReading } from '../services/readings.service.js'; 
 import { useAuthStore } from './auth.js';
 
 export const useReadingsStore = defineStore('reading', {
@@ -24,6 +24,15 @@ export const useReadingsStore = defineStore('reading', {
                 const token = useAuthStore().token;
                 const newReading = await createReading(idUtilizador, idLivro, token);
                 this.readings.push(newReading);
+            } catch (error) {
+                throw error;
+            }
+        },
+        async deleteReading(reading) {
+            try {
+                const token = useAuthStore().token;
+                await deleteReading(reading.dataLeitura, reading.idUtilizador, reading.idLivro, token);
+                await this.fetchReadings();
             } catch (error) {
                 throw error;
             }

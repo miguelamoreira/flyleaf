@@ -20,8 +20,8 @@
                 </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < readings.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <div class="d-flex text-center" style="position: absolute; left: 4vh; bottom: 7.5vh;">
-                    <v-btn :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/settings.svg" width="30" height="30"></v-btn>
-                    <v-btn :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="openReadingModal(readings[(rowIndex * 4) + (i - 1)])" :disabled="readings[(rowIndex * 4) + (i - 1)].criticaLivro === null" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/settings.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="deleteReading(readings[(rowIndex * 4) + (i - 1)])" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ readings[(rowIndex * 4) + (i - 1)].Livro.nomeLivro }}</p>
                   <p>{{ readings[(rowIndex * 4) + (i - 1)].dataLeitura }}</p>
@@ -39,6 +39,29 @@
     </v-row>
   </v-container>
   
+  <!-- Edit Reading Modal -->
+  <v-dialog v-model="readingModal" max-width="600px" persistent>
+      <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
+        <v-card-title style="font-family: Aleo, serif;" class="text-h5">New reading</v-card-title>
+        <v-card-text>
+          <v-row class="d-flex flex-row-reverse">
+            <v-col cols="7">
+              <v-select v-model="readingTitle" disabled label="Title" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-2"></v-select>
+              <p class="mb-4">{{ readingAuthor }}</p>
+              <v-textarea v-model="review" label="Review" max-length="150" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-textarea>
+              <v-select v-model="rating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
+            </v-col>
+            <v-col>
+              <img :src="`data:image/jpg;base64,${readingCover}`" width="200" height="320" class="rounded-lg">
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-center">
+          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveReading">Save</v-btn>
+          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeReadingModal">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   
   </template>
   <script>
@@ -54,7 +77,13 @@
       data() {
         return {
           authStore: useAuthStore(),
-          readingsStore: useReadingsStore()
+          readingsStore: useReadingsStore(),
+          readingModal: false,
+          readingTitle: '',
+          readingAuthor: '',
+          review: '',
+          rating: '',
+          currentReading: '',
         }
       },
       computed: {
@@ -66,6 +95,30 @@
           const idUtilizador = this.user ? this.user.idUtilizador : null;
           return idUtilizador ? this.readingsStore.getReadings.filter(reading => reading.idUtilizador === idUtilizador) : [];
         }
+      },
+      methods: {
+        async deleteReading(reading) {
+          try {
+            await this.readingsStore.deleteReading(reading);
+          } catch (error) {
+            console.error('Error deleting reading:', error);
+          }
+        },
+        openReadingModal(reading) {
+          this.readingCover = reading.Livro.capaLivro;
+          this.readingTitle = reading.Livro.nomeLivro;
+          this.readingAuthor = reading.Livro.autors.map(autor => autor.nomeAutor).join(', ');
+          this.review = reading.criticaLivro.comentario;
+          this.rating = reading.criticaLivro.classificacao;
+          this.readingModal = true;
+        },
+        closeReadingModal() {
+          this.readingModal = false;
+          this.readingCover = '';
+          this.readingTitle = '';
+          this.readingAuthor = '';
+          this.review = '';
+        },
       },
       mounted() {
         this.readingsStore.fetchReadings();

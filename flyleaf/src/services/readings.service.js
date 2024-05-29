@@ -33,3 +33,14 @@ export const createReading = async (idUtilizador, idLivro, token) => {
       throw new Error('Failed to create reading');
   }
 };
+
+export const deleteReading = async (dataLeitura, idUtilizador, idLivro, token) => {
+  try {
+    const response = await apiClient.delete('/readings', { data: { dataLeitura, idUtilizador, idLivro },
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response;
+  } catch (error) {
+    throw new Error('Failed to delete reading');
+  }
+}

@@ -22,7 +22,7 @@ export const fetchReviews = async (bookId, token) => {
 
 export const createReviewOrReading = async (bookId, reviewData, token) => {
     try {
-        const response = await apiClient.patch(`/books/${bookId}/reviews`, reviewData,
+        const response = await apiClient.post(`/books/${bookId}/reviews`, reviewData,
       {
         headers: { Authorization: `Bearer ${token}` }
       });
