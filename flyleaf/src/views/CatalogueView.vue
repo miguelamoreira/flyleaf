@@ -71,7 +71,7 @@
               <v-select v-model="newReadingRating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
             </v-col>
             <v-col>
-              <img :src="newReadingTitle ? `/src/assets/images/books/${newReadingCover}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
+              <img :src="newReadingTitle ? `data:image/jpg;base64,${newReadingCover}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
             </v-col>
           </v-row>
         </v-card-text>
@@ -104,7 +104,7 @@ export default {
       genreStore: useGenreStore(),
       searchQuery: '',
       readingsStore: useReadingsStore(),
-      reviewsStore: useReviewStore(),
+      reviewStore: useReviewStore(),
       textModal: '',
       readingModal: false,
       newReadingModal: false,
@@ -151,6 +151,8 @@ export default {
         await this.readingsStore.createReading(idUtilizador, idLivro);
         this.readingModal = true;
         this.textModal = "Your reading has been logged sucessfully."
+
+        await this.readingsStore.fetchReadings();
       } catch (error) {
         console.error('Error creating reading:', error);
       }
@@ -162,7 +164,7 @@ export default {
     openNewReadingModal(book) {
       this.newReadingTitle = book.nomeLivro;
       this.newReadingAuthor = book['autors.nomeAutor'];
-      this.newReadingCover = book.capaLivro['data'];
+      this.newReadingCover = book.capaLivro;
       this.newReadingModal = true;
     },
     closeNewReadingModal() {
@@ -189,6 +191,7 @@ export default {
         };
 
         await this.reviewStore.createReviewOrReading(bookId, reviewData);
+        await this.readingsStore.fetchReadings();
         this.closeNewReadingModal();
       } catch (error) {
         console.error('Error saving new reading:', error);

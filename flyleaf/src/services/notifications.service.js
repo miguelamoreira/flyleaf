@@ -31,9 +31,9 @@ export const fetchNotificationsSettings = async (userId, token) => {
   }
 }
 
-export const updateNotification = async (idTipoNotificacao, idUtilizador, estadoNotificacao, token) => {
+export const updateNotification = async (typeNotifId, userId, state, token) => {
   try {
-    const response = await apiClient.patch('/notifications/settings', { idTipoNotificacao, idUtilizador, estadoNotificacao}, {
+    const response = await apiClient.patch(`/users/${userId}/notifications/settings`, { typeNotifId, state}, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data.msg; 

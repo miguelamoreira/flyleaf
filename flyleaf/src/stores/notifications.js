@@ -30,10 +30,10 @@ export const useNotificationStore = defineStore('notification', {
                 throw error;
             }
         },
-        async updateNotification({ idTipoNotificacao, idUtilizador, estadoNotificacao }) {
+        async updateNotification(typeNotifId, userId, state) {
             try {
                 const token = useAuthStore().token;
-                await updateNotification(idTipoNotificacao, idUtilizador, estadoNotificacao, token);
+                await updateNotification(typeNotifId, userId, state, token);
                 await this.fetchNotifications();
             } catch (error) {
                 throw error;

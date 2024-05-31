@@ -26,7 +26,7 @@
                   </div>
                   <p class="font-weight-bold">{{ currentBook['autors.nomeAutor'] }}</p>
                   <p class="my-12 font-weight-bold">{{ currentBook['categoria.nomeCategoria'] }}</p>
-                  <p class="my-12 font-weight-bold">{{ currentBook.rating ? currentBook.rating.join : '?' }}/5</p>
+                  <p class="my-12 font-weight-bold">{{ averageRating }}/5</p>
                   <p class="mt-12 mb-6 font-weight-bold">Description</p>
                   <p class="text-center">
                     {{ currentBook.descricaoLivro }}
@@ -101,6 +101,19 @@
         reviews() {
           return this.reviewStore.getReviews;
         },
+        averageRating() {
+          if (this.reviews.length === 0) return 0;
+
+          const totalRating = this.reviews.reduce((sum, review) => {
+            const rating = parseFloat(review.classificacao);
+            if (isNaN(rating)) return sum;
+            return sum + rating;
+          }, 0);
+          
+          const average = totalRating / this.reviews.length;
+          if (isNaN(average)) return 0;
+          return average.toFixed(1);
+        }
       },
       mounted() {
         this.bookStore.fetchBooks();

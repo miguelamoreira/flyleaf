@@ -50,7 +50,7 @@ export const deleteUser = async (userId, token) => {
 
 export const toggleState = async (userId, token, stateData) => {
   try {
-    const response = await apiClient.patch(`/users/${userId}`, stateData, {
+    const response = await apiClient.patch(`/users/${userId}/state`, stateData, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;

@@ -271,11 +271,7 @@
             boolStatus = false;
           }
           
-          await this.notifsStore.updateNotification({
-            idTipoNotificacao: 1,
-            idUtilizador: this.user.idUtilizador,
-            estadoNotificacao: boolStatus,
-          });
+          await this.notifsStore.updateNotification( 1, this.authStore.getUser.idUtilizador, boolStatus);
 
           await this.notifsStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
         } catch (error) {

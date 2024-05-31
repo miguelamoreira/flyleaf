@@ -140,7 +140,7 @@
         newReadingModal: false,
         newReadingTitle: '',
         newReadingReview: '',
-        newReadingRating: null,
+        newReadingRating: 0,
         newReadingCover: '',
         newRequestModal: false,
         newRequestTitle: '',
