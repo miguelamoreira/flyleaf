@@ -177,7 +177,9 @@
         return this.authStore.getFavourites;
       },
       books() {
-        return this.bookStore.getBooks;
+        const allBooks = this.bookStore.getBooks;
+        const favouriteBookIds = this.favourites.map(favourite => favourite.idLivro);
+        return allBooks.filter(book => !favouriteBookIds.includes(book.idLivro));
       },
     },
     methods: {
