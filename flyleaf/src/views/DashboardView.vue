@@ -39,17 +39,17 @@
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Reading lists</h2>
             </v-col>
           </v-row>
-          <v-row justify="center">
-            <v-col cols="12" sm="6" md="4" lg="3" v-for="(list, index) in lists.slice(0, 4)" :key="index" class="d-flex flex-wrap">
+          <v-row v-for="(row, rowIndex) in Math.ceil((lists.length + 1) / 4)" :key="rowIndex" justify="center">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;">
-                <router-link :to="{ name: 'readinglists'}" :class="{ 'last-book-link': index === 3 }">
+                <router-link v-if="((rowIndex * 4) + (i - 1)) < lists.length" :to="{ name: 'readinglists'}" :class="{ 'last-book-link': i === 4 }">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`data:image/jpeg;base64,${list.Livros[0].capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpeg;base64,${lists[(rowIndex * 4) + i - 1].Livros[0].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
-                <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                  <p class="font-weight-bold mt-2">{{ list.nomeLista }}</p>
-                  <p>{{ list.descricaoLista }}</p>
+                <div v-if="i !== 4 && (((rowIndex * 4) + (i - 1)) < lists.length)" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                  <p class="font-weight-bold mt-2">{{ lists[(rowIndex * 4) + (i - 1)].nomeLista }}</p>
+                  <p>{{ getBooksCountText(lists[(rowIndex * 4) + (i - 1)].Livros.length) }}</p>
                 </div>
               </div>
             </v-col>
@@ -193,13 +193,13 @@
         return this.bookStore.getBooks;
       },
       lists() {
-        return this.listStore.getLists;
+        return this.listStore.getLists.slice(0, 4);
       },
       requests() {
-        return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating");
+        return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating").slice(0, 4);
       },
       users() {
-        return this.authStore.getUsers.filter(user => user.idTipoUtilizador === 1);
+        return this.authStore.getUsers.filter(user => user.idTipoUtilizador === 1).slice(0, 4);
       },
       readings() {
         return this.readingsStore.getReadings;
@@ -290,7 +290,6 @@
       async deleteUser(userId) {
         try {
           await this.authStore.deleteUser(userId);
-
           await this.authStore.fetchUsers();
         } catch (error) {
           console.error(error);
@@ -314,6 +313,9 @@
         } catch (error) {
           console.error(error);
         }
+      },
+      getBooksCountText(bookCount) {
+        return `${bookCount} book${bookCount !== 1 ? 's' : ''}`;
       }
     }
   }

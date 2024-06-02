@@ -40,13 +40,18 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async deleteUser(userId) {
+      console.log('Deleting user with ID:', userId);
       try {
         await deleteUser(userId, this.token);
+        console.log('User deleted successfully');
         await this.fetchUsers();
+        console.log('Users fetched successfully');
+        console.log('Updated users:', this.users); // Add this line
       } catch (error) {
+        console.error('Error deleting user:', error);
         throw new Error('Failed to delete user');
       }
-    },
+    },    
     async updateUserState(userId, stateData) {
       try {
         await toggleState(userId, this.token, stateData);

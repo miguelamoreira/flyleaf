@@ -20,11 +20,11 @@ export const fetchReadings = async (token) => {
     }
 };
 
-export const createReading = async (idUtilizador, idLivro, token) => {
+export const createReading = async (userId, bookId, token) => {
   try {
       const response = await apiClient.post('/readings', {
-        idUtilizador,
-        idLivro
+        userId,
+        bookId
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -34,9 +34,9 @@ export const createReading = async (idUtilizador, idLivro, token) => {
   }
 };
 
-export const deleteReading = async (dataLeitura, idUtilizador, idLivro, token) => {
+export const deleteReading = async (date, userId, bookId, token) => {
   try {
-    const response = await apiClient.delete('/readings', { data: { dataLeitura, idUtilizador, idLivro },
+    const response = await apiClient.delete('/readings', { data: { bookId, userId, date },
       headers: { Authorization: `Bearer ${token}` }
     });
     return response;

@@ -60,8 +60,10 @@
         this.$router.push({ name: 'home' });
       },
       async settings() {
-        await this.notificationStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
-        this.notificationEnabled = this.notificationStore.notificationSettings.estadoNotificacao;
+        if (this.authStore.getUser.idTipoUtilizador === 1) {
+          await this.notificationStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
+          this.notificationEnabled = this.notificationStore.notificationSettings.estadoNotificacao;
+        }
       }
     },
     computed: {

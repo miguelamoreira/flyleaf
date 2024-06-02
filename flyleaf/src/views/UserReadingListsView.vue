@@ -13,11 +13,11 @@
           <v-row v-for="(row, rowIndex) in Math.ceil((lists.length + 1) / 4)" :key="rowIndex" justify="center">
             <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="list mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
-                <router-link v-if="((rowIndex * 4) + (i - 1)) < lists.length" :to="{ name: 'list'}">
+                <div v-if="((rowIndex * 4) + (i - 1)) < lists.length">
                   <v-card :elevation="4" class="rounded-lg" style="width: 25vh; height: 40vh;">
                     <img :src="`data:image/jpg;base64,${lists[(rowIndex * 4) + i - 1].Livros[0].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
-                </router-link>
+                </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < lists.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <p class="font-weight-bold mt-2">{{ lists[(rowIndex * 4) + (i - 1)].nomeLista }}</p>
                   <p>{{ lists[(rowIndex * 4) + (i - 1)].descricaoLista }}</p>

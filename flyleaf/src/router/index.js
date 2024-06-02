@@ -67,7 +67,7 @@ const router = createRouter({
       component: ReadingListsView
     },
     {
-      path: '/myreadinglists/list',
+      path: '/readinglists/:readingListId',
       name: 'list',
       component: ListView
     },
@@ -102,7 +102,7 @@ const router = createRouter({
       component: AddReadingListView
     },
     {
-      path: '/readingslists/list/edit',
+      path: '/readinglists/:readingListId/edit',
       name: 'editlist',
       component: EditReadingListView
     }
