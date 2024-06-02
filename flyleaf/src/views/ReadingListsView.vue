@@ -7,7 +7,7 @@
         <v-container fluid>
           <v-row>
             <v-col cols="12" class="mx-12 mt-10 mx-lg-14 mx-xl-16">
-              <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">My reading lists</h2>
+              <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Reading lists</h2>
             </v-col>
           </v-row>
           <v-row v-for="(row, rowIndex) in Math.ceil((lists.length + 1) / 4)" :key="rowIndex" justify="center">

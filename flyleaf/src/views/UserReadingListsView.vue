@@ -19,8 +19,12 @@
                   </v-card>
                 </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < lists.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                  <div class="d-flex text-center" style="position: absolute; left: 4vh; bottom: 7.5vh;">
+                    <v-btn :to="{name : 'editlist', params: { readingListId: lists[(rowIndex * 4) + (i - 1)].idLista }}" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/settings.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="deleteList(lists[(rowIndex * 4) + (i - 1)].idLista)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                  </div>
                   <p class="font-weight-bold mt-2">{{ lists[(rowIndex * 4) + (i - 1)].nomeLista }}</p>
-                  <p>{{ lists[(rowIndex * 4) + (i - 1)].descricaoLista }}</p>
+                  <p>{{ getBooksCountText(lists[(rowIndex * 4) + (i - 1)].Livros.length) }}</p>
                 </div>
               </div>
             </v-col>
@@ -69,6 +73,19 @@
       },
       mounted() {
         this.listStore.fetchLists();
+      },
+      methods: {
+        getBooksCountText(bookCount) {
+          return `${bookCount} book${bookCount !== 1 ? 's' : ''}`;
+        },
+        async deleteList(readingListId) {
+          try {
+            await this.listStore.deleteList(readingListId);
+            await this.listStore.fetchLists();
+          } catch (error) {
+            console.error('Error deleting reading list:', error);
+          }
+        }
       }
     }
   </script>
