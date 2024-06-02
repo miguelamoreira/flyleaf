@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { fetchLists, fetchList, deleteList } from '../services/lists.service.js'; 
+import { fetchLists, fetchList, createList, updateList, deleteList } from '../services/lists.service.js'; 
 import { useAuthStore } from './auth.js';
 
 export const useListStore = defineStore('list', {
@@ -26,6 +26,22 @@ export const useListStore = defineStore('list', {
                 const token = useAuthStore().token;
                 const list = await fetchList(readingListId, token);
                 this.list = list;
+            } catch (error) {
+                throw error;
+            }
+        }, 
+        async createList(listData) {
+            try {
+                const token = useAuthStore().token;
+                await createList(listData, token);
+            } catch (error) {
+                throw error;
+            }
+        },
+        async updateList(listData) {
+            try {
+                const token = useAuthStore().token;
+                await updateList(listData, token);
             } catch (error) {
                 throw error;
             }

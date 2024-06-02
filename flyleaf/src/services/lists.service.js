@@ -31,6 +31,28 @@ export const fetchList = async (readingListId, token) => {
   }
 }
 
+export const createList = async (listData, token) => {
+  try {
+    const response = await apiClient.post('/reading-lists', listData, {
+      headers: { Authorization: `Bearer ${token}` }
+    }); 
+    return response.data.data;
+  } catch (error) {
+    throw new Error('Failed to fetch reading lists');
+  }
+}
+
+export const updateList = async (readingListId, listData, token) => {
+  try {
+    const response = await apiClient.patch(`/reading-lists/${readingListId}`, listData, {
+      headers: { Authorization: `Bearer ${token}` }
+    }); 
+    return response.data.data;
+  } catch (error) {
+    throw new Error('Failed to fetch reading lists');
+  }
+}
+
 export const deleteList = async (readingListId, token) => {
   try {
     const response = await apiClient.delete(`/reading-lists/${readingListId}`, {
