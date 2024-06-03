@@ -14,25 +14,29 @@
             <v-form class="mt-6 mx-14 mb-4 mx-lg-14 my-lg-6" style="width: 100%;">
               <v-row>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field label="Name" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
-                  <v-switch v-model="model" :label="`Switch: ${model}`" false-value="Private" true-value="Public" hide-details class="mx-2"></v-switch>
+                  <v-text-field v-model="nameList" label="Name" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-switch v-model="stateList" :label="`${stateList}`" false-value="Private" true-value="Public" hide-details class="mx-2"></v-switch>
                 </v-col>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-textarea label="Description" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-textarea>
+                  <v-textarea v-model="descList" label="Description" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-textarea>
                 </v-col>
               </v-row>
               <v-row align="center">
-                <v-col cols="10" sm="6" class="pa-4">
-                  <v-select label="Add a book" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-select>
+                <v-col cols="10" sm="6" class="pa-4 d-flex">
+                  <v-select v-model="newBook" :items="books.map(book => book.nomeLivro)" label="Add a book" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-select>
+                  <div>
+                    <v-btn @click="addBookToList" block class="mx-4 align-self-center" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark); width: 10vh;">Add Book</v-btn>
+                  </div>
                 </v-col>
-                <v-col cols="2" class="d-flex flex-row ml-16">
-                  <v-btn type="submit" block class="mx-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
+                <v-col cols="2"></v-col>
+                <v-col cols="2" class="d-flex flex-row pa-5">
+                  <v-btn @click="createList" block class="mx-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
                   <v-btn block class="mx-4" style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);">Cancel</v-btn>
                 </v-col>
               </v-row>
             </v-form>
           </v-row>
-          <v-row v-if="list.books.length === 0" justify="center">
+          <v-row v-if="booksList.length === 0" justify="center">
             <div style="border: 5px solid var(--vt-c-brown-light); border-radius: 1rem; color: var(--vt-c-brown-dark); width: 135vh; min-height: 50vh;" class="mx-12 my-8 d-flex align-center justify-center flex-column text-center">
               <div>
                 <p class="text-h6">Your list is empty</p>
@@ -40,18 +44,20 @@
               </div>
             </div>
           </v-row>
-          <v-row v-else justify="center">
-            <v-col v-for="(book, index) in list.books" :key="index" cols="12" sm="6" md="3">
+          <v-row v-else v-for="(row, rowIndex) in Math.ceil((booksList.length + 1) / 4)" :key="rowIndex" justify="center">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="list mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
-                <v-card :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh;">
-                  <img :src="`/src/assets/images/books/${book.image}`" style="width: 25vh; height: 40vh;">
-                </v-card>
-                <div style="position: absolute; bottom: -55px; left: 0; right: 0; width: 27vh;" class="d-flex align-center justify-space-between">
+                <div v-if="((rowIndex * 4) + (i - 1)) < booksList.length">
+                  <v-card :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh;">
+                    <img :src="`data:image/jpg;base64,${booksList[((rowIndex * 4) + (i - 1))].capaLivro}`" style="width: 25vh; height: 40vh;">
+                  </v-card>
+                </div>
+                <div v-if="((rowIndex * 4) + (i - 1)) < booksList.length" style="position: absolute; bottom: -55px; left: 0; right: 0; width: 27vh;" class="d-flex align-center justify-space-between">
                   <div>
-                    <p class="font-weight-bold mt-2">{{ book.title }}</p>
-                    <p>{{ book.author }}</p>
+                    <p class="font-weight-bold mt-2">{{ booksList[((rowIndex * 4) + (i - 1))].nomeLivro }}</p>
+                    <p>{{ booksList[((rowIndex * 4) + (i - 1))].anoLivro }}</p>
                   </div>
-                  <v-btn :elevation="0" style="background-color: var(--vt-c-beige);" size="small"><img src="@/assets/images/icons/delete.svg"></v-btn>
+                  <v-btn @click="removeBookFromList(((rowIndex * 4) + (i - 1)))" :elevation="0" style="background-color: var(--vt-c-beige);" size="small"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
               </div>
             </v-col>
@@ -69,6 +75,9 @@
 <script>
   import Sidebar from '@/components/Sidebar.vue';
   import Navbar from '@/components/Navbar.vue';
+  import { useListStore } from '../stores/lists';
+  import { useBookStore } from '../stores/books';
+  import { useAuthStore } from '../stores/auth';
   
   export default {
     components: {
@@ -85,9 +94,72 @@
             books: [
             
           ] 
-        }, 
+        },
+        stateList: 'Private',
+        listId: null,
+        listStore: useListStore(), 
+        bookStore: useBookStore(),
+        authStore: useAuthStore(),
+        nameList: '',
+        descList: '',
+        newBook: '',
+        booksList: [] 
       }
     },
+    async mounted() {
+      await this.bookStore.fetchBooks();
+    },
+    computed: {
+      books() {
+        const allBooks = this.bookStore.getBooks;
+        const listBookIds = this.booksList.map(book => book.idLivro);
+        return allBooks.filter(book => !listBookIds.includes(book.idLivro));
+      },
+      user() {
+        return this.authStore.getUser;
+      },
+    },
+    methods: {
+      async addBookToList() {
+        if (this.newBook) {
+          console.log("lol", this.booksList);
+          const selectedBook = this.books.find(book => book.nomeLivro === this.newBook);
+          console.log("teste", selectedBook);
+          if (selectedBook) {
+            this.booksList.push(selectedBook);
+            this.newBook = ''; 
+          }
+        }
+      },
+      async removeBookFromList(index) {
+        this.booksList.splice(index, 1);
+      },
+      async createList() {
+        try {
+          console.log('Name:', this.nameList);
+          console.log('Description:', this.descList);
+
+          const boolState = this.stateList === 'Public' ? 1 : 0;
+
+          const bookIds = this.booksList.map(book => book.idLivro);
+
+          const listData = {
+            userId: this.user.idUtilizador,
+            name: this.nameList,
+            state: boolState,
+            description: this.descList,
+            newBooks: bookIds
+          };
+          console.log('New list data:', listData);
+
+          await this.listStore.createList(listData);
+
+          this.$router.push({ name: 'myreadinglists' });
+        } catch (error) {
+          console.error('Error creating list:', error);
+        }
+      }
+    }
   }
 </script>
 

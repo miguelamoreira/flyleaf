@@ -64,10 +64,7 @@
         },
         lists() {
           this.user = this.authStore.getUser;
-          console.log('User:', this.user);
           const idUtilizador = this.user ? this.user.idUtilizador : null;
-          console.log('idUtilizador:', idUtilizador);
-          console.log("Listas:" ,this.listStore.getLists);
           return idUtilizador ? this.listStore.getLists.filter(list => list.idUtilizador === idUtilizador) : [];
         }
       },

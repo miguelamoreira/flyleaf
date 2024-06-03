@@ -7,7 +7,7 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: false,
     user: null,
     users: [],
-    favourite: [],
+    favourites: [],
   }),
   getters: {
     isLoggedIn: (state) => state.isAuthenticated,
@@ -43,12 +43,8 @@ export const useAuthStore = defineStore('auth', {
       console.log('Deleting user with ID:', userId);
       try {
         await deleteUser(userId, this.token);
-        console.log('User deleted successfully');
         await this.fetchUsers();
-        console.log('Users fetched successfully');
-        console.log('Updated users:', this.users); // Add this line
       } catch (error) {
-        console.error('Error deleting user:', error);
         throw new Error('Failed to delete user');
       }
     },    

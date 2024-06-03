@@ -38,7 +38,7 @@ export const createList = async (listData, token) => {
     }); 
     return response.data.data;
   } catch (error) {
-    throw new Error('Failed to fetch reading lists');
+    throw new Error('Failed to create reading list');
   }
 }
 
@@ -49,7 +49,7 @@ export const updateList = async (readingListId, listData, token) => {
     }); 
     return response.data.data;
   } catch (error) {
-    throw new Error('Failed to fetch reading lists');
+    throw new Error('Failed to update reading list');
   }
 }
 
@@ -60,6 +60,6 @@ export const deleteList = async (readingListId, token) => {
     }); 
     return response.data.data;
   } catch (error) {
-    throw new Error('Failed to fetch reading list');
+    throw new Error('Failed to delete reading list');
   }
 }

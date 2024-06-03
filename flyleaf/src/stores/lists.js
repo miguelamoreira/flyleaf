@@ -30,10 +30,10 @@ export const useListStore = defineStore('list', {
                 throw error;
             }
         }, 
-        async createList(readingListId, listData) {
+        async createList(listData) {
             try {
                 const token = useAuthStore().token;
-                await createList(readingListId, listData, token);
+                await createList(listData, token);
             } catch (error) {
                 throw error;
             }
