@@ -19,11 +19,11 @@
             </v-card-title>
             <v-card-text>
               <v-form class="mt-6" @submit.prevent="signup">
-                <v-text-field label="Username" v-model="username" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-text-field label="E-mail" v-model="email" type="email" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-text-field label="Password" v-model="password" type="password" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-text-field label="Confirm your password" v-model="confirmPassword" type="password" class="rounded-lg mb-8" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
+                <v-text-field id="usernameSignup" label="Username" v-model="username" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+                <v-text-field id="emailSignup" label="E-mail" v-model="email" type="email" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+                <v-text-field id="passwordSignup" label="Password" v-model="password" type="password" class="rounded-lg mb-4" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+                <v-text-field id="confirmSignup" label="Confirm your password" v-model="confirmPassword" type="password" class="rounded-lg mb-8" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+                <v-btn id="btnRegister" type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
                   Register
                 </v-btn>
               </v-form>

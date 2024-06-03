@@ -10,7 +10,7 @@
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Catalogue</h2>
             </v-col>
             <v-col cols="4" class="ml-12 mt-8 mx-xl-16 d-flex flex-end flex-nowrap flex-md-wrap">
-              <v-text-field v-model="searchQuery" class="rounded-lg ml-4" style="max-width: 400px; background-color: var(--vt-c-yellow-light);" hide-details label="Search by title, author, year or genre"></v-text-field>
+              <v-text-field id="searchBook" v-model="searchQuery" class="rounded-lg ml-4" style="max-width: 400px; background-color: var(--vt-c-yellow-light);" hide-details label="Search by title, author, year or genre"></v-text-field>
             </v-col>
           </v-row>
           <v-row v-for="(row, rowIndex) in Math.ceil((filteredBooks.length + 1) / 4)" :key="rowIndex" justify="center">

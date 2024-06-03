@@ -19,9 +19,9 @@
             </v-card-title>
             <v-card-text>
               <v-form class="mt-6" @submit.prevent="login">
-                <v-text-field label="E-mail" v-model="email" class="rounded-lg" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-text-field label="Password" type="password" class="mt-4 mb-8 rounded-lg" v-model="password" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
-                <v-btn type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
+                <v-text-field id="emailLogin" label="E-mail" v-model="email" class="rounded-lg" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+                <v-text-field id="passwordLogin" label="Password" type="password" class="mt-4 mb-8 rounded-lg" v-model="password" style="background-color: var(--vt-c-beige);" hide-details></v-text-field>
+                <v-btn id="btnLogin" type="submit" block class="mt-4" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">
                   Login
                 </v-btn>
               </v-form>

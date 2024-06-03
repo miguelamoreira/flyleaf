@@ -19,10 +19,10 @@ export const useReadingsStore = defineStore('reading', {
                 throw error;
             }
         },
-        async createReading(idUtilizador, idLivro) {
+        async createReading(userId, bookId) {
             try {
                 const token = useAuthStore().token;
-                const newReading = await createReading(idUtilizador, idLivro, token);
+                const newReading = await createReading(userId, bookId, token);
                 this.readings.push(newReading);
             } catch (error) {
                 throw error;

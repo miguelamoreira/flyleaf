@@ -14,28 +14,28 @@
             </div>
           </div>
           <v-list density="compact" nav>
-            <v-list-item title="Homepage" value="homepage" :to="{name: 'dashboard'}" class="page"></v-list-item>
-            <v-list-item title="Catalogue" value="catalogue" :to="{name: 'catalogue'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
-            <v-list-item title="My readings" value="readings" :to="{name: 'myreadings'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
-            <v-list-item title="My reading lists" value="readinglists" :to="{name: 'myreadinglists'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
-            <v-list-item title="My book requests" value="bookrequests" :to="{name: 'mybookrequests'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
-            <v-list-item title="Profile" value="profile" :to="{name: 'profile'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
-            <v-list-item title="Book requests" value="bookrequests" :to="{name: 'bookrequests'}" v-if="user.idTipoUtilizador === 2"></v-list-item>
-            <v-list-item title="Users" value="users" :to="{name: 'users'}" v-if="user.idTipoUtilizador === 2"></v-list-item>
-            <v-list-item title="Settings" value="settings" :to="{name: 'settings'}"></v-list-item>
+            <v-list-item id="btnHomepage" title="Homepage" value="homepage" :to="{name: 'dashboard'}" class="page"></v-list-item>
+            <v-list-item id="btnCatalogue" title="Catalogue" value="catalogue" :to="{name: 'catalogue'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item id="btnMyReadings" title="My readings" value="readings" :to="{name: 'myreadings'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item id="btnMyLists" title="My reading lists" value="readinglists" :to="{name: 'myreadinglists'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item id="btnMyRequests" title="My book requests" value="bookrequests" :to="{name: 'mybookrequests'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item id="btnProfile" title="Profile" value="profile" :to="{name: 'profile'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item id="btnRequests" title="Book requests" value="bookrequests" :to="{name: 'bookrequests'}" v-if="user.idTipoUtilizador === 2"></v-list-item>
+            <v-list-item id="btnUsers" title="Users" value="users" :to="{name: 'users'}" v-if="user.idTipoUtilizador === 2"></v-list-item>
+            <v-list-item id="btnSettings" title="Settings" value="settings" :to="{name: 'settings'}"></v-list-item>
           </v-list>
           <hr class="ma-4" style="border: 1px solid var(--vt-c-brown-dark)">
           <p class="ma-4" v-if="user.idTipoUtilizador === 1">Options</p>
-          <div class="d-flex flex-column" v-if="user.idTipoUtilizador === 1">
+          <div id="btnReading" class="d-flex flex-column" v-if="user.idTipoUtilizador === 1">
             <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" @click="openNewReadingModal">
               <img src="@/assets/images/icons/add.svg" class="mr-4">
               <span class="font-weight-bold">New reading</span>
             </v-btn>
-            <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" :to="{name: 'newreadinglist'}">
+            <v-btn id="btnList" style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" :to="{name: 'newreadinglist'}">
               <img src="@/assets/images/icons/add.svg" class="mr-4">
               <span class="font-weight-bold">New reading list</span>
             </v-btn>
-            <v-btn style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" @click="openNewRequestModal">
+            <v-btn id="btnRequest" style="background-color: var(--vt-c-brown-dark); color: var(--vt-c-brown-light);" class="ma-4" @click="openNewRequestModal">
               <img src="@/assets/images/icons/add.svg" class="mr-4">
               <span class="font-weight-bold">New book request</span>
             </v-btn>
@@ -75,7 +75,7 @@
         <v-card-text>
           <v-row class="d-flex flex-row-reverse">
             <v-col cols="7">
-              <v-select v-model="newReadingTitle" label="Title" :items="books.map(book => book.nomeLivro)" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-2"></v-select>
+              <v-select id="titleReading" v-model="newReadingTitle" label="Title" :items="books.map(book => book.nomeLivro)" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-2"></v-select>
               <p v-if="newReadingTitle" class="mb-4">{{ getAuthor() }}</p>
               <p v-else class="mb-4">Author</p>
               <v-textarea v-model="newReadingReview" label="Review" max-length="150" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-textarea>
@@ -87,8 +87,8 @@
           </v-row>
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
-          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveNewReading">Save</v-btn>
-          <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeNewReadingModal">Cancel</v-btn>
+          <v-btn id="btnNewReading" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text @click="saveNewReading">Save</v-btn>
+          <v-btn id="btnCancel" style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeNewReadingModal">Cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

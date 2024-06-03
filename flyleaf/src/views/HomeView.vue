@@ -6,8 +6,8 @@
             <img src="@/assets/images/logo.svg" width="150" height="100" contain class="mx-4">
           </router-link>
           <v-app-bar-title class="ml-auto" grow></v-app-bar-title>
-          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" :to="{ name: 'login' }">Login</v-btn>
-          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" class="mx-4" :to="{ name: 'signup' }">Signup</v-btn>
+          <v-btn id="btnLogin" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" :to="{ name: 'login' }">Login</v-btn>
+          <v-btn id="btnSignup" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" class="mx-4" :to="{ name: 'signup' }">Signup</v-btn>
       </v-app-bar>
     </v-container>
     <v-container fluid id="sectionHero" style="background-color: var(--vt-c-brown-light); height: 80vh;" class="pt-12 d-flex align-items-center justify-content-center align-content-space-between text-center">
