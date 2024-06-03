@@ -193,7 +193,8 @@
         return this.bookStore.getBooks;
       },
       lists() {
-        return this.listStore.getLists.slice(0, 4);
+        const publicLists = this.listStore.getLists.filter(list => list.estadoLista == 1)
+        return publicLists.slice(0, 4);
       },
       requests() {
         return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating").slice(0, 4);

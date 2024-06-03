@@ -12,6 +12,11 @@
               <v-btn v-if="canEditList" style="background-color: var(--vt-c-beige);" :elevation="0" :to="{name : 'editlist', params: { readingListId: list.idLista }}"><img src="@/assets/images/icons/settings.svg"></v-btn>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col cols="12" class="mx-12 mt-10 mx-lg-14 mx-xl-16">
+              <h3><span class="font-weight-bold">Description:</span> {{ list.descricaoLista }}</h3>
+            </v-col>
+          </v-row>
           <v-row v-if="list.Livros && list.Livros.length > 0" v-for="(row, rowIndex) in Math.ceil((list.Livros.length + 1) / 4)" :key="rowIndex" justify="center">
             <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="list mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 

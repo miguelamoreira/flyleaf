@@ -58,7 +58,8 @@
           return this.authStore.getUser;
         },
         lists() {
-          return this.listStore.getLists;
+          const publicLists = this.listStore.getLists.filter(list => list.estadoLista == 1)
+          return publicLists;
         }
       },
       mounted() {
