@@ -51,23 +51,23 @@
             <v-form class="mt-6 mx-14 mb-4 mx-lg-14 my-lg-6" style="width: 100%;" @submit.prevent="updateUser">
               <v-row>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field v-model="username" label="Username" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field id="usernameSettings" v-model="username" label="Username" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field v-model="email" label="E-mail" type="email" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field id="emailSettings" v-model="email" label="E-mail" type="email" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field v-model="password" label="Password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field id="passwordSettings" v-model="password" label="Password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" class="pa-4">
-                  <v-text-field v-model="confirmPassword" label="Confirm your password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
+                  <v-text-field id="confirmSettings" v-model="confirmPassword" label="Confirm your password" type="password" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-text-field>
                 </v-col>
                 </v-row>
               <v-row justify="center">
                 <v-col cols="4" sm="2">
-                  <v-btn @click="updateUser" :disabled="!username || !email || !password || !confirmPassword" block class="mt-6" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
+                  <v-btn id="btnUpdate" @click="updateUser" :disabled="!username || !email || !password || !confirmPassword" block class="mt-6" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
                 </v-col>
                 <v-col cols="4" sm="2">
                   <v-btn @click="cancelUpdate" block class="mt-6" style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);">Cancel</v-btn>
