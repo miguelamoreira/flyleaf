@@ -75,12 +75,12 @@
               </v-row>
             </v-form>
           </v-row>
-          <v-row>
+          <v-row v-if="user.idTipoUtilizador === 1">
             <v-col cols="12" class="mx-12 mt-16 mx-lg-14">
               <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold">Notifications</h2>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row v-if="user.idTipoUtilizador === 1">
             <v-col cols="12" class="mb-4">
               <v-form class="mt-6 my-lg-6" style="width: 100%;">
                 <v-row justify="center">
