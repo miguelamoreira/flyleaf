@@ -128,7 +128,7 @@
             const bookId = this.currentReading.Livro.idLivro;
             const reviewId = this.currentReading.criticaLivro.idCritica;
             
-            if (!this.review.trim() && !this.comentario.trim()) {
+            if (!this.review.trim() && !this.rating) {
               await this.deleteReview(bookId, reviewId);
               return;
             }
