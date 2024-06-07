@@ -15,7 +15,7 @@
           </div>
           <v-list density="compact" nav>
             <v-list-item id="btnHomepage" title="Homepage" value="homepage" :to="{name: 'dashboard'}" class="page"></v-list-item>
-            <v-list-item id="btnCatalogue" title="Catalogue" value="catalogue" :to="{name: 'catalogue'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
+            <v-list-item id="btnCatalogue" title="Catalogue" value="catalogue" :to="{name: 'catalogue'}"></v-list-item>
             <v-list-item id="btnMyReadings" title="My readings" value="readings" :to="{name: 'myreadings'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
             <v-list-item id="btnMyLists" title="My reading lists" value="readinglists" :to="{name: 'myreadinglists'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
             <v-list-item id="btnMyRequests" title="My book requests" value="bookrequests" :to="{name: 'mybookrequests'}" v-if="user.idTipoUtilizador === 1"></v-list-item>
@@ -101,18 +101,20 @@
           <v-row class="d-flex flex-row-reverse">
             <v-col cols="8">
               <v-text-field v-model="newRequestTitle" label="Title" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-text-field>
-              <v-text-field label="Author" v-model="newRequestAuthor" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-text-field>
+              <v-text-field label="Author(s)" v-model="newRequestAuthors" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-text-field>
               <v-textarea v-model="newRequestDescription" label="Description" max-length="150" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-textarea>
               <div class="d-flex">
                 <v-text-field label="Year" v-model="newRequestYear" class="mr-2 rounded-lg mb-4" style="background-color: var(--vt-c-yellow-light);" hide-details></v-text-field>
-                <v-select  v-model="newRequestGenre" label="Genre" :items="genres" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
+                <v-select multiple v-model="newRequestGenre" label="Genre" :items="genres" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
               </div>
             </v-col>
             <v-col>
               <label for="file-input" class="file-input-label">
                 <img :src="newRequestCover ? newRequestCover : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
               </label>
-              <input id="file-input" type="file" style="display: none;" @change="handleFileInputChange">
+              <input accept=".jpg" id="file-input" type="file" style="display: none;" @change="handleFileInputChange">
+              <p><span class="font-weight-medium">Valid image formats:</span> .jpg</p>
+              <p>{{ imageMessage }}</p>
             </v-col>
           </v-row>
         </v-card-text>
@@ -144,10 +146,10 @@
         newReadingCover: '',
         newRequestModal: false,
         newRequestTitle: '',
-        newRequestAuthor: '',
+        newRequestAuthors: '',
         newRequestDescription: '',
         newRequestYear: '',
-        newRequestGenre: '',
+        newRequestGenre: null,
         newRequestCover: '',
         avatarModal: false,
         authStore: useAuthStore(),
@@ -156,6 +158,7 @@
         reviewStore: useReviewStore(),
         bookStore: useBookStore(),
         readingsStore: useReadingsStore(),
+        imageMessage: '',
       }
     },
     mounted() {
@@ -248,37 +251,40 @@
       openNewRequestModal() {
         this.newRequestModal = true;
         this.newRequestTitle = '';
-        this.newRequestAuthor = '';
+        this.newRequestAuthors = '';
         this.newRequestDescription = '';
         this.newRequestYear = '';
-        this.newRequestGenre = '';
+        this.newRequestGenre = null;
         this.newRequestCover = '';
       },
       async saveNewRequest() {
-        if (!this.newRequestTitle || !this.newRequestAuthor || !this.newRequestDescription || !this.newRequestYear || !this.newRequestGenre) {
+        if (!this.newRequestTitle || !this.newRequestAuthors || !this.newRequestDescription || !this.newRequestYear || !this.newRequestGenre.length) {
           console.log("Incomplete data!");
           return;
         }
 
         try {
-          const selectedGenre = this.genreStore.getGenres.find(genre => genre.nomeCategoria === this.newRequestGenre);
+          const selectedGenres = this.genreStore.getGenres.filter(genre => this.newRequestGenre.includes(genre.nomeCategoria));
 
-          if (!selectedGenre) {
+          if (!selectedGenres.length) {
               console.error("Selected genre not found!");
               return;
           }
+  
+          const authorNames = this.newRequestAuthors.split(',').map(author => author.trim());
+          const categoryIds = selectedGenres.map(genre => genre.idCategoria);
 
           const requestData = {
             idUtilizador: this.user.idUtilizador,
             bookData: {
-              nomePedidoLivro: this.newRequestTitle,
-              anoPedidoLivro: this.newRequestYear,
-              descricaoPedidoLivro: this.newRequestDescription,
-              capaLivroPedido: this.newRequestCover,
-              estadoPedido: 'validating', 
+              title: this.newRequestTitle,
+              year: this.newRequestYear,
+              description: this.newRequestDescription,
+              cover: this.newRequestCover,
+              state: 'validating', 
             },
-            authorNames: [this.newRequestAuthor], 
-            categoryIds: [selectedGenre.idCategoria], 
+            authorNames: authorNames, 
+            categoryIds: categoryIds, 
           };
 
         await this.requestStore.createNewRequest(requestData);
@@ -299,8 +305,14 @@
         return selectedBook ? `${selectedBook.capaLivro}` : '/src/assets/images/books/none.svg';
       },
       handleFileInputChange(event) {
+        this.imageMessage = '';
         const file = event.target.files[0];
-        this.newRequestCover = URL.createObjectURL(file);
+        const extension = file.name.split('.').pop().toLowerCase();
+        if (extension === 'jpg') {
+          this.newRequestCover = URL.createObjectURL(file);
+        } else {
+          this.imageMessage = 'Invalid file type.';
+        }
       },
     },
     mounted() {

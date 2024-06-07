@@ -24,6 +24,7 @@ export const useRequestStore = defineStore('request', {
                 const token = useAuthStore().token;
                 const newRequest = await createRequest(requestData, token);
                 this.requests.push(newRequest);
+                await this.fetchRequests();
             } catch (error) {
                 throw error;
             }
@@ -32,6 +33,7 @@ export const useRequestStore = defineStore('request', {
             try {
                 const token = useAuthStore().token;
                 await updateRequest(requestId, updatedData, token);
+                await this.fetchRequests();
             } catch (error) {
                 throw error;
             }

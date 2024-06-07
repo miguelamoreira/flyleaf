@@ -10,7 +10,7 @@
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Book requests</h2>
             </v-col>
           </v-row>
-          <v-row v-for="(request, index) in requests" :key="request.nomePedidoLivro" justify="center" class="px-10 mt-10">
+          <v-row v-for="(request, index) in filteredRequests" :key="request.nomePedidoLivro" justify="center" class="px-10 mt-10">
             <v-col>
               <div class="requests" style="position: relative; width: 130vh;">
                 <div class="d-flex flex-row mx-4 mb-10 flex-nowrap align-items-start">
@@ -58,6 +58,10 @@
     computed: {
       requests() {
         return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating");
+      },
+      filteredRequests() {
+        const uniqueRequests = new Set();
+        return this.requests.filter(request => !uniqueRequests.has(request.idPedido) && uniqueRequests.add(request.idPedido));
       }
     },
     mounted() {

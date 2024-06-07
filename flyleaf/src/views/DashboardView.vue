@@ -61,21 +61,21 @@
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Book requests</h2>
             </v-col>
           </v-row>
-          <v-row justify="center" v-for="(row, rowIndex) in Math.ceil((requests.length + 1) / 4)" :key="rowIndex">
+          <v-row justify="center" v-for="(row, rowIndex) in Math.ceil((filteredRequests.length + 1) / 4)" :key="rowIndex">
             <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
-                <router-link :to="{ name: 'bookrequests'}" :class="{ 'last-book-link': index === 3 }" v-if="((rowIndex * 4) + (i - 1)) < requests.length">
+                <router-link :to="{ name: 'bookrequests'}" :class="{ 'last-book-link': index === 3 }" v-if="((rowIndex * 4) + (i - 1)) < filteredRequests.length">
                     <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                      <img :src="`data:image/jpg;base64,${requests[(rowIndex * 4) + (i - 1)].capaLivroPedido}`" style="width: 25vh; height: 40vh;">
+                      <img :src="`data:image/jpg;base64,${filteredRequests[(rowIndex * 4) + (i - 1)].capaLivroPedido}`" style="width: 25vh; height: 40vh;">
                     </v-card>
                 </router-link>
-                <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < requests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < filteredRequests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                     <div class="text-center d-flex" style="position: inherit; left: 30px; bottom: 60px;" >
-                      <v-btn @click="acceptRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                      <v-btn @click="denyRequest(requests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="acceptRequest(filteredRequests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="denyRequest(filteredRequests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
                     </div>
-                    <p class="font-weight-bold mt-2">{{ requests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
-                    <p>{{ requests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
+                    <p class="font-weight-bold mt-2">{{ filteredRequests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
+                    <p>{{ filteredRequests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
                 </div>
               </div>
             </v-col>
@@ -198,6 +198,10 @@
       },
       requests() {
         return this.requestStore.getRequests.filter(request => request.estadoPedido === "validating").slice(0, 4);
+      },
+      filteredRequests() {
+        const uniqueRequests = new Set();
+        return this.requests.filter(request => !uniqueRequests.has(request.idPedido) && uniqueRequests.add(request.idPedido));
       },
       users() {
         return this.authStore.getUsers.filter(user => user.idTipoUtilizador === 1).slice(0, 4);
