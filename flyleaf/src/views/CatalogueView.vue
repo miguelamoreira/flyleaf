@@ -21,13 +21,20 @@
                     <img :src="`data:image/jpg;base64,${filteredBooks[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
-                <div v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
+                <div v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length && user.idTipoUtilizador === 1" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <div class="d-flex text-center" style="position: absolute; left: 4vh; bottom: 7.5vh;">
                     <v-btn @click="createReading(filteredBooks[(rowIndex * 4) + (i - 1)].idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
                     <v-btn @click="openNewReadingModal(filteredBooks[(rowIndex * 4) + (i - 1)])" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ filteredBooks[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
                   <p>{{ filteredBooks[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
+                </div>
+                <div v-if="((rowIndex * 4) + (i - 1)) < filteredBooks.length && user.idTipoUtilizador === 2" style="position: absolute; bottom: -55px; left: 0; right: 0;" class="d-flex align-center justify-space-between">
+                  <div>
+                    <p class="font-weight-bold mt-2">{{ filteredBooks[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
+                    <p>{{ filteredBooks[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
+                  </div>
+                  <v-btn @click="deleteBook(filteredBooks[(rowIndex * 4) + (i - 1)].idLivro)" :elevation="0" style="background-color: var(--vt-c-beige); position: absolute; left: 20vh;" size="small"><img src="@/assets/images/icons/delete.svg"></v-btn>
                 </div>
               </div>
             </v-col>
@@ -181,7 +188,6 @@ export default {
         if (!book) {
           return;
         }
-
         const bookId = book.idLivro;
         const reviewData = {
           idLivro: bookId,
@@ -195,6 +201,13 @@ export default {
         this.closeNewReadingModal();
       } catch (error) {
         console.error('Error saving new reading:', error);
+      }
+    },
+    async deleteBook(bookId) {
+      try {
+        await this.bookStore.deleteBookById(bookId);
+      } catch (error) {
+        console.log('Error deleting book:', error);
       }
     }
   },

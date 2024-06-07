@@ -99,7 +99,14 @@
           return this.book;
         },
         reviews() {
-          return this.reviewStore.getReviews;
+          const uniqueReviews = new Set();
+          return this.reviewStore.getReviews.filter(review => {
+            if (!uniqueReviews.has(review.idCritica)) {
+              uniqueReviews.add(review.idCritica);
+              return true;
+            }
+            return false;
+          });
         },
         averageRating() {
           if (this.reviews.length === 0) return 0;

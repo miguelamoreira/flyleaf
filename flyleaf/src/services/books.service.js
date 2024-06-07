@@ -30,3 +30,14 @@ export const fetchBookById = async (bookId, token) => {
       throw new Error('Failed to fetch book by ID');
   }
 };
+
+export const deleteBookById = async (bookId, token) => {
+  try {
+    const response = await apiClient.delete(`/books/${bookId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }); 
+    return response.data.data;
+  } catch (error) {
+      throw new Error('Failed to delete book');
+  }
+}
