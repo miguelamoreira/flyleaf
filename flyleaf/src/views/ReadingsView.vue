@@ -63,6 +63,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+      <template v-slot:actions>
+        <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+      </template>
+    </v-snackbar>
   
   </template>
   <script>
@@ -87,6 +94,8 @@
           review: '',
           rating: '',
           currentReading: '',
+          modalConfirm: false,
+          modalText: ''
         }
       },
       computed: {
@@ -103,6 +112,8 @@
         async deleteReading(reading) {
           try {
             await this.readingsStore.deleteReading(reading);
+            this.modalConfirm = true;
+            this.modalText = 'Reading deleted successfully'
           } catch (error) {
             console.error('Error deleting reading:', error);
           }
@@ -140,6 +151,8 @@
             
             await this.readingsStore.fetchReadings();
             this.closeReadingModal();
+            this.modalConfirm = true;
+            this.modalText = 'Review updated successfully'
           } catch (error) {
             console.error('Error saving review:', error);
           }
@@ -148,6 +161,8 @@
           try {
             await this.reviewStore.deleteReview(bookId, reviewId);
             this.closeReadingModal();
+            this.modalConfirm = true;
+            this.modalText = 'Review deleted successfully'
           } catch (error) {
             console.error('Error deleting review:', error);
           }

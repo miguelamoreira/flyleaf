@@ -3,9 +3,9 @@ import { login, getAllUsers, deleteUser, toggleState, updateAvatar, getFavourite
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null,
-    isAuthenticated: false,
-    user: null,
+    token: localStorage.getItem('token') || null,
+    isAuthenticated: !!localStorage.getItem('token'),
+    user: JSON.parse(localStorage.getItem('user')) || null,
     users: [],
     favourites: [],
   }),
@@ -22,6 +22,8 @@ export const useAuthStore = defineStore('auth', {
         this.token = token;
         this.isAuthenticated = true;
         this.user = user;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
       } catch (error) {
         throw error; 
       }
@@ -30,6 +32,8 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       this.isAuthenticated = false;
       this.user = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
     },
     async fetchUsers() {
       try {
@@ -52,6 +56,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         await toggleState(userId, this.token, stateData);
         await this.fetchUsers();
+        localStorage.setItem('user', JSON.stringify(this.user));
       } catch (error) {
         throw new Error('Failed to update state')
       }

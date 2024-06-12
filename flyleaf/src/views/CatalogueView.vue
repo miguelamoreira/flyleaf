@@ -55,15 +55,12 @@
   </v-container>
 
   <!-- Confirming reading logging modal (UX purposes) -->
-  <v-dialog v-model="readingModal" max-width="600px" persistent>
-    <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
-      <v-card-title style="font-family: Aleo, serif;" class="text-h5">New Reading</v-card-title>
-      <v-card-text class="text-center">{{ textModal }}</v-card-text>
-      <v-card-actions class="d-flex justify-center mt-6">
-        <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeReadingModal">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+      <template v-slot:actions>
+        <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+      </template>
+  </v-snackbar>
 
   <!-- New reading/review modal -->
   <v-dialog v-model="newReadingModal" max-width="600px" persistent>
@@ -112,8 +109,8 @@ export default {
       searchQuery: '',
       readingsStore: useReadingsStore(),
       reviewStore: useReviewStore(),
-      textModal: '',
-      readingModal: false,
+      modalText: '',
+      modalConfirm: false,
       newReadingModal: false,
       newReadingTitle: '',
       newReadingAuthor: '',
@@ -140,12 +137,12 @@ export default {
         const author = book['autors.nomeAutor'].toLowerCase();
         const category = book['categoria.nomeCategoria'].toLowerCase();
         const year = book.anoLivro.toString();
-        const key = book.idLivro; // Use book ID as the key for uniqueness
+        const key = book.idLivro; 
         if (!uniqueBooks[key] && (title.includes(query) || author.includes(query) || category.includes(query) || year.includes(query))) {
-          uniqueBooks[key] = true; // Mark the book as encountered
-          return true; // Include the book in the filtered list
+          uniqueBooks[key] = true; 
+          return true; 
         }
-        return false; // Exclude the book from the filtered list
+        return false; 
       });
     }
   },
@@ -162,8 +159,8 @@ export default {
 
       try {
         await this.readingsStore.createReading(idUtilizador, idLivro);
-        this.readingModal = true;
-        this.textModal = "Your reading has been logged sucessfully."
+        this.modalConfirm = true;
+        this.modalText = "Your reading has been logged sucessfully."
 
         await this.readingsStore.fetchReadings();
       } catch (error) {
@@ -205,6 +202,8 @@ export default {
         await this.reviewStore.createReviewOrReading(bookId, reviewData);
         await this.readingsStore.fetchReadings();
         this.closeNewReadingModal();
+        this.modalConfirm = true;
+        this.modalText = "Review created sucessfully."
       } catch (error) {
         console.error('Error saving new reading:', error);
       }
@@ -212,6 +211,8 @@ export default {
     async deleteBook(bookId) {
       try {
         await this.bookStore.deleteBookById(bookId);
+        this.modalConfirm = true;
+        this.modalText = "Book deleted sucessfully."
       } catch (error) {
         console.log('Error deleting book:', error);
       }
