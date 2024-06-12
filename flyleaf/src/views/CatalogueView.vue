@@ -134,12 +134,18 @@ export default {
     },
     filteredBooks() {
       const query = this.searchQuery.toLowerCase();
+      let uniqueBooks = {};
       return this.books.filter(book => {
         const title = book.nomeLivro.toLowerCase();
         const author = book['autors.nomeAutor'].toLowerCase();
         const category = book['categoria.nomeCategoria'].toLowerCase();
         const year = book.anoLivro.toString();
-        return title.includes(query) || author.includes(query) || category.includes(query) || year.includes(query);
+        const key = book.idLivro; // Use book ID as the key for uniqueness
+        if (!uniqueBooks[key] && (title.includes(query) || author.includes(query) || category.includes(query) || year.includes(query))) {
+          uniqueBooks[key] = true; // Mark the book as encountered
+          return true; // Include the book in the filtered list
+        }
+        return false; // Exclude the book from the filtered list
       });
     }
   },

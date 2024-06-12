@@ -305,14 +305,8 @@
         return selectedBook ? `${selectedBook.capaLivro}` : '/src/assets/images/books/none.svg';
       },
       handleFileInputChange(event) {
-        this.imageMessage = '';
         const file = event.target.files[0];
-        const extension = file.name.split('.').pop().toLowerCase();
-        if (extension === 'jpg') {
-          this.newRequestCover = URL.createObjectURL(file);
-        } else {
-          this.imageMessage = 'Invalid file type.';
-        }
+        this.newRequestCover = URL.createObjectURL(file);
       },
     },
     mounted() {
