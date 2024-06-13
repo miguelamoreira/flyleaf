@@ -41,3 +41,12 @@ export const deleteBookById = async (bookId, token) => {
       throw new Error('Failed to delete book');
   }
 }
+
+export const fetchHighestRated = async (token) => {
+  try {
+    const response = await apiClient.get('/books/highest-rated'); 
+    return response.data.data;
+  } catch (error) {
+    throw new Error('Failed to fetch books');
+  }
+};

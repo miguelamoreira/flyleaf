@@ -38,22 +38,22 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container fluid id="sectionHighest" style="background-color: var(--vt-c-beige);">
+    <v-container v-if="highestRated" fluid id="sectionHighest" style="background-color: var(--vt-c-beige);">
       <div style="border: 5px solid var(--vt-c-brown-light); border-radius: 1rem; color: var(--vt-c-brown-dark);" class="ma-4">
         <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold pa-4">Highest rated</h2>
         <div class="d-flex flex-row mx-4 mb-4 flex-wrap flex-sm-nowrap">
-          <img :src="`/src/assets/images/books/${book.image}`" width="300" height="420" class="rounded-lg" :elevation="4">
+          <img :src="`data:image/jpg;base64,${highestRated.cover}`" width="300" height="420" class="rounded-lg" :elevation="4">
           <div class="mx-lg-12">
             <div class="d-flex flex-row">
-              <p class="text-h6 font-weight-bold">{{ book.title }}</p>
-              <p class="text-body-2 mx-4 mt-2">{{ book.year }}</p>
+              <p class="text-h6 font-weight-bold">{{ highestRated.title }}</p>
+              <p class="text-body-2 mx-4 mt-2">{{ highestRated.year }}</p>
             </div>
-            <p class="font-weight-bold">{{ book.author }}</p>
-            <p class="my-12 font-weight-bold">{{ book.categories.join(', ') }}</p>
-            <p class="my-12 font-weight-bold">{{ book.rating }}/5</p>
+            <p class="font-weight-bold">{{ checkAuthors(highestRated.authors) }}</p>
+            <p class="my-12 font-weight-bold">{{ checkGenres(highestRated.categories) }}</p>
+            <p class="my-12 font-weight-bold">{{ highestRated.averageRating }}/5</p>
             <p class="mt-12 mb-4 font-weight-bold">Description</p>
             <p class="text-center">
-              {{ book.description }}
+              {{ highestRated.description }}
             </p>
           </div>
         </div>
@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import { useBookStore } from '../stores/books.js';
+
 export default {
   data() {
     return {
@@ -101,18 +103,30 @@ export default {
         { title: 'Explore', color: 'var(--vt-c-yellow-dark)', titleColor: 'var(--vt-c-brown-dark)', icon: 'book3.svg', text: 'Explore the catalogue and discover new books wanting to be read or read reviews of your favourite books.', textColor: 'var(--vt-c-brown-dark)' },
         { title: 'Request', color: 'var(--vt-c-yellow-light)', titleColor: 'var(--vt-c-brown-dark)', icon: 'book4.svg', text: 'Didn’t find a particular book? Request it to be added to the catalogue.', textColor: 'var(--vt-c-brown-dark)' }
       ],
-      book: { 
-        title: 'Normal People', 
-        author: 'Sally Rooney', 
-        image: 'normalpeople.webp', 
-        description: 'At school Connell and Marianne pretend not to know each other. He’s popular and well-adjusted, star of the school soccer team while she is lonely, proud, and intensely private. But when Connell comes to pick his mother up from her housekeeping job at Marianne’s house, a strange and indelible connection grows between the two teenagers - one they are determined to conceal.',
-        year: 2018,
-        rating: 4.2,
-        categories: [
-          'Fiction', 'Contemporary', 'Romance'
-        ]
-      },
+      bookStore: useBookStore()
     };
+  },
+  computed: {
+    highestRated() {
+      return this.bookStore.getHighestRated;
+    }
+  },
+  mounted() {
+    this.bookStore.fetchHighestRated()
+  },
+  methods: {
+    checkAuthors(authors) {
+      if (Array.isArray(authors)) {
+        return authors.join(', ')
+      }
+      return authors
+    },
+    checkGenres(genres) {
+      if (Array.isArray(genres)) {
+        return genres.join(', ')
+      }
+      return genres
+    }
   }
 }
 </script>
