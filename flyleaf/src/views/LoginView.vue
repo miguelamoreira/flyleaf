@@ -32,6 +32,14 @@
       </v-row>
     </v-container>
   </v-app>
+
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+    <template v-slot:actions>
+      <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+    </template>
+  </v-snackbar>
+
 </template>
 
 <script>
@@ -44,6 +52,8 @@ export default {
       email: '',
       password: '',
       authStore: useAuthStore(),
+      modalConfirm: false,
+      modalText: ''
     }
   },
   methods: {
@@ -53,6 +63,8 @@ export default {
 
         this.$router.push({ name: 'dashboard' });
       } catch (error) {
+        this.modalConfirm = true;
+        this.modalText = 'Error while signing in'
         console.error('Login failed:', error);
       }
     }

@@ -72,6 +72,13 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+    <template v-slot:actions>
+      <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+    </template>
+  </v-snackbar>
 </template>
 <script>
 import Sidebar from '@/components/Sidebar.vue';
@@ -92,7 +99,9 @@ export default {
       nameList: '',
       descList: '',
       newBook: '',
-      booksList: []
+      booksList: [],
+      modalConfirm: false,
+      modalText: ''
     }
   },
   async mounted() {
@@ -155,8 +164,13 @@ export default {
 
         await this.listStore.updateList(this.listId, updatedListData);
 
+        this.modalConfirm = true;
+        this.modalText = 'Reading list updated successfully'
+        await new Promise(resolve => setTimeout(resolve, 1000));
         this.$router.push({ name: 'myreadinglists' });
       } catch (error) {
+        this.modalConfirm = true;
+        this.modalText = 'Error while updating reading list'
         console.error('Error updating list:', error);
       }
     }

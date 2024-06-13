@@ -45,6 +45,14 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+      <template v-slot:actions>
+        <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+      </template>
+  </v-snackbar>
+
 </template>
 <script>
   import Sidebar from '@/components/Sidebar.vue';
@@ -64,6 +72,8 @@
         readingsStore: useReadingsStore(),
         listsStore: useListStore(),
         requestsStore: useRequestStore(),
+        modalText: '',
+        modalConfirm: false,
       }
     },
     computed: {
@@ -101,6 +111,8 @@
           await this.authStore.deleteUser(userId);
 
           await this.authStore.fetchUsers();
+          this.modalConfirm = true;
+          this.modalText = "User deleted sucessfully."
         } catch (error) {
           console.error(error);
         }
@@ -120,6 +132,8 @@
           await this.authStore.updateUserState(userId, newStateData)
 
           await this.authStore.fetchUsers();
+          this.modalConfirm = true;
+          this.modalText = "User's state updated sucessfully."
         } catch (error) {
           console.error(error);
         }

@@ -19,9 +19,9 @@
                     <div class="d-flex flex-row align-center">
                       <p class="text-h6 font-weight-bold">{{ request.nomeLivroPedido }}</p>
                     </div>
-                    <p class="font-weight-bold">{{ request['autors.nomeAutor']  }}</p>
+                    <p class="font-weight-bold">{{ request['authors'].join(', ')  }}</p>
                     <p class="text-center mt-5">{{ request.descricaoLivroPedido }}</p>
-                    <p class="text-body-2 text-center mt-5">{{ request.anoLivroPedido }} - {{ request['categoria.nomeCategoria']  }}</p>
+                    <p class="text-body-2 text-center mt-5">{{ request.anoLivroPedido }} - {{ request['genres'].join(', ')  }}</p>
                   </div>
                 </div>
                 <div class="d-flex mt-16" style="position: absolute; bottom: 0; left: 30vh; right: 0;">
@@ -40,6 +40,14 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+      <template v-slot:actions>
+        <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+      </template>
+  </v-snackbar>
+
 </template>
 <script>
   import Sidebar from '@/components/Sidebar.vue';
@@ -53,6 +61,8 @@
     data() {
       return {
         requestStore: useRequestStore(),
+        modalText: '',
+        modalConfirm: false,
       }
     },
     computed: {
@@ -72,7 +82,9 @@
         try {
           await this.requestStore.updateRequest(requestId, { estadoPedido: 'accepted' });
 
-          await this.requestStore.fetchRequests(); 
+          await this.requestStore.fetchRequests();
+          this.modalConfirm = true;
+          this.modalText = "Book request accepted sucessfully."
         } catch (error) {
           console.error(error);
         }
@@ -82,6 +94,8 @@
           await this.requestStore.updateRequest(requestId, { estadoPedido: 'denied' });
 
           await this.requestStore.fetchRequests();
+          this.modalConfirm = true;
+          this.modalText = "Book request denied sucessfully."
         } catch (error) {
           console.error(error);
         }

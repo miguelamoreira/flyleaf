@@ -24,8 +24,8 @@
                     <p class="text-h6 font-weight-bold">{{ currentBook.nomeLivro }}</p>
                     <p class="text-body-2 mx-4 mt-2">{{ currentBook.anoLivro }}</p>
                   </div>
-                  <p class="font-weight-bold">{{ currentBook['autors.nomeAutor'] }}</p>
-                  <p class="my-12 font-weight-bold">{{ currentBook['categoria.nomeCategoria'] }}</p>
+                  <p class="font-weight-bold">{{ currentBook['authors'].join(', ') }}</p>
+                  <p class="my-12 font-weight-bold">{{ currentBook['categoria'].join(', ') }}</p>
                   <p class="my-12 font-weight-bold">{{ averageRating }}/5</p>
                   <p class="mt-12 mb-6 font-weight-bold">Description</p>
                   <p class="text-center">

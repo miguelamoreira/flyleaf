@@ -71,6 +71,14 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+    <template v-slot:actions>
+      <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+    </template>
+  </v-snackbar>
+
 </template>
 <script>
   import Sidebar from '@/components/Sidebar.vue';
@@ -103,7 +111,9 @@
         nameList: '',
         descList: '',
         newBook: '',
-        booksList: [] 
+        booksList: [],
+        modalConfirm: false,
+        modalText: ''
       }
     },
     async mounted() {
@@ -150,12 +160,16 @@
             description: this.descList,
             newBooks: bookIds
           };
-          console.log('New list data:', listData);
 
           await this.listStore.createList(listData);
 
+          this.modalConfirm = true;
+          this.modalText = 'Reading list created successfully'
+          await new Promise(resolve => setTimeout(resolve, 1000));
           this.$router.push({ name: 'myreadinglists' });
         } catch (error) {
+          this.modalConfirm = true;
+          this.modalText = 'Error while creating reading list'
           console.error('Error creating list:', error);
         }
       }

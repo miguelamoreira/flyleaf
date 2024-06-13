@@ -144,6 +144,13 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+      <template v-slot:actions>
+        <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+      </template>
+  </v-snackbar>
 </template>
 <script>
   import Sidebar from '@/components/Sidebar.vue';
@@ -171,6 +178,8 @@
         confirmPassword: '',
         notifStatus: true,
         notificationLabel: '',
+        modalText: '',
+        modalConfirm: false,
       }
     },
     computed: {
@@ -215,7 +224,11 @@
             await this.authStore.addFavourite(selectedBook.idLivro);
             await this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
             this.closeFavouritesModal();
+            this.modalConfirm = true;
+            this.modalText = "Book marked as favourite sucessfully."
           } catch (error) {
+            this.modalConfirm = true;
+            this.modalText = "Error while marking book as favourite."
             console.error('Failed to add favourite:', error);
           }
         }
@@ -224,12 +237,16 @@
         try {
           await this.authStore.removeFavourite(bookId);
           await this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
+          this.modalConfirm = true;
+          this.modalText = "Book unmarked as favourite sucessfully."
         } catch (error) {
           console.error('Failed to remove favourite:', error);
         }
       },
       async updateFavourite() {
         const selectedBook = this.books.find(book => book.nomeLivro === this.newTitleFavourite);
+        this.modalConfirm = true;
+        this.modalText = "Favourite books updated sucessfully."
         if (!selectedBook) {
           console.error('Selected book not found.');
           return;
@@ -254,12 +271,16 @@
         try {
           await this.authStore.updateUser(userData);
           await this.authStore.fetchUsers;
+          this.modalConfirm = true;
+          this.modalText = "User's data updated sucessfully."
 
           this.username = '';
           this.email = '';
           this.password = '';
           this.confirmPassword = '';
         } catch (error) {
+          this.modalConfirm = true;
+          this.modalText = "Error while trying to update user's data."
           console.error('Failed to update user:', error);
         }
       },
@@ -281,6 +302,8 @@
           await this.notifsStore.updateNotification( 1, this.authStore.getUser.idUtilizador, boolStatus);
 
           await this.notifsStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
+          this.modalConfirm = true;
+          this.modalText = "Notification's preferences updated sucessfully."
         } catch (error) {
           console.error('Failed to update notification status:', error);
         }

@@ -118,15 +118,12 @@
   </v-container>
 
   <!-- Confirming reading logging modal (UX purposes) -->
-  <v-dialog v-model="readingModal" max-width="600px" persistent>
-    <v-card class="rounded-lg pa-4" style="background-color: var(--vt-c-beige);">
-      <v-card-title style="font-family: Aleo, serif;" class="text-h5">New Reading</v-card-title>
-      <v-card-text class="text-center">{{ textModal }}</v-card-text>
-      <v-card-actions class="d-flex justify-center mt-6">
-        <v-btn style="background-color: var(--vt-c-green-dark); color: var(--vt-c-green-light);" text @click="closeReadingModal">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+      <template v-slot:actions>
+        <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+      </template>
+  </v-snackbar>
 
   <!-- New reading/review modal -->
   <v-dialog v-model="newReadingModal" max-width="600px" persistent>
@@ -175,8 +172,8 @@
         requestStore: useRequestStore(),
         readingsStore: useReadingsStore(),
         reviewStore: useReviewStore(),
-        textModal: '',
-        readingModal: false,
+        modalText: '',
+        modalConfirm: false,
         newReadingModal: false,
         newReadingTitle: '',
         newReadingAuthor: '',
@@ -222,7 +219,9 @@
         try {
           await this.requestStore.updateRequest(requestId, { estadoPedido: 'accepted' });
 
-          await this.requestStore.fetchRequests(); 
+          await this.requestStore.fetchRequests();
+          this.modalConfirm = true;
+          this.modalText = "Book request accepted sucessfully."
         } catch (error) {
           console.error(error);
         }
@@ -231,7 +230,9 @@
         try {
           await this.requestStore.updateRequest(requestId, { estadoPedido: 'denied' });
 
-          await this.requestStore.fetchRequests(); 
+          await this.requestStore.fetchRequests();
+          this.modalConfirm = true;
+          this.modalText = "Book request denied sucessfully."
         } catch (error) {
           console.error(error);
         }
@@ -241,17 +242,13 @@
     
         try {
           await this.readingsStore.createReading(idUtilizador, idLivro);
-          this.readingModal = true;
-          this.textModal = "Your reading has been logged sucessfully."
+          this.modalConfirm = true;
+          this.modalText = "Your reading has been logged sucessfully."
 
           await this.readingsStore.fetchReadings();
         } catch (error) {
           console.error('Error creating reading:', error);
         }
-      },
-      closeReadingModal() {
-        this.readingModal = false;
-        this.textModal = '';
       },
       openNewReadingModal(book) {
         this.newReadingTitle = book.nomeLivro;
@@ -285,6 +282,8 @@
           await this.reviewStore.createReviewOrReading(bookId, reviewData);
           await this.readingsStore.fetchReadings();
           this.closeNewReadingModal();
+          this.modalConfirm = true;
+          this.modalText = "Review created sucessfully."
         } catch (error) {
           console.error('Error saving new reading:', error);
         }
@@ -296,6 +295,8 @@
         try {
           await this.authStore.deleteUser(userId);
           await this.authStore.fetchUsers();
+          this.modalConfirm = true;
+          this.modalText = "User deleted sucessfully."
         } catch (error) {
           console.error(error);
         }
@@ -315,6 +316,8 @@
           await this.authStore.updateUserState(userId, newStateData)
 
           await this.authStore.fetchUsers();
+          this.modalConfirm = true;
+          this.modalText = "User's state updated sucessfully."
         } catch (error) {
           console.error(error);
         }

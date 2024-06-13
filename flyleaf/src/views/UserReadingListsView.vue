@@ -39,8 +39,13 @@
     </v-row>
   </v-container>
   
-  
-  </template>
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+    <template v-slot:actions>
+      <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+    </template>
+  </v-snackbar>
+</template>
   <script>
     import Sidebar from '@/components/Sidebar.vue';
     import Navbar from '@/components/Navbar.vue';
@@ -56,6 +61,8 @@
           authStore: useAuthStore(),
           listStore: useListStore(),
           user: null,
+          modalConfirm: false,
+          modalText: ''
         }
       },
       computed: {
@@ -79,6 +86,8 @@
           try {
             await this.listStore.deleteList(readingListId);
             await this.listStore.fetchLists();
+            this.modalConfirm = true;
+            this.modalText = 'Reading list deleted successfully'
           } catch (error) {
             console.error('Error deleting reading list:', error);
           }

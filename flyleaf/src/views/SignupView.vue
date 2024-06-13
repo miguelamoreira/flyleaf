@@ -34,6 +34,13 @@
       </v-row>
     </v-container>
   </v-app>
+  
+  <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+    <template v-slot:actions>
+      <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script>
@@ -45,6 +52,8 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
+      modalConfirm: false,
+      modalText: ''
     }
   },
   methods: {
@@ -57,8 +66,13 @@ export default {
       try {
         await signup(this.username, this.email, this.password);
 
+        this.modalConfirm = true;
+        this.modalText = 'Account created successfully'
+        await new Promise(resolve => setTimeout(resolve, 1000));
         this.$router.push({ name: 'login' });
       } catch (error) {
+        this.modalConfirm = true;
+        this.modalText = 'Error while signup in'
         console.error('Signup failed:', error.message);
       }
     }
