@@ -21,7 +21,7 @@
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
                 <router-link :to="{ name: 'catalogue'}" v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`data:image/jpg;base64,${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="((rowIndex * 4) + (i - 1)) < favourites.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
@@ -42,7 +42,7 @@
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
                 <router-link v-if="((rowIndex * 4) + (i - 1)) < readings.length" :to="{ name: 'book', params: { bookId: readings[(rowIndex * 4) + (i - 1)].idLivro }}">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`data:image/jpg;base64,${readings[(rowIndex * 4) + (i - 1)].Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`${readings[(rowIndex * 4) + (i - 1)].Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </router-link>
                 <div v-if="((rowIndex * 4) + (i - 1)) < readings.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">

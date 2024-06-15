@@ -42,7 +42,7 @@
       <div style="border: 5px solid var(--vt-c-brown-light); border-radius: 1rem; color: var(--vt-c-brown-dark);" class="ma-4">
         <h2 style="font-family: Aleo, serif;" class="text-h5 font-weight-bold pa-4">Highest rated</h2>
         <div class="d-flex flex-row mx-4 mb-4 flex-wrap flex-sm-nowrap">
-          <img :src="`data:image/jpg;base64,${highestRated.cover}`" width="300" height="420" class="rounded-lg" :elevation="4">
+          <img :src="highestRated.cover" width="300" height="420" class="rounded-lg" :elevation="4">
           <div class="mx-lg-12">
             <div class="d-flex flex-row">
               <p class="text-h6 font-weight-bold">{{ highestRated.title }}</p>

@@ -21,7 +21,7 @@
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
                 <div class="favourites" @click="openUpdateModal(favourites[(rowIndex * 4) + (i - 1)].idLivro, favourites[(rowIndex * 4) + (i - 1)].nomeLivro)" v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`data:image/jpg;base64,${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < favourites.length" style="position: absolute; bottom: -55px; left: 0; right: 0;" class="d-flex align-center justify-space-between">

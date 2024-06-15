@@ -82,7 +82,7 @@
               <v-select v-model="newReadingRating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
             </v-col>
             <v-col>
-              <img :src="newReadingTitle ? `data:image/jpg;base64,${getBookImage()}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
+              <img :src="newReadingTitle ? `${getBookImage()}` : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
             </v-col>
           </v-row>
         </v-card-text>
@@ -112,9 +112,7 @@
               <label for="file-input" class="file-input-label">
                 <img :src="newRequestCover ? newRequestCover : '/src/assets/images/books/none.svg'" width="200" height="320" class="rounded-lg">
               </label>
-              <input accept=".jpg" id="file-input" type="file" style="display: none;" @change="handleFileInputChange">
-              <p><span class="font-weight-medium">Valid image formats:</span> .jpg</p>
-              <p>{{ imageMessage }}</p>
+              <input name="cover" id="file-input" type="file" style="display: none;" @change="handleFileInputChange">
             </v-col>
           </v-row>
         </v-card-text>
@@ -124,6 +122,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="modalConfirm" color="brown-darken-1">
+      {{ modalText }}
+    <template v-slot:actions>
+      <v-btn  variant="text" @click="modalConfirm = false">Close</v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script>
@@ -151,6 +156,7 @@
         newRequestYear: '',
         newRequestGenre: null,
         newRequestCover: '',
+        newRequestCoverFile: null,
         avatarModal: false,
         authStore: useAuthStore(),
         requestStore: useRequestStore(),
@@ -159,6 +165,8 @@
         bookStore: useBookStore(),
         readingsStore: useReadingsStore(),
         imageMessage: '',
+        modalConfirm: false,
+        modalText: ''
       }
     },
     mounted() {
@@ -237,7 +245,11 @@
           await this.readingsStore.fetchReadings();
           await this.requestStore.fetchRequests(); 
           this.closeNewReadingModal();
+          this.modalConfirm = true;
+          this.modalText = "Your reading has been logged sucessfully."
         } catch (error) {
+          this.modalConfirm = true;
+          this.modalText = "Error while logging reading."
           console.error('Error saving new reading: ', error);
         }
       },
@@ -258,7 +270,7 @@
         this.newRequestCover = '';
       },
       async saveNewRequest() {
-        if (!this.newRequestTitle || !this.newRequestAuthors || !this.newRequestDescription || !this.newRequestYear || !this.newRequestGenre.length) {
+        if (!this.newRequestTitle || !this.newRequestAuthors || !this.newRequestDescription || !this.newRequestYear || !this.newRequestGenre.length || !this.newRequestCoverFile) {
           console.log("Incomplete data!");
           return;
         }
@@ -274,22 +286,32 @@
           const authorNames = this.newRequestAuthors.split(',').map(author => author.trim());
           const categoryIds = selectedGenres.map(genre => genre.idCategoria);
 
-          const requestData = {
-            idUtilizador: this.user.idUtilizador,
-            bookData: {
-              title: this.newRequestTitle,
-              year: this.newRequestYear,
-              description: this.newRequestDescription,
-              cover: this.newRequestCover,
-              state: 'validating', 
-            },
-            authorNames: authorNames, 
-            categoryIds: categoryIds, 
-          };
+          const formData = new FormData();
+          formData.append('idUtilizador', this.user.idUtilizador);
+          formData.append('bookData[title]', this.newRequestTitle);
+          formData.append('bookData[year]', this.newRequestYear);
+          formData.append('bookData[description]', this.newRequestDescription);
+          formData.append('bookData[state]', 'validating');
+          formData.append('cover', this.newRequestCoverFile);
 
-        await this.requestStore.createNewRequest(requestData);
+          console.log('cover', formData.get('cover'));
+          console.log('cccc', this.newRequestCoverFile);
+
+          authorNames.forEach((author, index) => {
+            formData.append(`authorNames[${index}]`, author);
+          });
+
+          categoryIds.forEach((categoryId, index) => {
+            formData.append(`categoryIds[${index}]`, categoryId);
+          });
+
+        await this.requestStore.createNewRequest(formData);
         this.closeNewRequestModal();
+        this.modalConfirm = true;
+        this.modalText = 'Book request created successfully'
         } catch(error) {
+          this.modalConfirm = true;
+          this.modalText = 'Error while creating book request'
           console.log("Error saving new request: ", error);
         }
       },
@@ -307,6 +329,7 @@
       handleFileInputChange(event) {
         const file = event.target.files[0];
         this.newRequestCover = URL.createObjectURL(file);
+        this.newRequestCoverFile = file;
       },
     },
     mounted() {

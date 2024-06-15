@@ -15,7 +15,7 @@
               <div class="book mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <div v-if="((rowIndex * 4) + (i - 1)) < readings.length">
                   <v-card :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh;">
-                    <img :src="`data:image/jpg;base64,${readings[(rowIndex * 4) + (i - 1)].Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`${readings[(rowIndex * 4) + (i - 1)].Livro.capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < readings.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
@@ -52,7 +52,7 @@
               <v-select v-model="rating" :items="[1, 2, 3, 4, 5]" label="Rating" style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg mb-4"></v-select>
             </v-col>
             <v-col>
-              <img :src="`data:image/jpg;base64,${readingCover}`" width="200" height="320" class="rounded-lg">
+              <img :src="`${readingCover}`" width="200" height="320" class="rounded-lg">
             </v-col>
           </v-row>
         </v-card-text>

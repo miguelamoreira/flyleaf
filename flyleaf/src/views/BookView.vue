@@ -16,7 +16,7 @@
               <div class="d-flex flex-row mx-4 mb-4 flex-wrap flex-sm-nowrap justify-center px-12 mt-8">
                 <div>
                   <v-card :elevation="4" style="width: 35vh; height: 55vh;" class="rounded-lg"> 
-                    <img :src="`data:image/jpg;base64,${book.capaLivro}`" style="width: 35vh; height: 55vh;">
+                    <img :src="`${book.capaLivro}`" style="width: 35vh; height: 55vh;">
                   </v-card>
                 </div>
                 <div class="ml-lg-8">

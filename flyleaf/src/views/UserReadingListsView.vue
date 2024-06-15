@@ -15,7 +15,7 @@
               <div class="list mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <div v-if="((rowIndex * 4) + (i - 1)) < lists.length">
                   <v-card :elevation="4" class="rounded-lg" style="width: 25vh; height: 40vh;">
-                    <img :src="`data:image/jpg;base64,${lists[(rowIndex * 4) + i - 1].Livros[0].capaLivro}`" style="width: 25vh; height: 40vh;">
+                    <img :src="`${lists[(rowIndex * 4) + i - 1].Livros[0].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
                 </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < lists.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">

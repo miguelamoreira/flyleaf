@@ -24,7 +24,7 @@ export const createRequest = async (requestData, token) => {
   try {
       const response = await apiClient.post('/requests', requestData,
       {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }
       });
       return response.data.data;
   } catch (error) {
