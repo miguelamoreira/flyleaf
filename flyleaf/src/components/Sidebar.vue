@@ -6,7 +6,7 @@
           <div class="ma-4 d-flex flex-row">
             <div>
               <img :src="`/src/assets/images/avatars/${user.avatarUtilizador}`" width="100" height="100" class="avatar-image">
-              <v-btn style="background-color: var(--vt-c-green-dark); position: relative; left: 9vh; bottom: 14vh" :elevation="0" size="small" @click="openAvatarModal"><img src="@/assets/images/icons/edit.svg"></v-btn>
+              <v-btn style="background-color: var(--vt-c-green-dark); position: relative; left: 70px; bottom: 105px" :elevation="0" size="small" @click="openAvatarModal"><img src="@/assets/images/icons/edit.svg"></v-btn>
             </div>
             <div class="d-flex flex-column ma-4">
               <span class="font-weight-bold">{{ user.nomeUtilizador }}</span>

@@ -25,8 +25,8 @@
                 </router-link>
                 <div v-if="index !== 3" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <div class="text-center">
-                    <v-btn @click="createReading(book.idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                    <v-btn @click="openNewReadingModal(book)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/review.svg" width="30" height="30"></v-btn>
+                    <v-btn @click="createReading(book.idLivro)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9); width: 8vh; height: 5.5vh;"><img src="@/assets/images/icons/arrow.svg" style="width: 5vh; height: 5vh;"></v-btn>
+                    <v-btn @click="openNewReadingModal(book)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9); width: 8vh; height: 5.5vh;"><img src="@/assets/images/icons/review.svg" style="width: 5vh; height: 5vh;"></v-btn>
                   </div>
                   <p class="font-weight-bold mt-2">{{ book.nomeLivro }}</p>
                   <p>{{ book['autors.nomeAutor'] }}</p>
@@ -69,10 +69,10 @@
                       <img :src="`${filteredRequests[(rowIndex * 4) + (i - 1)].capaLivroPedido}`" style="width: 25vh; height: 40vh;">
                     </v-card>
                 </router-link>
-                <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < filteredRequests.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
-                    <div class="text-center d-flex" style="position: inherit; left: 30px; bottom: 60px;" >
-                      <v-btn @click="acceptRequest(filteredRequests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/arrow.svg" width="30" height="30"></v-btn>
-                      <v-btn @click="denyRequest(filteredRequests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < filteredRequests.length" style="position: absolute; bottom: -60px; left: 0px; right: 0;">
+                    <div class="text-center d-flex" style="position: inherit; left: 4vh; bottom: 60px;" >
+                      <v-btn @click="acceptRequest(filteredRequests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9); width: 8vh; height: 5.5vh;"><img src="@/assets/images/icons/arrow.svg" style="width: 5vh; height: 5vh;"></v-btn>
+                      <v-btn @click="denyRequest(filteredRequests[(rowIndex * 4) + (i - 1)].idPedido)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9); width: 8vh; height: 5.5vh;"><img src="@/assets/images/icons/delete.svg" style="width: 5vh; height: 5vh;"></v-btn>
                     </div>
                     <p class="font-weight-bold mt-2">{{ filteredRequests[(rowIndex * 4) + (i - 1)].nomeLivroPedido }}</p>
                     <p>{{ filteredRequests[(rowIndex * 4) + (i - 1)]['autors.nomeAutor'] }}</p>
@@ -95,11 +95,11 @@
                 </router-link>
                 <div v-if="index !== 3 && ((rowIndex * 4) + (i - 1)) < users.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                     <div class="text-center d-flex" style="position: inherit; left: 30px; bottom: 60px;" >
-                      <v-btn @click="updateUser(users[(rowIndex * 4) + (i - 1)].idUtilizador)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);">
-                        <img v-if="users[(rowIndex * 4) + (i - 1)].estadoUtilizador === 'normal'" width="30" height="30" src="@/assets/images/icons/block.svg">
-                        <img v-if="users[(rowIndex * 4) + (i - 1)].estadoUtilizador === 'bloqueado'" width="30" height="30" src="@/assets/images/icons/arrow.svg">
+                      <v-btn @click="updateUser(users[(rowIndex * 4) + (i - 1)].idUtilizador)" :elevation="0" class="rounded-ts-lg rounded-bs-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9); width: 8vh; height: 5.5vh;">
+                        <img v-if="users[(rowIndex * 4) + (i - 1)].estadoUtilizador === 'normal'" style="width: 5vh; height: 5vh;" src="@/assets/images/icons/block.svg">
+                        <img v-if="users[(rowIndex * 4) + (i - 1)].estadoUtilizador === 'bloqueado'" style="width: 5vh; height: 5vh;" src="@/assets/images/icons/arrow.svg">
                       </v-btn>
-                      <v-btn @click="deleteUser(users[(rowIndex * 4) + (i - 1)].idUtilizador)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9);"><img src="@/assets/images/icons/delete.svg" width="30" height="30"></v-btn>
+                      <v-btn @click="deleteUser(users[(rowIndex * 4) + (i - 1)].idUtilizador)" :elevation="0" class="rounded-te-lg rounded-be-lg rounded-0" style="background-color: rgba(64, 52, 43, 0.9); width: 8vh; height: 5.5vh;"><img src="@/assets/images/icons/delete.svg" style="width: 5vh; height: 5vh;"></v-btn>
                     </div>
                     <p class="font-weight-bold mt-2">{{ users[(rowIndex * 4) + (i - 1)].nomeUtilizador }}</p>
                     <p>{{ getReadingsCount(users[(rowIndex * 4) + (i - 1)].idUtilizador)}} books read</p>

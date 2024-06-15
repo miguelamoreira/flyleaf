@@ -47,12 +47,18 @@
                 <div class="d-flex">
                   <img :src="`/src/assets/images/avatars/${reviews[(rowIndex * 2) + (i - 1)].avatarUtilizador}`" width="80" class="mx-4">
                   <div class="d-flex flex-column text-center">
-                    <v-card-title class="text-h6 font-weight-bold">{{ reviews[(rowIndex * 2) + (i - 1)].nomeUtilizador }}</v-card-title>
+                    <v-card-title class="text-h5 font-weight-bold">{{ reviews[(rowIndex * 2) + (i - 1)].nomeUtilizador }}</v-card-title>
                     <p>{{ userBookCount(reviews[(rowIndex * 2) + (i - 1)].idUtilizador) }} books</p>
                   </div>
                 </div>
-                <v-card-text class="text-center pt-12">
-                  {{ reviews[(rowIndex * 2) + (i - 1)].comentario }}
+                <v-card-text class="pt-6">
+                  <div>
+                    <p class="text-h6">Rating: <span class="text-body-1">{{ reviews[(rowIndex * 2) + (i - 1)].classificao ? reviews[(rowIndex * 2) + (i - 1)].classificao : '-'}}/5</span></p>
+                  </div>
+                  <div class="pt-3">
+                    <p class="text-h6">Review:</p>
+                    <p class="pt-2 text-center text-body-1">{{ reviews[(rowIndex * 2) + (i - 1)].comentario ? reviews[(rowIndex * 2) + (i - 1)].comentario : '-' }}</p>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
