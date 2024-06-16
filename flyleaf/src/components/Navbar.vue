@@ -23,7 +23,7 @@
           <v-card-title style="font-family: Aleo, serif; color: var(--vt-c-brown-dark);" class="text-h5">Notifications</v-card-title>
         </div>
         <v-card-text style="color: var(--vt-c-brown-medium);">
-          <div v-for="(notification, index) in notifications" :key="index" class="mb-4">
+          <div v-for="(notification, index) in reversedNotifications.slice(0, 3)" :key="index" class="mb-4">
             <div class="d-flex align-center mb-4">
               <p class="text-h6 font-weight-bold mr-2">{{ notification.tituloNotificacao }}</p>
               <p class="text-caption">{{ notification.dataNotificacao }}</p>
@@ -31,6 +31,9 @@
             <p>{{ notification.conteudoNotificacao }}</p>
           </div>
         </v-card-text>
+        <v-card-actions class="d-flex justify-center">
+          <v-btn style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);" text :to="{'name': 'notifications'}">More</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </template>
@@ -87,6 +90,9 @@
           return idUtilizador ? this.notificationStore.getNotifications.filter(notification => notification.idUtilizador === idUtilizador) : [];
         }
       },
+      reversedNotifications() {
+        return this.notifications ? this.notifications.slice().reverse() : [];
+      }
     },
     mounted() {
       this.notificationStore.fetchNotifications();

@@ -16,6 +16,7 @@ import UsersView from '@/views/UsersView.vue'
 import AddReadingListView from '@/views/AddReadingListView.vue'
 import EditReadingListView from '@/views/EditReadingListView.vue'
 import UserReadingListsView from '@/views/UserReadingListsView.vue'
+import NotificationsView from '@/views/NotificationsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,6 +106,11 @@ const router = createRouter({
       path: '/readinglists/:readingListId/edit',
       name: 'editlist',
       component: EditReadingListView
+    },
+    {
+      path: '/notifications',
+      name: 'notifications',
+      component: NotificationsView
     }
   ]
 })
