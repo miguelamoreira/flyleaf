@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { fetchNotifications, fetchNotificationsSettings, updateNotification } from '../services/notifications.service.js'; 
+import { fetchNotifications, fetchNotificationsSettings, updateNotification, updateFavouriteGenres } from '../services/notifications.service.js'; 
 import { useAuthStore } from './auth.js';
 
 export const useNotificationStore = defineStore('notification', {
@@ -34,6 +34,15 @@ export const useNotificationStore = defineStore('notification', {
             try {
                 const token = useAuthStore().token;
                 await updateNotification(typeNotifId, userId, state, token);
+                await this.fetchNotifications();
+            } catch (error) {
+                throw error;
+            }
+        },
+        async updateFavouriteGenres(userId, genres, state) {
+            try {
+                const token = useAuthStore().token;
+                await updateFavouriteGenres(userId, genres, state, token);
                 await this.fetchNotifications();
             } catch (error) {
                 throw error;

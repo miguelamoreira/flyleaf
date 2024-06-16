@@ -25,7 +25,7 @@
                     <p class="text-body-2 mx-4 mt-2">{{ currentBook.anoLivro }}</p>
                   </div>
                   <p class="font-weight-bold">{{ checkAuthors(currentBook['authors']) }}</p>
-                  <p class="my-12 font-weight-bold">{{ checkGenres(currentBook['categoria']) }}</p>
+                  <p class="my-12 font-weight-bold">{{ checkGenres(currentBook['genres']) }}</p>
                   <p class="my-12 font-weight-bold">{{ averageRating }}/5</p>
                   <p class="mt-12 mb-6 font-weight-bold">Description</p>
                   <p class="text-center">
@@ -150,7 +150,7 @@
           }
           return genres
         }
-          }
+      }
     }
 </script>
     

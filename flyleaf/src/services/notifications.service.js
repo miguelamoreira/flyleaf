@@ -42,4 +42,15 @@ export const updateNotification = async (typeNotifId, userId, state, token) => {
   }
 };
 
+export const updateFavouriteGenres = async (userId, genres, state, token) => {
+  try {
+    const response = await apiClient.put(`/users/${userId}/favouriteGenres`, { genres, state }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data.data; 
+  } catch (error) {
+    throw new Error('Failed to update favourite genres');
+  }
+};
+
 export default apiClient;

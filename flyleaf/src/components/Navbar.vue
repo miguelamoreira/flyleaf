@@ -45,7 +45,7 @@
         notificationIcon: '/src/assets/images/icons/notif.svg',
         authStore: useAuthStore(),
         notificationStore: useNotificationStore(),
-        notificationEnabled: false,
+        notificationEnabled: true,
       }
     },
     methods: {
@@ -60,9 +60,19 @@
         this.$router.push({ name: 'home' });
       },
       async settings() {
-        if (this.authStore.getUser.idTipoUtilizador === 1) {
-          await this.notificationStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
-          this.notificationEnabled = this.notificationStore.notificationSettings.estadoNotificacao;
+        try {
+          if (this.authStore.getUser.idTipoUtilizador === 1) {
+            await this.notificationStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
+            
+            const notificationSettings = this.notificationStore.notificationSettings;
+            const stateNotifStatus = notificationSettings.find(setting => setting.idTipoNotificacao === 1)?.estadoNotificacao;
+            const stateGenres = notificationSettings.find(setting => setting.idTipoNotificacao === 2)?.estadoNotificacao;
+
+            this.notificationEnabled = stateNotifStatus || stateGenres;
+          }
+        } catch (error) {
+          console.error('Error fetching notification settings:', error);
+          this.notificationEnabled = false;
         }
       }
     },
@@ -80,6 +90,7 @@
     },
     mounted() {
       this.notificationStore.fetchNotifications();
+      this.authStore.fetchUserById(this.authStore.getUser.idTipoUtilizador);
       this.settings();
     },
   }

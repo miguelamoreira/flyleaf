@@ -37,6 +37,15 @@ export const getAllUsers = async (token) => {
   }
 };
 
+export const findUserById = async (userId, token) => {
+  try {
+      const response = await apiClient.get(`/users/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+  } catch (error) {
+      throw new Error('Fetching user failed');
+  }
+};
+
 export const deleteUser = async (userId, token) => {
   try {
     const response = await apiClient.delete(`/users/${userId}`, {

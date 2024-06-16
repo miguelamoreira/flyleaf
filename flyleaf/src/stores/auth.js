@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { login, getAllUsers, deleteUser, toggleState, updateAvatar, getFavourites, addFavourite, removeFavourite, updateFavourites, updateUser } from '../services/auth.service.js'; 
+import { login, getAllUsers, findUserById, deleteUser, toggleState, updateAvatar, getFavourites, addFavourite, removeFavourite, updateFavourites, updateUser } from '../services/auth.service.js'; 
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -8,12 +8,14 @@ export const useAuthStore = defineStore('auth', {
     user: JSON.parse(localStorage.getItem('user')) || null,
     users: [],
     favourites: [],
+    userById: null,
   }),
   getters: {
     isLoggedIn: (state) => state.isAuthenticated,
     getUser: (state) => state.user,
     getUsers: (state) => state.users,
-    getFavourites: (state) => state.favourites
+    getFavourites: (state) => state.favourites,
+    getUserById: (state) => state.userById
   },
   actions: {
     async login({ email, password }) {
@@ -41,6 +43,14 @@ export const useAuthStore = defineStore('auth', {
         this.users = response.data;
       } catch (error) {
         throw new Error('Failed to fetch users');
+      }
+    },
+    async fetchUserById(userId) {
+      try {
+        const response = await findUserById(userId, this.token);
+        this.userById = response.data;
+      } catch (error) {
+        throw new Error('Failed to fetch user')
       }
     },
     async deleteUser(userId) {

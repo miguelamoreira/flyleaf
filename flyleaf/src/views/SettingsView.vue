@@ -97,11 +97,29 @@
               </v-form>
             </v-col>
           </v-row>
-          <v-row justify-center>
-            <div class="mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
-              <v-card :elevation="0" class="rounded-lg" height="320" style="width: 160vh; height: 40vh; background-color: var(--vt-c-beige);"></v-card> 
-            </div>
+          <v-row v-if="user.idTipoUtilizador === 1">
+            <v-col cols="12" class="mb-4">
+              <v-form class="mt-6 my-lg-6" style="width: 100%;">
+                <v-row justify="center">
+                  <h3>Do you want to select your favourite genres?</h3>
+                </v-row>
+                <v-row justify="center">
+                  <v-switch v-model="genresSwitch" :label="`${genresSwitch}`" hide-details false-value="no" true-value="yes"></v-switch>
+                </v-row>
+                <v-row v-if="genresSwitch === 'yes'" justify="center">
+                  <v-col cols="6" sm="4" class="pa-4">
+                    <v-select v-model="selectedGenres" :items="genres.map(genre => genre.nomeCategoria)" label="Select Genres" multiple style="background-color: var(--vt-c-yellow-light);" hide-details class="rounded-lg"></v-select>
+                  </v-col>
+                </v-row>
+                <v-row justify="center">
+                  <v-col cols="4" sm="2">
+                    <v-btn @click="updateGenres" block class="mt-6" style="background-color: var(--vt-c-green-light); color: var(--vt-c-green-dark);">Save</v-btn>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-col>
           </v-row>
+          
         </v-container>
       </v-col>
     </v-row>
@@ -158,6 +176,7 @@
   import { useAuthStore } from '../stores/auth.js';
   import { useBookStore } from '../stores/books';
   import { useNotificationStore } from '../stores/notifications';
+  import { useGenreStore } from '../stores/genres.js';
   
   export default {
     components: {
@@ -170,16 +189,19 @@
         authStore: useAuthStore(),
         bookStore: useBookStore(),
         notifsStore: useNotificationStore(),
+        genreStore: useGenreStore(),
         titleFavourite: '',
         newTitleFavourite: '',
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
-        notifStatus: true,
+        notifStatus: 'yes',
         notificationLabel: '',
         modalText: '',
         modalConfirm: false,
+        genresSwitch: 'no',  
+        selectedGenres: [],  
       }
     },
     computed: {
@@ -187,7 +209,6 @@
         return this.authStore.getUser;
       },
       favourites() {
-        console.log('user favourites', this.authStore.getFavourites);
         return this.authStore.getFavourites;
       },
       books() {
@@ -195,6 +216,9 @@
         const favouriteBookIds = this.favourites.map(favourite => favourite.idLivro);
         return allBooks.filter(book => !favouriteBookIds.includes(book.idLivro));
       },
+      genres() {
+        return this.genreStore.getGenres;
+      }
     },
     methods: {
       openFavouritesModal() {
@@ -310,19 +334,43 @@
       },
       async settings() {
         await this.notifsStore.fetchNotificationsSettings(this.authStore.getUser.idUtilizador);
-        const state = this.notifsStore.notificationSettings.estadoNotificacao;
+        const notificationSettings = this.notifsStore.notificationSettings;
+        const stateNotifStatus = notificationSettings.find(setting => setting.idTipoNotificacao === 1)?.estadoNotificacao || false;
+        const stateGenres = notificationSettings.find(setting => setting.idTipoNotificacao === 2)?.estadoNotificacao || false;
 
-        if (state == true) {
-          this.notifStatus = 'yes'
-        } else {
-          this.notifStatus = 'no'
+        this.notifStatus = stateNotifStatus ? 'yes' : 'no';
+        this.genresSwitch = stateGenres ? 'yes' : 'no';
+
+        let currentUser = await this.authStore.getUserById;
+        const favGenres = currentUser.categoriasFavoritas;
+        this.selectedGenres = favGenres;
+      },
+      async updateGenres() {
+        try {
+          const userId = this.authStore.getUser.idUtilizador;
+          const genres = this.selectedGenres;
+          const state = this.genresSwitch === 'yes';
+
+          await this.notifsStore.updateFavouriteGenres(userId, genres, state);
+
+          await this.authStore.fetchUserById(userId);
+          this.settings();
+          
+          this.modalConfirm = true;
+          this.modalText = "Favourite genres updated successfully.";
+        } catch (error) {
+          console.error('Failed to update favourite genres:', error);
+          this.modalConfirm = true;
+          this.modalText = "Failed to update favourite genres.";
         }
       }
     },
     mounted() {
       this.authStore.fetchFavourites(this.authStore.getUser.idUtilizador);
+      this.authStore.fetchUserById(this.authStore.getUser.idTipoUtilizador);
       this.bookStore.fetchBooks();
       this.settings();
+      this.genreStore.fetchGenres();
     }
   }
 </script>
