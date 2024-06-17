@@ -201,7 +201,7 @@
         modalText: '',
         modalConfirm: false,
         genresSwitch: 'no',  
-        selectedGenres: [],  
+        selectedGenres: null,  
       }
     },
     computed: {
@@ -341,8 +341,12 @@
         this.notifStatus = stateNotifStatus ? 'yes' : 'no';
         this.genresSwitch = stateGenres ? 'yes' : 'no';
 
+        if (this.genresSwitch == 'no') {
+          this.selectedGenres = null
+        }
+
         let currentUser = await this.authStore.getUserById;
-        const favGenres = currentUser.categoriasFavoritas;
+        const favGenres = currentUser.categoriasFavoritas.split(', ');
         this.selectedGenres = favGenres;
       },
       async updateGenres() {
