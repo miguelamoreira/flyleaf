@@ -53,7 +53,7 @@
                 </div>
                 <v-card-text class="pt-6">
                   <div>
-                    <p class="text-h6">Rating: <span class="text-body-1">{{ reviews[(rowIndex * 2) + (i - 1)].classificao ? reviews[(rowIndex * 2) + (i - 1)].classificao : '-'}}/5</span></p>
+                    <p class="text-h6">Rating: <span class="text-body-1">{{ reviews[(rowIndex * 2) + (i - 1)].classificacao ? reviews[(rowIndex * 2) + (i - 1)].classificacao : '-'}}/5</span></p>
                   </div>
                   <div class="pt-3">
                     <p class="text-h6">Review:</p>
