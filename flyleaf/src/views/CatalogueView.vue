@@ -6,10 +6,11 @@
       <v-col cols="10" style="position: relative; left: 0vh; top: 0vh;">
         <v-container fluid>
           <v-row class="d-flex justify-space-between flex-nowrap flex-md-wrap" align="center">
-            <v-col cols="4" class="mx-12 mt-8 mx-lg-14 mx-xl-16">
+            <v-col cols="2" class="mx-12 mt-8 mx-lg-14 mx-xl-16">
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Catalogue</h2>
             </v-col>
-            <v-col cols="4" class="ml-16 mt-8 mx-lg-16 d-flex flex-end flex-nowrap flex-md-wrap">
+            <v-col cols="6" class="ml-16 mt-8 mx-lg-16 d-flex flex-end flex-nowrap flex-md-wrap align-center">
+              <v-btn @click="orderBooks" size="large" style="background-color: var(--vt-c-yellow-light); color: var(--vt-c-beige-light);">{{ btnOrder }}</v-btn>
               <v-text-field id="searchBook" v-model="searchQuery" class="rounded-lg ml-4" style="max-width: 400px; background-color: var(--vt-c-yellow-light);" hide-details label="Search by title, author, year or genre"></v-text-field>
             </v-col>
           </v-row>
@@ -116,7 +117,9 @@ export default {
       newReadingAuthor: '',
       newReadingCover: '',
       newReadingReview: '',
-      newReadingRating: null
+      newReadingRating: null,
+      btnOrder: 'A-Z',
+      sortedBooks: []
     }
   },
   computed: {
@@ -131,20 +134,25 @@ export default {
     },
     filteredBooks() {
       const query = this.searchQuery.toLowerCase();
-      let uniqueBooks = {};
-      return this.books.filter(book => {
+      let filtered = this.books.filter(book => {
         const title = book.nomeLivro.toLowerCase();
         const author = book['autors.nomeAutor'].toLowerCase();
         const category = book['categoria.nomeCategoria'].toLowerCase();
         const year = book.anoLivro.toString();
-        const key = book.idLivro; 
-        if (!uniqueBooks[key] && (title.includes(query) || author.includes(query) || category.includes(query) || year.includes(query))) {
-          uniqueBooks[key] = true; 
-          return true; 
+        if (title.includes(query) || author.includes(query) || category.includes(query) || year.includes(query)) {
+          return true;
         }
-        return false; 
+        return false;
       });
-    }
+
+      return filtered.sort((a, b) => {
+        if (this.btnOrder === 'A-Z') {
+          return a.nomeLivro.localeCompare(b.nomeLivro);
+        } else {
+          return b.nomeLivro.localeCompare(a.nomeLivro);
+        }
+      });
+    },
   },
   methods: {
     async searchBooks() {
@@ -216,7 +224,10 @@ export default {
       } catch (error) {
         console.log('Error deleting book:', error);
       }
-    }
+    },
+    orderBooks() {
+      this.btnOrder = this.btnOrder === 'A-Z' ? 'Z-A' : 'A-Z';
+    },
   },
   mounted() {
     this.genreStore.fetchGenres();

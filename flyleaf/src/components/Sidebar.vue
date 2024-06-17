@@ -209,8 +209,12 @@
           const avatarData = { avatarUtilizador: this.selectedAvatar };
           await this.authStore.updateAvatar(this.user.idUtilizador, avatarData);
           this.user.avatarUtilizador = this.selectedAvatar;
+          this.modalConfirm = true;
+          this.modalText = 'Avatar updated successfully'
           this.closeAvatarModal();
         } else {
+          this.modalConfirm = true;
+          this.modalText = 'Error while updating avatar'
           this.closeAvatarModal();
         }
       },
