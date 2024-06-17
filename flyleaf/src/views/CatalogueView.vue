@@ -9,7 +9,7 @@
             <v-col cols="2" class="mx-12 mt-8 mx-lg-14 mx-xl-16">
               <h2 style="font-family: Aleo, serif;" class="text-h4 font-weight-bold">Catalogue</h2>
             </v-col>
-            <v-col cols="6" class="ml-16 mt-8 mx-lg-16 d-flex flex-end flex-nowrap flex-md-wrap align-center">
+            <v-col cols="5" class="mx-3 mt-8 d-flex flex-end flex-nowrap flex-md-wrap align-center">
               <v-btn @click="orderBooks" size="large" style="background-color: var(--vt-c-yellow-light); color: var(--vt-c-beige-light);">{{ btnOrder }}</v-btn>
               <v-text-field id="searchBook" v-model="searchQuery" class="rounded-lg ml-4" style="max-width: 400px; background-color: var(--vt-c-yellow-light);" hide-details label="Search by title, author, year or genre"></v-text-field>
             </v-col>
