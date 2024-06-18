@@ -161,6 +161,7 @@
           try {
             await this.reviewStore.deleteReview(bookId, reviewId);
             this.closeReadingModal();
+            await this.readingsStore.fetchReadings();
             this.modalConfirm = true;
             this.modalText = 'Review deleted successfully'
           } catch (error) {
