@@ -19,16 +19,23 @@
           <v-row v-if="favourites && favourites.length" v-for="(row, rowIndex) in Math.ceil((favourites.length + 1) / 4)" :key="rowIndex" justify="center">
             <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
               <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
-                <router-link :to="{ name: 'catalogue'}" v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
+                <div v-if="((rowIndex * 4) + (i - 1)) < favourites.length">
                   <v-card :elevation="4" class="rounded-lg"  height="320" style="width: 25vh; height: 40vh;">
                     <img :src="`${favourites[(rowIndex * 4) + (i - 1)].capaLivro}`" style="width: 25vh; height: 40vh;">
                   </v-card>
-                </router-link>
+                </div>
                 <div v-if="((rowIndex * 4) + (i - 1)) < favourites.length" style="position: absolute; bottom: -55px; left: 0; right: 0;">
                   <p class="font-weight-bold mt-2">{{ favourites[(rowIndex * 4) + (i - 1)].nomeLivro }}</p>
                   <p>{{ favourites[(rowIndex * 4) + (i - 1)].autors[0].nomeAutor }}</p>
                 </div>
                 <v-card v-else-if="favourites.length < 4" :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh; background-color: white;"></v-card>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row v-else-if="favourites && favourites.length == 0">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="6" md="3">
+              <div class="book mx-12 my-4 mx-lg-14 my-lg-6" style="position: relative;"> 
+                <v-card :elevation="4" class="rounded-lg" height="320" style="width: 25vh; height: 40vh; background-color: white;"></v-card>
               </div>
             </v-col>
           </v-row>
