@@ -59,7 +59,7 @@
               </div>
             </v-col>
           </v-row>
-          <v-row justify-center>
+          <v-row justify-center v-if="readings.length === 0">
             <div class="mx-12 my-6 mx-lg-14 my-lg-8" style="position: relative;"> 
                 <v-card :elevation="0" class="rounded-lg" height="320" style="width: 160vh; height: 40vh; background-color: var(--vt-c-beige);"></v-card> 
             </div>

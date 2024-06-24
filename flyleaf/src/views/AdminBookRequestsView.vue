@@ -14,7 +14,11 @@
             <v-col>
               <div class="requests" style="position: relative; width: 130vh;">
                 <div class="d-flex flex-row mx-4 mb-10 flex-nowrap align-items-start">
-                  <img :src="`${request.capaLivroPedido}`" width="200" height="310" class="rounded-lg" :elevation="4">
+                  <div>
+                    <v-card :elevation="4" width="200" height="310" class="rounded-lg">
+                      <img :src="`${request.capaLivroPedido}`" width="200" height="310" class="rounded-lg">
+                    </v-card>
+                  </div>
                   <div class="mx-lg-12">
                     <div class="d-flex flex-row align-center">
                       <p class="text-h6 font-weight-bold">{{ request.nomeLivroPedido }}</p>
